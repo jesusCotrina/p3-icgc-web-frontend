@@ -3,8 +3,7 @@
 import { Children, useCallback, useEffect, useRef, useState } from 'react';
 
 /** Ancho por defecto de cada diapositiva: 1 en móvil, 2 en tablet, 3 en escritorio. */
-const ANCHO_POR_DEFECTO =
-  'w-[85%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]';
+const ANCHO_POR_DEFECTO = 'w-[85%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]';
 
 /** Máximo de tarjetas visibles a la vez en cualquier pantalla (para el bucle). */
 const MAX_VISIBLES = 4;
@@ -29,6 +28,7 @@ export function Carousel({
   children,
   autoplayMs,
   itemClassName = ANCHO_POR_DEFECTO,
+  flechas = true,
 }: {
   label: string;
   children: React.ReactNode;
@@ -36,6 +36,8 @@ export function Carousel({
   autoplayMs?: number;
   /** Ancho de cada diapositiva (clases de Tailwind) */
   itemClassName?: string;
+  /** false: sin botones anterior/siguiente (quedan los puntitos y el deslizamiento) */
+  flechas?: boolean;
 }) {
   const pista = useRef<HTMLUListElement>(null);
   const originales = Children.toArray(children);
@@ -99,7 +101,9 @@ export function Carousel({
   // Las copias se ven y se pueden clicar, pero el Tab no debe pasar por ellas
   useEffect(() => {
     pista.current
-      ?.querySelectorAll<HTMLElement>('[data-copia] a, [data-copia] button, [data-copia] [tabindex]')
+      ?.querySelectorAll<HTMLElement>(
+        '[data-copia] a, [data-copia] button, [data-copia] [tabindex]',
+      )
       .forEach((el) => el.setAttribute('tabindex', '-1'));
   }, [copias, n]);
 
@@ -185,17 +189,29 @@ export function Carousel({
 
       {paginas > 1 && (
         <div className="mt-6 flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={anterior}
-            disabled={!enBucle && actual === 0}
-            aria-label="Anterior"
-            className={flecha}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
+          {flechas && (
+            <button
+              type="button"
+              onClick={anterior}
+              disabled={!enBucle && actual === 0}
+              aria-label="Anterior"
+              className={flecha}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          )}
 
           <div className="flex items-center gap-2">
             {Array.from({ length: paginas }, (_, i) => (
@@ -212,17 +228,29 @@ export function Carousel({
             ))}
           </div>
 
-          <button
-            type="button"
-            onClick={siguiente}
-            disabled={!enBucle && actual >= paginas - 1}
-            aria-label="Siguiente"
-            className={flecha}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
+          {flechas && (
+            <button
+              type="button"
+              onClick={siguiente}
+              disabled={!enBucle && actual >= paginas - 1}
+              aria-label="Siguiente"
+              className={flecha}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          )}
         </div>
       )}
     </div>

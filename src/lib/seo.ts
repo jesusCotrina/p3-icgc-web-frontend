@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE_URL } from './api';
+import { direccionDelSitio } from './direccion';
 import type { PostDTO, PostSummaryDTO, SiteSettingsDTO } from './types';
 
 /**
@@ -154,6 +155,7 @@ export function postDescription(post: PostDTO | PostSummaryDTO): string {
  */
 
 export function organizationSchema(settings: SiteSettingsDTO) {
+  const direccion = direccionDelSitio(settings);
   const sameAs = [
     settings.facebookUrl,
     settings.instagramUrl,
@@ -204,16 +206,15 @@ export function organizationSchema(settings: SiteSettingsDTO) {
           },
         }
       : {}),
-    ...(settings.address
-      ? {
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: settings.address,
-            addressLocality: settings.city ?? undefined,
-            addressCountry: settings.country ?? 'PE',
-          },
-        }
-      : {}),
+    // Siempre con dirección (la del gestor o la por defecto): SEO local
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: direccion.calle,
+      ...(direccion.distrito
+        ? { addressLocality: direccion.distrito, addressRegion: direccion.ciudad }
+        : { addressLocality: direccion.ciudad }),
+      addressCountry: settings.country === 'Perú' || !settings.country ? 'PE' : settings.country,
+    },
   };
 }
 
@@ -332,6 +333,8 @@ export function courseSchema(
     image?: string;
     audience?: string;
     topics?: string[];
+    /** Aún no abre: se declara como preventa en vez de "disponible" */
+    comingSoon?: boolean;
   },
   settings: SiteSettingsDTO,
 ) {
@@ -358,7 +361,9 @@ export function courseSchema(
     offers: {
       '@type': 'Offer',
       category: 'Educational',
-      availability: 'https://schema.org/InStock',
+      availability: course.comingSoon
+        ? 'https://schema.org/PreOrder'
+        : 'https://schema.org/InStock',
       url,
     },
     hasCourseInstance: {

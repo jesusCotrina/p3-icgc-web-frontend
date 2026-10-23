@@ -31,7 +31,7 @@ export const CREDITOS_FIJOS: readonly CreditoFijo[] = [
   },
   {
     imagen: '/hero/paisaje-andino-laguna-quellacocha.webp',
-    dondeSeUsa: 'Portada del inicio',
+    dondeSeUsa: 'Portada del inicio y fondo de “Encuentra tu siguiente paso”',
     autor: 'Nina Reicer',
     licencia: 'CC BY-SA 4.0',
     original:
@@ -39,17 +39,9 @@ export const CREDITOS_FIJOS: readonly CreditoFijo[] = [
   },
   {
     imagen: '/inicio/asamblea-comunal-tiquihua.webp',
-    dondeSeUsa: 'Inicio, tarjeta “Consultoría y asesoría”',
+    dondeSeUsa: 'Inicio, tarjeta “Sobre el instituto”',
     autor: 'Txolo',
     licencia: 'CC BY-SA 4.0',
     original: 'https://commons.wikimedia.org/wiki/File:Asamblea_comunal_en_la_comunidad_de_Tiquihua.jpg',
-  },
-  {
-    imagen: '/inicio/taller-mapeo-participativo.webp',
-    dondeSeUsa: 'Inicio, tarjeta “Cursos y capacitación”',
-    autor: 'Candy Sotomayor',
-    licencia: 'CC BY-SA 4.0',
-    original:
-      'https://commons.wikimedia.org/wiki/File:Taller_Mapeo_participativo_para_la_justicia_clim%C3%A1tica_02.jpg',
   },
 ];

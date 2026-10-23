@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AutoReveal } from '@/components/AutoReveal';
 import { Carousel } from '@/components/Carousel';
-import { CourseCard } from '@/components/CourseCard';
+import { AvisoProximamente, CourseCard } from '@/components/CourseCard';
 import { CoursesExplorer } from '@/components/CoursesExplorer';
 import { JsonLd } from '@/components/JsonLd';
 import { WhatsAppIcon } from '@/components/Icons';
@@ -64,7 +64,10 @@ function FichaCurso({ curso, masInfoUrl }: { curso: CourseDTO; masInfoUrl: strin
         </div>
 
         <div className="p-7 lg:p-10">
-          <p className="eyebrow">Detalle del curso</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="eyebrow">Detalle del curso</p>
+            {curso.comingSoon && <AvisoProximamente />}
+          </div>
           <h2 id={`ficha-${curso.slug}`} className="mt-2 text-balance text-3xl leading-tight">
             {curso.name}
           </h2>
@@ -152,6 +155,7 @@ export default async function CursosPage() {
                 topics: c.topics,
                 mode: MODO_SCHEMA[c.mode],
                 hours: c.lectiveHours,
+                comingSoon: c.comingSoon,
                 image: c.coverImage?.url,
               },
               settings,

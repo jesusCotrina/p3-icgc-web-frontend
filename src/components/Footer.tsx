@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { direccionDelSitio } from '@/lib/direccion';
 import { logoSrc } from '@/lib/api';
 import type { CategoryDTO, SiteSettingsDTO } from '@/lib/types';
 import { whatsappUrl } from '@/lib/whatsapp';
@@ -81,7 +82,9 @@ export function Footer({
 
   // El mapa apunta a la dirección de los datos generales del gestor; si aún
   // no se cargó, a la ciudad
-  const lugar = [settings.address, settings.city, 'Perú'].filter(Boolean).join(', ');
+  // La del gestor o, si está vacía, la dirección por defecto del instituto
+  const direccion = direccionDelSitio(settings);
+  const lugar = direccion.busqueda;
   const mapaUrl = `https://www.google.com/maps?q=${encodeURIComponent(lugar)}&output=embed`;
 
   return (
@@ -168,8 +171,7 @@ export function Footer({
                   </a>
                 </li>
               )}
-              {settings.address && <li>{settings.address}</li>}
-              {settings.city && <li>{settings.city}, Perú</li>}
+              <li>{direccion.texto}, Perú</li>
             </ul>
           </div>
 
@@ -188,6 +190,25 @@ export function Footer({
                 className="block h-56 w-full border-0"
               />
             </div>
+            {/* La dirección también como texto: se lee sin cargar el mapa y Google la indexa */}
+            <address className="mt-3 flex items-start gap-2 text-sm not-italic text-brand-100">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="mt-0.5 shrink-0 text-brand-300"
+              >
+                <path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" />
+                <circle cx="12" cy="9" r="2.5" />
+              </svg>
+              {direccion.texto}, Perú
+            </address>
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}`}
               target="_blank"
@@ -203,7 +224,10 @@ export function Footer({
           <p>
             © {year} {settings.siteName}. Todos los derechos reservados.{' '}
             {/* La atribución de las fotos con licencia Creative Commons va en esa página */}
-            <Link href="/creditos" className="underline-offset-2 transition-colors hover:text-white hover:underline">
+            <Link
+              href="/creditos"
+              className="underline-offset-2 transition-colors hover:text-white hover:underline"
+            >
               Créditos de las fotos
             </Link>
           </p>
@@ -214,7 +238,17 @@ export function Footer({
                 r.label === 'WhatsApp' ? (
                   <WhatsAppIcon size={18} />
                 ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
                     {ICONOS_REDES[r.label]}
                   </svg>
                 );

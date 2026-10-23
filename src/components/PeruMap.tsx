@@ -12,7 +12,14 @@ const CENTRO_CALLAO: [number, number] = [-77.12, -12.05];
  * real, no una imagen) y la lista de abajo repite los datos de cada marcador,
  * así Google los lee aunque nunca se pase el mouse. Solo los marcadores son JS.
  */
-export function PeruMap({ presencia }: { presencia: PresenciaRegion[] }) {
+export function PeruMap({
+  presencia,
+  resumen,
+}: {
+  presencia: PresenciaRegion[];
+  /** Cifras que van arriba de la lista, en la columna derecha */
+  resumen?: React.ReactNode;
+}) {
   const conPresencia = new Set(presencia.map((p) => p.region));
 
   const marcadores: Marcador[] = presencia.map((p) => {
@@ -37,9 +44,11 @@ export function PeruMap({ presencia }: { presencia: PresenciaRegion[] }) {
   });
 
   return (
-    <div>
+    // Escritorio: mapa a la izquierda, cifras y regiones a la derecha (aprovecha
+    // el ancho que antes quedaba vacío a los costados). Móvil: uno debajo del otro.
+    <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14">
       <div
-        className="relative mx-auto w-full max-w-[34rem]"
+        className="relative mx-auto w-full max-w-[34rem] lg:mx-0 lg:justify-self-start"
         style={{ aspectRatio: `${MAPA_ANCHO} / ${MAPA_ALTO}` }}
       >
         <svg
@@ -88,24 +97,31 @@ export function PeruMap({ presencia }: { presencia: PresenciaRegion[] }) {
         <PeruMapMarkers marcadores={marcadores} />
       </div>
 
-      {/* Alternativa en texto: accesible, indexable y útil en móvil */}
-      {marcadores.length > 0 && (
-        <ul className="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-2">
-          {marcadores.map((m) => (
-            <li
-              key={m.id}
-              className="flex items-start gap-3 rounded-xl border border-silver-200 bg-white p-4"
-            >
-              <span aria-hidden="true" className="mt-1 h-3 w-3 shrink-0 rounded-full bg-rose-600" />
-              <p className="text-sm leading-relaxed text-slate-600">
-                <strong className="text-brand-900">{m.region}:</strong> {m.proyectos}{' '}
-                {m.proyectos === 1 ? 'proyecto' : 'proyectos'} y {m.comunidades}{' '}
-                {m.comunidades === 1 ? 'comunidad beneficiada' : 'comunidades beneficiadas'}.
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div>
+        {resumen}
+
+        {/* Alternativa en texto: accesible, indexable y útil en móvil */}
+        {marcadores.length > 0 && (
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {marcadores.map((m) => (
+              <li
+                key={m.id}
+                className="flex items-start gap-3 rounded-xl border border-silver-200 bg-white p-4"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-1 h-3 w-3 shrink-0 rounded-full bg-rose-600"
+                />
+                <p className="text-sm leading-relaxed text-slate-600">
+                  <strong className="text-brand-900">{m.region}:</strong> {m.proyectos}{' '}
+                  {m.proyectos === 1 ? 'proyecto' : 'proyectos'} y {m.comunidades}{' '}
+                  {m.comunidades === 1 ? 'comunidad beneficiada' : 'comunidades beneficiadas'}.
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

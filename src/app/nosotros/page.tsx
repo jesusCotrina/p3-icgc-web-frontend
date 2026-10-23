@@ -5,6 +5,8 @@ import { AutoReveal } from '@/components/AutoReveal';
 import { ContactForm } from '@/components/ContactForm';
 import { JsonLd } from '@/components/JsonLd';
 import { getSettings, logoSrc } from '@/lib/api';
+import { direccionDelSitio } from '@/lib/direccion';
+import { MISION, VALORES } from '@/lib/institucional';
 import { absoluteUrl, breadcrumbSchema, buildMetadata } from '@/lib/seo';
 
 export const revalidate = 86400;
@@ -21,24 +23,6 @@ export async function generateMetadata(): Promise<Metadata> {
     settings,
   });
 }
-
-const VALORES = [
-  {
-    titulo: 'Pertinencia',
-    texto:
-      'Partimos del contexto real de cada comunidad. No hay un solo modelo de gestión comunal y no pretendemos imponerlo.',
-  },
-  {
-    titulo: 'Transparencia',
-    texto:
-      'Enseñamos a documentar, rendir cuentas y archivar. Una comunidad con papeles en orden es una comunidad que se defiende.',
-  },
-  {
-    titulo: 'Continuidad',
-    texto:
-      'La capacitación no termina con el certificado: acompañamos a los egresados mientras aplican lo aprendido.',
-  },
-] as const;
 
 const HITOS = [
   {
@@ -116,12 +100,8 @@ export default async function NosotrosPage() {
       valor: settings.whatsapp,
       href: settings.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}` : null,
     },
-    { etiqueta: 'Dirección', valor: settings.address, href: null },
-    {
-      etiqueta: 'Ciudad',
-      valor: settings.city ? `${settings.city}, Perú` : null,
-      href: null,
-    },
+    // La del gestor o, si está vacía, la dirección por defecto del instituto
+    { etiqueta: 'Dirección', valor: `${direccionDelSitio(settings).texto}, Perú`, href: null },
   ].filter((d) => Boolean(d.valor));
 
   return (
@@ -200,11 +180,7 @@ export default async function NosotrosPage() {
             <h2 id="mision" className="text-3xl">
               Nuestra misión
             </h2>
-            <p className="mt-5 leading-relaxed text-slate-600">
-              Formar dirigentes, comuneros y profesionales capaces de administrar su territorio y
-              sus recursos con autonomía, orden y respaldo legal. Creemos que una comunidad
-              informada negocia mejor, se divide menos y protege más.
-            </p>
+            <p className="mt-5 leading-relaxed text-slate-600">{MISION}</p>
           </div>
           <div>
             <h2 className="text-3xl">Nuestro enfoque</h2>

@@ -18,6 +18,24 @@ function Dato({ icono, children }: { icono: React.ReactNode; children: React.Rea
 }
 
 /**
+ * Aviso "¡Próximamente!": etiqueta ámbar con un punto que late, para que se
+ * note sobre la foto. Es texto real (Google y lectores de pantalla lo leen).
+ */
+export function AvisoProximamente({ className = '' }: { className?: string }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3 py-1 text-[0.72rem] font-extrabold uppercase tracking-wide text-amber-950 shadow-lg ring-2 ring-white/80 ${className}`}
+    >
+      <span aria-hidden="true" className="relative flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-950/60 motion-reduce:animate-none" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-950" />
+      </span>
+      ¡Próximamente!
+    </span>
+  );
+}
+
+/**
  * Tarjeta compacta de curso para el carrusel del inicio y de /cursos.
  * Server Component: los datos (horas, modalidad, certificado) quedan en el
  * HTML para Google. "Ver detalle" lleva a la ficha en /cursos; en esa misma
@@ -42,6 +60,7 @@ export function CourseCard({ curso, masInfoUrl }: { curso: CourseDTO; masInfoUrl
         <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-0.5 text-[0.7rem] font-bold text-brand-700 shadow-card">
           {curso.duration}
         </span>
+        {curso.comingSoon && <AvisoProximamente className="absolute right-3 top-3" />}
       </div>
 
       <div className="flex flex-1 flex-col p-5">

@@ -22,7 +22,7 @@ export type MensajeWhatsApp = keyof typeof MENSAJES;
  * así el botón siempre lleva a algún lado útil.
  */
 export function whatsappUrl(
-  settings: SiteSettingsDTO,
+  settings: Pick<SiteSettingsDTO, 'whatsapp'>,
   mensaje: MensajeWhatsApp | string = 'general',
 ): string {
   const numero = (settings.whatsapp ?? '').replace(/\D/g, '');

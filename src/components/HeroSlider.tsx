@@ -3,8 +3,12 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-/** `credito`: autor y licencia. No se muestra sobre la foto: se publica en /creditos. */
-export type HeroSlide = { src: string; alt: string; credito?: string };
+/**
+ * `credito`: autor y licencia. No se muestra sobre la foto: se publica en /creditos.
+ * `tipo: 'logo'`: el logo del instituto en grande sobre el azul de la marca,
+ * a la derecha del texto (no se recorta como una foto de fondo).
+ */
+export type HeroSlide = { src: string; alt: string; credito?: string; tipo?: 'foto' | 'logo' };
 
 /**
  * Fondo rotativo del hero (fundido entre imágenes) con puntitos de navegación.
@@ -38,19 +42,42 @@ export function HeroSlider({
   return (
     <>
       <div className="absolute inset-0" aria-hidden="true">
-        {slides.map((slide, i) => (
-          <Image
-            key={slide.src}
-            src={slide.src}
-            alt={slide.alt}
-            fill
-            priority={i === 0}
-            sizes="100vw"
-            className={`object-cover transition-opacity duration-1000 ease-in-out ${
-              i === actual ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        ))}
+        {slides.map((slide, i) =>
+          slide.tipo === 'logo' ? (
+            <div
+              key={slide.src}
+              className={`absolute inset-0 bg-brand-gradient transition-opacity duration-1000 ease-in-out ${
+                i === actual ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              {/* En móvil queda tenue detrás del texto; en escritorio, a la derecha */}
+              <div className="absolute inset-0 flex items-center justify-end px-[6%] max-lg:opacity-25">
+                <div className="flex h-56 w-56 items-center justify-center rounded-full bg-white/95 p-6 shadow-2xl ring-8 ring-white/10 sm:h-72 sm:w-72 lg:h-[22rem] lg:w-[22rem]">
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt}
+                    width={320}
+                    height={320}
+                    sizes="(max-width: 640px) 12rem, (max-width: 1024px) 16rem, 20rem"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Image
+              key={slide.src}
+              src={slide.src}
+              alt={slide.alt}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className={`object-cover transition-opacity duration-1000 ease-in-out ${
+                i === actual ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ),
+        )}
       </div>
 
       {slides.length > 1 && (
