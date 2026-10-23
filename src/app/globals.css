@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Inter', system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white text-brand-900 antialiased;
+    font-family: var(--font-sans);
+  }
+
+  /* Jerarquia tipografica: un solo h1 por pagina, h2 y h3 para la estructura */
+  h1 {
+    @apply font-bold tracking-tight text-brand-900;
+  }
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight text-brand-900;
+  }
+
+  /* Foco visible: accesibilidad, y Google mide la usabilidad */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+
+  ::selection {
+    @apply bg-brand-500/20 text-brand-900;
+  }
+}
+
+@layer components {
+  /* Ancho amplio con margen lateral corto: aprovecha las pantallas grandes */
+  .container-icgc {
+    @apply mx-auto w-full max-w-[90rem] px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition-all duration-200;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-card-hover active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn border border-brand-200 bg-white text-brand-700 hover:border-brand-400 hover:bg-brand-50;
+  }
+  .btn-ghost {
+    @apply btn text-brand-700 hover:bg-brand-50;
+  }
+  .btn-light {
+    @apply btn bg-white text-brand-800 shadow-card hover:bg-brand-50;
+  }
+  /* Botones que abren WhatsApp: en el azul del tema (el verde desentonaba con
+     la marca). El ícono de WhatsApp ya indica a dónde lleva el botón. */
+  .btn-whatsapp {
+    @apply btn bg-brand-600 text-white shadow-card hover:bg-brand-700 hover:shadow-card-hover active:scale-[0.98];
+  }
+
+  .card {
+    @apply rounded-xl border border-silver-200 bg-white shadow-card transition-all duration-300;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.16em] text-brand-500;
+  }
+
+  /* Contenido del articulo: legibilidad = tiempo en pagina = señal positiva */
+  .article-body {
+    @apply text-[1.0625rem] leading-[1.75] text-slate-700;
+  }
+  .article-body p {
+    @apply mb-6;
+  }
+  .article-body a {
+    @apply font-medium text-brand-600 underline decoration-brand-300 underline-offset-2 hover:text-brand-700;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Carruseles: se desliza con el dedo o la rueda, sin barra visible */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  /* Enlace de salto para lectores de pantalla */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Título que se escribe solo (Typewriter.tsx) ──
+   Solo CSS: cada letra aparece en su turno (--d) y su borde derecho hace de
+   cursor solo mientras es la última escrita. El texto completo está en el
+   HTML desde el principio y ya ocupa su lugar, así que no mueve la página (CLS 0). */
+/* visibility (no opacity) y un borde como cursor: así las letras siguen
+   formando parte del degradado con bg-clip-text del texto resaltado. */
+.tw-letra {
+  border-right: 0.06em solid transparent;
+  margin-right: -0.06em;
+  animation:
+    tw-aparece 1ms var(--d, 0ms) both,
+    tw-cursor-paso var(--paso, 35ms) var(--d, 0ms) forwards;
+}
+.tw-cursor {
+  display: inline-block;
+  width: 0.07em;
+  height: 0.85em;
+  margin-left: 0.08em;
+  vertical-align: -0.04em;
+  background: theme('colors.brand.300');
+  opacity: 0;
+  /* Parpadea unas veces al terminar y se apaga */
+  animation: tw-parpadeo 0.9s steps(1) var(--d, 0ms) 5 forwards;
+}
+@keyframes tw-aparece {
+  from { visibility: hidden; }
+  to { visibility: visible; }
+}
+@keyframes tw-cursor-paso {
+  0%, 99.9% { border-right-color: theme('colors.brand.300'); }
+  100% { border-right-color: transparent; }
+}
+@keyframes tw-parpadeo {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tw-letra { animation: none; }
+  .tw-cursor { display: none; }
+}
+
+/* ── Aparición al hacer scroll (AutoReveal.tsx) ──
+   Mismo movimiento que <Reveal> del inicio: sube y aparece suave. */
+.revelar {
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.revelar-oculto {
+  opacity: 0;
+  transform: translateY(2.5rem);
+}
