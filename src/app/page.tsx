@@ -211,10 +211,11 @@ export default async function HomePage() {
               <Typewriter segmentos={TITULO_HERO} />
             </h1>
 
-            {/* Se escribe al terminar el título y luego va cambiando de frase */}
+            {/* Se escribe a la par del título y luego va cambiando de frase */}
             <FrasesRotativas
               frases={[settings.tagline, ...FRASES_CERCANAS]}
-              inicioMs={300 + textoCompleto(TITULO_HERO).length * 35 + 400}
+              // Arranca junto con el título (mismo retraso inicial que Typewriter)
+              inicioMs={300}
               className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-brand-100 sm:text-lg"
             />
 

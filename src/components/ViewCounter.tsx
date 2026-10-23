@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { API_PUBLIC_URL } from '@/lib/entorno';
 
 /**
  * Registra una visita al articulo.
@@ -11,11 +12,10 @@ import { useEffect } from 'react';
  */
 export function ViewCounter({ slug }: { slug: string }) {
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
     const controller = new AbortController();
 
     // keepalive: la peticion sobrevive aunque el visitante navegue de inmediato
-    fetch(`${apiUrl}/api/public/posts/${encodeURIComponent(slug)}/views`, {
+    fetch(`${API_PUBLIC_URL}/api/public/posts/${encodeURIComponent(slug)}/views`, {
       method: 'POST',
       keepalive: true,
       signal: controller.signal,

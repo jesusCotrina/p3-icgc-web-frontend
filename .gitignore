@@ -1,19 +1,29 @@
+# Dependencias
 node_modules/
-dist/
-build/
+
+# Build de Next.js
 .next/
 out/
-*.log
-npm-debug.log*
+build/
+*.tsbuildinfo
+
+# Variables de entorno: .env.local tiene REVALIDATE_SECRET.
+# La plantilla .env.example sí se sube.
 .env
 .env.local
 .env.*.local
 !.env.example
+
+# Vercel
+.vercel
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo y editores
 .DS_Store
 Thumbs.db
-coverage/
-.turbo/
-*.tsbuildinfo
-backend/uploads/**/*
-!backend/uploads/**/.gitkeep
-postgres-data/
+.vscode/*
+!.vscode/extensions.json
+.idea/

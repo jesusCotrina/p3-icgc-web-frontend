@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const MS_POR_LETRA = 28;
+const MS_POR_LETRA = 22;
 const MS_BORRADO = 14;
 const PAUSA_MS = 3800;
 

@@ -1,3 +1,5 @@
+import { unstable_noStore as noStore } from 'next/cache';
+import { API_CONFIGURADA, API_SERVER_URL, SITE_URL } from './entorno';
 import type {
   CategoryDTO,
   CourseDTO,
@@ -17,15 +19,11 @@ import type {
  * Nunca muevas estas llamadas a un useEffect.
  */
 
-// Dentro de Docker el backend se alcanza por el nombre del servicio;
-// desde el navegador, por la URL pública.
-const BASE_URL =
-  process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+// Las URLs (local, Docker o Vercel) se resuelven en lib/entorno.ts
+export { SITE_URL };
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(
-  /\/+$/,
-  '',
-);
+/** Si el backend no responde en este tiempo, la página sigue con datos vacíos. */
+const TIMEOUT_MS = 8000;
 
 /** Revalidación por defecto: 5 minutos. HTML cacheado = LCP bajo = mejor ranking. */
 const DEFAULT_REVALIDATE = 300;
@@ -38,8 +36,14 @@ type FetchOptions = {
 async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
   const { revalidate = DEFAULT_REVALIDATE, tags } = options;
 
-  const res = await fetch(`${BASE_URL}/api${path}`, {
+  if (!API_CONFIGURADA) {
+    throw new ApiError('NEXT_PUBLIC_API_URL no está configurada en Vercel', 503);
+  }
+
+  const res = await fetch(`${API_SERVER_URL}/api${path}`, {
     headers: { Accept: 'application/json' },
+    // Sin esto, un backend que no contesta deja colgado el build de Vercel
+    signal: AbortSignal.timeout(TIMEOUT_MS),
     next: { revalidate: revalidate === false ? 0 : revalidate, ...(tags ? { tags } : {}) },
   });
 
@@ -60,15 +64,46 @@ export class ApiError extends Error {
   }
 }
 
+/** Rutas que ya avisaron: una línea por ruta, no un stack trace por cada llamada. */
+const avisadas = new Set<string>();
+
+function avisar(path: string, error: unknown) {
+  if (!API_CONFIGURADA) {
+    if (avisadas.has('*')) return;
+    avisadas.add('*');
+    console.warn(
+      '[api] La web corre en Vercel pero NEXT_PUBLIC_API_URL apunta a localhost o no existe. ' +
+        'Configúrala en Vercel → Settings → Environment Variables con la URL pública del backend ' +
+        '(https://...) y vuelve a desplegar. Mientras tanto las páginas salen sin contenido.',
+    );
+    return;
+  }
+  if (avisadas.has(path)) return;
+  avisadas.add(path);
+  const causa =
+    error instanceof Error
+      ? ((error.cause as Error | undefined)?.message ?? error.message)
+      : String(error);
+  console.warn(`[api] No se pudo leer ${path} desde ${API_SERVER_URL}: ${causa}`);
+}
+
 /**
  * Variante tolerante: si la API está caída, la página igual se renderiza.
  * Un 500 global sería mucho peor para el SEO que una sección vacía.
+ *
+ * Además, una respuesta de reserva NO se guarda en caché (noStore): la página
+ * se renderiza en cada visita hasta que el backend vuelva, en vez de quedar
+ * vacía durante horas por el ISR. Si pasa al revalidar una página que ya tenía
+ * contenido, Next conserva la versión anterior.
  */
 async function safeFetch<T>(path: string, fallback: T, options?: FetchOptions): Promise<T> {
   try {
     return await apiFetch<T>(path, options);
   } catch (error) {
-    console.error(`[api] Falló ${path}:`, error);
+    avisar(path, error);
+    // Sin try/catch: Next usa la excepción interna de noStore para saber que
+    // la página no debe guardarse. Fuera de un render no hace nada.
+    noStore();
     return fallback;
   }
 }
@@ -110,9 +145,14 @@ export async function getPost(slug: string): Promise<PostWithRelated | null> {
       tags: ['posts', `post:${slug}`],
     });
   } catch (error) {
+    // Solo un 404 real del backend es "el artículo no existe"
     if (error instanceof ApiError && error.status === 404) return null;
-    console.error(`[api] Falló el post ${slug}:`, error);
-    return null;
+    // Backend caído: NO responder 404 (Google desindexaría el artículo). Se
+    // lanza el error: Next sigue sirviendo la última versión buena del
+    // artículo y, si no la hay, responde un error temporal (5xx), que Google
+    // vuelve a intentar más tarde.
+    avisar(`/public/posts/${slug}`, error);
+    throw error;
   }
 }
 

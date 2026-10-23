@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { API_PUBLIC_URL } from '@/lib/entorno';
 
 type Estado =
   | { tipo: 'inicial' }
@@ -28,8 +29,7 @@ export function ContactForm() {
 
     setEstado({ tipo: 'enviando' });
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/api/public/contact`, {
+      const res = await fetch(`${API_PUBLIC_URL}/api/public/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos),

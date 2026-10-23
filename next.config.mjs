@@ -1,7 +1,34 @@
 /** @type {import('next').NextConfig} */
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
-const { protocol, hostname, port } = new URL(apiUrl);
+/**
+ * Host del backend del que next/image puede optimizar fotos (/uploads/...).
+ * Tolerante: si la variable trae espacios o le falta el "https://", se avisa
+ * con un mensaje claro en vez de romper el build con un "Invalid URL".
+ */
+function hostDelBackend() {
+  const crudo = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').trim();
+  const conProtocolo = /^https?:\/\//i.test(crudo) ? crudo : `https://${crudo}`;
+  try {
+    const url = new URL(conProtocolo);
+    if (process.env.VERCEL && /^(localhost|127\.0\.0\.1)$/.test(url.hostname)) {
+      console.warn(
+        '\n[config] NEXT_PUBLIC_API_URL no está configurada en Vercel (apunta a localhost).\n' +
+          '         La web se publicará sin contenido hasta que la configures con la URL pública del backend.\n',
+      );
+    } else if (process.env.VERCEL && url.protocol === 'http:') {
+      console.warn(
+        '\n[config] NEXT_PUBLIC_API_URL usa http://. Vercel sirve la web con https y el navegador\n' +
+          '         bloqueará las fotos y el formulario (contenido mixto). Usa un backend con https.\n',
+      );
+    }
+    return url;
+  } catch {
+    console.warn(`\n[config] NEXT_PUBLIC_API_URL no es una URL válida: "${crudo}". Se usa http://localhost:4000\n`);
+    return new URL('http://localhost:4000');
+  }
+}
+
+const { protocol, hostname, port } = hostDelBackend();
 
 const nextConfig = {
   reactStrictMode: true,
