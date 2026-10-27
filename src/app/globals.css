@@ -167,3 +167,55 @@
   opacity: 0;
   transform: translateY(2.5rem);
 }
+
+/* Foto que se acerca mientras se hace scroll (como en ppdperu.org). Sin JS:
+   usa animaciones ligadas al scroll; el navegador que no las soporta
+   simplemente muestra la foto quieta. */
+@keyframes zoom-al-scroll {
+  from {
+    transform: scale(1.22);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .zoom-al-scroll {
+      animation: zoom-al-scroll linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 60%;
+    }
+  }
+}
+
+/* Aviso de carga entre páginas (IndicadorNavegacion): aparece solo si la
+   navegación tarda más de 150 ms y la barra avanza rápido y luego despacio. */
+.aparecer-con-retraso {
+  animation: aparecer-carga 0.2s ease-out 150ms both;
+}
+.barra-navegacion {
+  animation: avance-carga 8s cubic-bezier(0.1, 0.7, 0.2, 1) forwards;
+}
+@keyframes aparecer-carga {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes avance-carga {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 92%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .barra-navegacion {
+    animation: none;
+    width: 60%;
+  }
+}

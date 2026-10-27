@@ -27,11 +27,12 @@ export const CREDITOS_FIJOS: readonly CreditoFijo[] = [
     dondeSeUsa: 'Portada del inicio',
     autor: 'Ordzonhyd Rudyard Tarco Palomino',
     licencia: 'CC BY 4.0',
-    original: 'https://commons.wikimedia.org/wiki/File:Comunidad_Campesina_Santa_Cruz_de_Cumi_04.jpg',
+    original:
+      'https://commons.wikimedia.org/wiki/File:Comunidad_Campesina_Santa_Cruz_de_Cumi_04.jpg',
   },
   {
     imagen: '/hero/paisaje-andino-laguna-quellacocha.webp',
-    dondeSeUsa: 'Portada del inicio y fondo de “Encuentra tu siguiente paso”',
+    dondeSeUsa: 'Portada del inicio',
     autor: 'Nina Reicer',
     licencia: 'CC BY-SA 4.0',
     original:
@@ -39,9 +40,10 @@ export const CREDITOS_FIJOS: readonly CreditoFijo[] = [
   },
   {
     imagen: '/inicio/asamblea-comunal-tiquihua.webp',
-    dondeSeUsa: 'Inicio, tarjeta “Sobre el instituto”',
+    dondeSeUsa: 'Inicio, foto de “Nuestra misión”',
     autor: 'Txolo',
     licencia: 'CC BY-SA 4.0',
-    original: 'https://commons.wikimedia.org/wiki/File:Asamblea_comunal_en_la_comunidad_de_Tiquihua.jpg',
+    original:
+      'https://commons.wikimedia.org/wiki/File:Asamblea_comunal_en_la_comunidad_de_Tiquihua.jpg',
   },
 ];

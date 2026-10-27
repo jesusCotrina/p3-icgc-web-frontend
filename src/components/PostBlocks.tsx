@@ -252,26 +252,34 @@ function toEmbedUrl(url: string): string | null {
 }
 
 /**
- * Índice de contenidos a partir de los H2/H3.
+ * Índice de contenidos a partir de los subtítulos que el autor escribe en el
+ * gestor: se arma solo, con un enlace a cada sección.
  * Mejora la navegación en artículos largos y favorece los enlaces de salto
  * ("jump to") que Google muestra en los resultados.
  */
 export function TableOfContents({ blocks }: { blocks: PostBlockDTO[] }) {
   const headings = blocks.filter((b) => b.type === 'HEADING' && (b.text ?? '').trim());
-  if (headings.length < 3) return null;
+  if (headings.length === 0) return null;
 
   return (
-    <nav aria-labelledby="toc-title" className="my-10 rounded-xl border border-brand-100 bg-brand-50/60 p-6">
-      <h2 id="toc-title" className="mb-4 text-sm font-bold uppercase tracking-wider text-brand-700">
-        Contenido del artículo
+    <nav aria-labelledby="toc-title" className="rounded-xl border border-brand-100 bg-brand-50/60 p-5">
+      <h2 id="toc-title" className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-700">
+        En este artículo
       </h2>
-      <ol className="space-y-2 text-sm">
+      <ol className="space-y-1 text-sm">
         {headings.map((h) => (
-          <li key={h.id} className={h.level === 3 ? 'ml-5' : ''}>
+          <li key={h.id} className={h.level === 3 ? 'ml-4' : ''}>
             <a
               href={`#${slugAnchor(h.text ?? '')}`}
-              className="text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-900"
+              className="flex gap-2.5 rounded-md px-2 py-1.5 font-semibold leading-snug text-brand-900 transition-colors hover:bg-white hover:text-brand-600"
             >
+              {/* Viñeta: círculo lleno en las secciones, aro en las subsecciones */}
+              <span
+                aria-hidden="true"
+                className={`mt-[0.4rem] h-2 w-2 shrink-0 rounded-full ${
+                  h.level === 3 ? 'border-2 border-brand-400' : 'bg-brand-500'
+                }`}
+              />
               {h.text}
             </a>
           </li>

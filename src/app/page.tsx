@@ -14,11 +14,11 @@ import { OrientadorSiguientePaso } from '@/components/OrientadorSiguientePaso';
 import { Reveal } from '@/components/Reveal';
 import { StatsCounter } from '@/components/StatsCounter';
 import { textoCompleto, Typewriter } from '@/components/Typewriter';
-import { BookIcon, CheckIcon, HandshakeIcon } from '@/components/Icons';
+import { BookIcon, HandshakeIcon } from '@/components/Icons';
 import { ServiciosCarrusel } from '@/components/ServiciosCarrusel';
 import { getCourses, getPosts, getProjects, getSettings, logoSrc } from '@/lib/api';
 import { presenciaPorRegion, resumenPresencia } from '@/lib/presencia';
-import { MISION_CORTA, RESUMEN_INSTITUTO, VALORES } from '@/lib/institucional';
+import { MISION, RESUMEN_INSTITUTO, VALORES } from '@/lib/institucional';
 import { absoluteUrl, buildMetadata, truncate } from '@/lib/seo';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
 
@@ -81,16 +81,40 @@ const FRASES_CERCANAS = [
 /** Empresas y comunidades que trabajan con el instituto (logos en public/clientes). */
 const CLIENTES: readonly Cliente[] = [
   {
-    nombre: 'Minera Raura',
-    logo: '/clientes/minera-raura.avif',
-    width: 354,
-    height: 123,
+    nombre: 'Comunidad Campesina Santa Rosa de Colquijirca',
+    logo: '/clientes/comunidad-santa-rosa-colquijirca.webp',
+    width: 323,
+    height: 320,
   },
   {
-    nombre: 'Buenaventura',
-    logo: '/clientes/buenaventura.avif',
-    width: 652,
-    height: 106,
+    nombre: 'ECOSARC Colquijirca',
+    logo: '/clientes/ecosarc-colquijirca.webp',
+    width: 540,
+    height: 320,
+  },
+  {
+    nombre: 'Comunidad Campesina de Quichas',
+    logo: '/clientes/comunidad-campesina-quichas.webp',
+    width: 327,
+    height: 320,
+  },
+  {
+    nombre: 'ECOSERMUQ, Empresa Comunal de Servicios Múltiples Quichas',
+    logo: '/clientes/ecosermuq-quichas.webp',
+    width: 371,
+    height: 320,
+  },
+  {
+    nombre: 'ECOSERM VIP',
+    logo: '/clientes/ecoserm-vip.webp',
+    width: 365,
+    height: 320,
+  },
+  {
+    nombre: 'Paltarumi',
+    logo: '/clientes/paltarumi.webp',
+    width: 761,
+    height: 320,
   },
 ];
 
@@ -114,27 +138,6 @@ function TarjetaQuienes({ children }: { children: React.ReactNode }) {
       </svg>
       {children}
     </article>
-  );
-}
-
-/** Ícono de línea dentro de un cuadrado azul claro. */
-function IconoTarjeta({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-colors group-hover:bg-brand-600 group-hover:text-white">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {children}
-      </svg>
-    </span>
   );
 }
 
@@ -176,7 +179,6 @@ export default async function HomePage() {
 
   // Los dos botones del hero van al mismo WhatsApp pero con mensajes distintos,
   // así sabemos por qué llegó cada consulta.
-  const urlCursos = whatsappUrl(settings, 'cursos');
   const urlAsesoria = whatsappUrl(settings, 'asesoria');
 
   // Los años salen de los ajustes del gestor; proyectos y regiones se cuentan
@@ -231,10 +233,11 @@ export default async function HomePage() {
           ]}
         />
 
-        {/* Velo oscuro: garantiza contraste del texto sobre cualquier foto */}
+        {/* Velo neutro solo detrás del texto (izquierda): la foto conserva sus
+            colores y el título se sigue leyendo sobre cualquier imagen */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-950/90 via-brand-900/70 to-brand-900/25"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 via-45% to-transparent"
         />
 
         {/* Padding superior corto: el título tiene que entrar casi pegado al menú */}
@@ -263,7 +266,7 @@ export default async function HomePage() {
             />
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={urlCursos} {...propsEnlace(urlCursos)} className="btn-light">
+              <Link href="/cursos" className="btn-light">
                 <BookIcon size={18} />
                 Ver cursos
               </Link>
@@ -277,155 +280,228 @@ export default async function HomePage() {
           </div>
         </div>
 
+        {/* Fundido al azul marino: el hero se une con "Quiénes somos" sin corte */}
         <div
           aria-hidden="true"
-          className="relative z-10 h-10 bg-white [clip-path:ellipse(75%_100%_at_50%_100%)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent via-brand-950/70 to-brand-950"
         />
       </section>
 
       {/* ──────────────────── Quiénes somos ──────────────────── */}
-      {/* overflow-x-clip: el deslizamiento lateral no genera scroll horizontal */}
+      {/* Fondo en degradado de azul marino a turquesa (el mismo de "Programa a
+          medida"); arranca en el azul en que termina el hero, sin corte. */}
       <section
         aria-labelledby="quienes-titulo"
-        className="container-icgc overflow-x-clip py-16 lg:py-20"
+        className="relative isolate overflow-x-clip pb-16 pt-8 text-white lg:pb-24 lg:pt-10"
       >
-        <Reveal desde="izquierda" className="max-w-3xl">
-          <p className="eyebrow">Quiénes somos</p>
-          <h2 id="quienes-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-            Un instituto al servicio de las comunidades
-          </h2>
-          <p className="mt-4 text-pretty text-slate-600">
-            Asesoramos y capacitamos a comunidades campesinas, nativas y organizaciones del Perú
-            para que sus proyectos se formulen, se financien y se ejecuten bien.
-          </p>
-        </Reveal>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
+        />
+        {/* Destellos de color */}
+        <div
+          aria-hidden="true"
+          className="absolute -right-24 top-40 -z-10 h-96 w-96 rounded-full bg-cyan-400/30 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -left-32 top-1/2 -z-10 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl"
+        />
+        {/* Arranca en el mismo azul marino en que termina el hero */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-brand-950 via-brand-950/70 to-transparent"
+        />
+        {/* Trama de puntos, como textura */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 opacity-[0.12] [background-image:radial-gradient(rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,transparent,black_25%,transparent_70%)]"
+        />
 
-        {/* Misión y valores (chicas) + instituto y líder (con botón a /nosotros) */}
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Reveal desde="izquierda" retrasoMs={100} className="h-full">
-            <TarjetaQuienes>
-              <div className="flex h-full flex-col p-6">
-                <IconoTarjeta>
-                  <circle cx="12" cy="12" r="9" />
-                  <circle cx="12" cy="12" r="5" />
-                  <circle cx="12" cy="12" r="1.5" />
-                </IconoTarjeta>
-                <h3 className="mt-5 text-lg transition-colors group-hover:text-brand-700">
-                  Nuestra misión
-                </h3>
-                <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
-                  {MISION_CORTA}
-                </p>
-              </div>
-            </TarjetaQuienes>
+        <div className="container-icgc">
+          <Reveal desde="izquierda" className="max-w-2xl">
+            <p className="eyebrow !text-cyan-300">Quiénes somos</p>
+            <h2
+              id="quienes-titulo"
+              className="mt-4 text-balance text-2xl leading-tight text-white sm:text-3xl lg:text-4xl"
+            >
+              Un instituto al servicio de las{' '}
+              <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-200 bg-clip-text text-transparent">
+                comunidades
+              </span>
+            </h2>
+            <p className="mt-5 text-pretty leading-relaxed text-white/80">
+              Asesoramos y capacitamos a comunidades campesinas, nativas y organizaciones del Perú
+              para que sus proyectos se formulen, se financien y se ejecuten bien.
+            </p>
           </Reveal>
 
-          <Reveal desde="izquierda" retrasoMs={200} className="h-full">
-            <TarjetaQuienes>
-              <div className="flex h-full flex-col p-6">
-                <IconoTarjeta>
-                  <path d="M12 21s-7-4.5-7-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7 3.5C19 16.5 12 21 12 21z" />
-                </IconoTarjeta>
-                <h3 className="mt-5 text-lg transition-colors group-hover:text-brand-700">
-                  Nuestros valores
-                </h3>
-                <ul className="mt-3 space-y-2.5 text-sm">
-                  {VALORES.map((v) => (
-                    <li key={v.titulo} className="flex gap-2">
-                      <CheckIcon size={16} className="mt-0.5 shrink-0 text-brand-500" />
-                      <span>
-                        <strong className="text-brand-900">{v.titulo}.</strong>{' '}
-                        <span className="text-slate-600">{v.texto.split('.')[0]}.</span>
+          {/* Misión a la izquierda y valores a la derecha, a la misma altura */}
+          <div className="mt-10 grid items-center gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-6">
+              <Reveal desde="izquierda">
+                <figure className="relative aspect-[16/10] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/20">
+                  <Image
+                    src="/inicio/asamblea-comunal-tiquihua.webp"
+                    alt="Comuneros reunidos en asamblea comunal frente al local de la comunidad de Tiquihua, en los Andes"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className="zoom-al-scroll object-cover"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-transparent"
+                  />
+                </figure>
+              </Reveal>
+              {/* El recuadro sube y se monta sobre la foto */}
+              <Reveal
+                retrasoMs={200}
+                className="relative z-10 -mt-14 ml-4 mr-4 sm:-mt-20 sm:ml-8 sm:mr-12"
+              >
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-600 to-cyan-600 p-6 shadow-[0_24px_48px_-16px_rgba(6,22,43,0.85)] sm:p-7">
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.9)_1px,transparent_1px)] [background-size:14px_14px] [mask-image:linear-gradient(135deg,black,transparent_60%)]"
+                  />
+                  <div className="relative">
+                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-cyan-100">
+                      Lo que nos mueve
+                    </p>
+                    <h3 className="mt-2 text-xl text-white sm:text-2xl">Nuestra misión</h3>
+                    <p className="mt-3 text-pretty text-sm leading-relaxed text-white/90 sm:text-base">
+                      {MISION}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+
+            <div className="lg:col-span-6">
+              {/* Panel de vidrio esmerilado sobre el paisaje */}
+              <Reveal
+                desde="derecha"
+                className="rounded-3xl bg-white/10 p-6 shadow-2xl ring-1 ring-white/20 backdrop-blur-md sm:p-8"
+              >
+                <h3 className="text-xl text-white sm:text-2xl">Nuestros valores</h3>
+                <div
+                  aria-hidden="true"
+                  className="mt-3 h-1 w-14 rounded-full bg-gradient-to-r from-cyan-300 to-amber-200"
+                />
+                <ol className="mt-6 space-y-6">
+                  {VALORES.map((v, i) => (
+                    <li key={v.titulo} className="flex gap-4">
+                      <span
+                        aria-hidden="true"
+                        className="bg-gradient-to-b from-cyan-200 to-cyan-500 bg-clip-text font-display text-3xl font-black leading-none text-transparent"
+                      >
+                        {String(i + 1).padStart(2, '0')}
                       </span>
+                      <div>
+                        <p className="font-bold text-white">{v.titulo}</p>
+                        <p className="mt-1 text-pretty text-sm leading-relaxed text-white/75">
+                          {v.texto}
+                        </p>
+                      </div>
                     </li>
                   ))}
-                </ul>
-              </div>
-            </TarjetaQuienes>
-          </Reveal>
+                </ol>
+              </Reveal>
+            </div>
+          </div>
 
-          <Reveal desde="derecha" retrasoMs={300} className="h-full">
-            <TarjetaQuienes>
-              <div className="relative aspect-[16/9] overflow-hidden bg-brand-50">
-                <Image
-                  src="/inicio/asamblea-comunal-tiquihua.webp"
-                  alt="Comuneros reunidos en asamblea comunal frente al local de la comunidad de Tiquihua, en los Andes"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 22rem"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
-                />
-              </div>
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-lg transition-colors group-hover:text-brand-700">
-                  Sobre el instituto
-                </h3>
-                <p className="mb-5 mt-2 line-clamp-5 text-pretty text-sm leading-relaxed text-slate-600">
-                  {RESUMEN_INSTITUTO}
-                </p>
-                <Link href="/nosotros" className="btn-secondary mt-auto w-fit py-2.5">
-                  Más información
-                  <span className="sr-only"> sobre el instituto</span>
-                </Link>
-              </div>
-            </TarjetaQuienes>
-          </Reveal>
-
-          {lider && (
-            <Reveal desde="derecha" retrasoMs={400} className="h-full">
+          {/* El instituto y su líder, en horizontal */}
+          <div className="mt-16 grid gap-6 lg:mt-24 lg:grid-cols-2">
+            <Reveal desde="izquierda" className="h-full">
               <TarjetaQuienes>
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="flex items-center gap-4">
+                <div className="flex h-full flex-col gap-6 p-7 sm:flex-row sm:items-center">
+                  <Image
+                    src={logoSrc(settings)}
+                    alt={settings.logoAlt}
+                    width={112}
+                    height={112}
+                    sizes="112px"
+                    className="h-28 w-28 shrink-0 object-contain"
+                  />
+                  <div className="flex flex-1 flex-col">
+                    <p className="text-xs font-bold uppercase tracking-wider text-brand-500">
+                      El instituto
+                    </p>
+                    <h3 className="mt-1 text-xl transition-colors group-hover:text-brand-700">
+                      Sobre el ICGC
+                    </h3>
+                    <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
+                      {RESUMEN_INSTITUTO}
+                    </p>
+                    <Link href="/nosotros" className="btn-primary mt-5 w-fit py-2.5">
+                      Más información
+                      <span className="sr-only"> sobre el instituto</span>
+                    </Link>
+                  </div>
+                </div>
+              </TarjetaQuienes>
+            </Reveal>
+
+            {lider && (
+              <Reveal desde="derecha" retrasoMs={150} className="h-full">
+                <TarjetaQuienes>
+                  <div className="flex h-full flex-col gap-6 p-7 sm:flex-row sm:items-center">
                     {/* La foto real se carga en el gestor; mientras tanto, iniciales */}
                     {lider.foto ? (
                       <Image
                         src={lider.foto.url}
                         alt={lider.fotoAlt}
-                        width={80}
-                        height={80}
-                        sizes="80px"
-                        className="h-20 w-20 shrink-0 rounded-full object-cover ring-4 ring-brand-100"
+                        width={112}
+                        height={112}
+                        sizes="112px"
+                        className="h-28 w-28 shrink-0 rounded-full object-cover ring-4 ring-brand-100"
                       />
                     ) : (
                       <span
                         aria-hidden="true"
-                        className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-2xl font-black text-white ring-4 ring-brand-100"
+                        className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-3xl font-black text-white ring-4 ring-brand-100"
                       >
                         {lider.iniciales}
                       </span>
                     )}
-                    <div className="min-w-0">
+                    <div className="flex flex-1 flex-col">
                       <p className="text-xs font-bold uppercase tracking-wider text-brand-500">
                         {lider.cargo ?? 'Nuestro líder'}
                       </p>
-                      <h3 className="mt-1 text-lg leading-snug transition-colors group-hover:text-brand-700">
+                      <h3 className="mt-1 text-xl transition-colors group-hover:text-brand-700">
                         {lider.nombre}
                       </h3>
+                      {lider.resumen && (
+                        <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
+                          {lider.resumen}
+                        </p>
+                      )}
+                      <Link href="/nosotros#lider" className="btn-primary mt-5 w-fit py-2.5">
+                        Más información
+                        <span className="sr-only"> sobre {lider.nombre}</span>
+                      </Link>
                     </div>
                   </div>
-                  {lider.resumen && (
-                    <p className="mb-5 mt-4 text-pretty text-sm leading-relaxed text-slate-600">
-                      {lider.resumen}
-                    </p>
-                  )}
-                  <Link href="/nosotros#lider" className="btn-secondary mt-auto w-fit py-2.5">
-                    Más información
-                    <span className="sr-only"> sobre {lider.nombre}</span>
-                  </Link>
-                </div>
-              </TarjetaQuienes>
-            </Reveal>
-          )}
+                </TarjetaQuienes>
+              </Reveal>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ──────────────────── Servicios (carrusel) ──────────────────── */}
       <section aria-labelledby="servicios-titulo" className="bg-brand-soft py-16 lg:py-20">
         <div className="container-icgc">
-          <Reveal className="mb-8 max-w-3xl">
-            <p className="eyebrow">Servicios</p>
-            <h2 id="servicios-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Todo lo que tu comunidad necesita, en un solo lugar
-            </h2>
+          <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-3xl">
+              <p className="eyebrow">Servicios</p>
+              <h2 id="servicios-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
+                Todo lo que tu comunidad necesita, en un solo lugar
+              </h2>
+            </div>
+            <Link href="/servicios" className="btn-secondary">
+              Ver todos los servicios
+            </Link>
           </Reveal>
           <Reveal retrasoMs={150}>
             <ServiciosCarrusel />
@@ -493,10 +569,11 @@ export default async function HomePage() {
               label="Proyectos que acompañamos"
               autoplayMs={4500}
               flechas={false}
-              itemClassName="w-[80%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-4.5rem)/4)]"
+              espacio="gap-3"
+              itemClassName="w-[80%] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)] xl:w-[calc((100%-2.25rem)/4)]"
             >
               {proyectos.map((proyecto) => (
-                <ProjectFlipCard key={proyecto.slug} proyecto={proyecto} />
+                <ProjectFlipCard key={proyecto.slug} proyecto={proyecto} alto="h-[24rem]" />
               ))}
             </Carousel>
           </Reveal>

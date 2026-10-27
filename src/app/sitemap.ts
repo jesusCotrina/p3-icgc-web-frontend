@@ -45,6 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const estaticas: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: fechaInicio, changeFrequency: 'weekly', priority: 1 },
+    { url: `${SITE_URL}/servicios`, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: fechaBlog, changeFrequency: 'daily', priority: 0.9 },
     {
       url: `${SITE_URL}/proyectos`,
@@ -77,6 +78,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(post.image ? { images: [post.image] } : {}),
   }));
 
+  // Cada curso tiene su propia página: es la que aparece en las búsquedas del tema
+  const paginasCursos: MetadataRoute.Sitemap = cursos.map((curso) => ({
+    url: `${SITE_URL}/cursos/${curso.slug}`,
+    lastModified: new Date(curso.updatedAt),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    ...(curso.coverImage ? { images: [curso.coverImage.url] } : {}),
+  }));
+
   // La API ya excluye las categorías sin artículos publicados
   const temas: MetadataRoute.Sitemap = categories.map((slug) => ({
     url: `${SITE_URL}/blog?category=${slug}`,
@@ -85,5 +95,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...estaticas, ...articulos, ...temas];
+  return [...estaticas, ...paginasCursos, ...articulos, ...temas];
 }

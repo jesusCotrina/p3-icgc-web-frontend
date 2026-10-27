@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { IndicadorNavegacion } from '@/components/IndicadorNavegacion';
 import { JsonLd } from '@/components/JsonLd';
 import { getCategories, getSettings, SITE_URL } from '@/lib/api';
 import { OG_POR_DEFECTO, organizationSchema, websiteSchema } from '@/lib/seo';
@@ -110,6 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Organización y sitio web: se declaran una sola vez, en el layout */}
         <JsonLd data={[organizationSchema(settings), websiteSchema(settings)]} />
 
+        <IndicadorNavegacion />
         <Header settings={settings} />
 
         <main id="contenido" className="flex-1">

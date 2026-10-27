@@ -168,7 +168,7 @@ export default async function NosotrosPage() {
               width={320}
               height={320}
               priority
-              className="h-auto w-full rounded-full bg-white/95 p-5 shadow-2xl"
+              className="h-auto w-full drop-shadow-2xl"
             />
           </div>
         </div>

@@ -90,7 +90,7 @@ export function Footer({
   return (
     <footer className="mt-24 bg-brand-gradient text-brand-100">
       <div className="container-icgc py-16">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[1.1fr_0.8fr_0.8fr_1fr_1.6fr]">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.6fr)]">
           {/* Identidad */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ export function Footer({
                 alt={settings.logoAlt}
                 width={56}
                 height={56}
-                className="h-14 w-14 rounded-full bg-white object-contain p-0.5"
+                className="h-14 w-14 object-contain"
               />
               <span className="text-xl font-extrabold text-white">ICGC</span>
             </div>
@@ -115,6 +115,7 @@ export function Footer({
             </h2>
             <ul className="mt-5 space-y-3 text-sm">
               {[
+                { href: '/servicios', label: 'Servicios de consultoría' },
                 { href: '/proyectos', label: 'Asesoría en proyectos' },
                 { href: '/cursos', label: 'Cursos de capacitación' },
                 { href: '/nosotros', label: 'Sobre el instituto' },
@@ -177,7 +178,7 @@ export function Footer({
 
           {/* Ubicación. loading="lazy": el iframe de Maps pesa y está al final
               de la página, no debe competir con el LCP */}
-          <div className="md:col-span-2 lg:col-span-4 xl:col-span-1">
+          <div className="min-w-0 md:col-span-2 lg:col-span-4 xl:col-span-1">
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">Ubicación</h2>
             <div className="mt-5 overflow-hidden rounded-xl border border-white/15">
               <iframe

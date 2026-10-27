@@ -9,6 +9,7 @@ import { NavLinks } from './NavLinks';
 
 export const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
+  { href: '/servicios', label: 'Servicios' },
   { href: '/proyectos', label: 'Proyectos' },
   { href: '/cursos', label: 'Cursos' },
   { href: '/blog', label: 'Blog' },

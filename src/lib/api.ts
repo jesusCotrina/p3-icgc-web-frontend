@@ -226,6 +226,19 @@ export function getCourses(): Promise<CourseDTO[]> {
   return safeFetch<CourseDTO[]>('/public/courses', [], { tags: ['courses'] });
 }
 
+/** Igual que getPost: null solo con un 404 real; si el backend cae, se lanza el error. */
+export async function getCourse(slug: string): Promise<CourseDTO | null> {
+  try {
+    return await apiFetch<CourseDTO>(`/public/courses/${encodeURIComponent(slug)}`, {
+      tags: ['courses'],
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    avisar(`/public/courses/${slug}`, error);
+    throw error;
+  }
+}
+
 /** Proyectos publicados: alimentan /proyectos, el mapa y las cifras del hero. */
 export function getProjects(): Promise<ProjectDTO[]> {
   return safeFetch<ProjectDTO[]>('/public/projects', [], { tags: ['projects'] });

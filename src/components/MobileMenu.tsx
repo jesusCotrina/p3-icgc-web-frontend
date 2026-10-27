@@ -84,6 +84,9 @@ export function MobileMenu({
             <Link
               key={link.href}
               href={link.href}
+              // Precarga completa: /blog es dinámico (lee filtros de la URL) y sin esto
+              // no se precarga; así todas las secciones del menú abren al instante
+              prefetch
               aria-current={esRutaActiva(pathname, link.href) ? 'page' : undefined}
               className={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
                 esRutaActiva(pathname, link.href)

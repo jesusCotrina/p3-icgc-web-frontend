@@ -31,6 +31,9 @@ export function NavLinks({ links }: { links: readonly NavLink[] }) {
           <Link
             key={link.href}
             href={link.href}
+            // Precarga completa: /blog es dinámico (lee filtros de la URL) y sin esto
+            // no se precarga; así todas las secciones del menú abren al instante
+            prefetch
             aria-current={activo ? 'page' : undefined}
             className={`relative rounded-lg px-3.5 py-2 text-sm transition-colors after:absolute after:inset-x-3.5 after:-bottom-0.5 after:h-0.5 after:rounded-full after:transition-colors ${
               activo

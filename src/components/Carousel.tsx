@@ -29,6 +29,7 @@ export function Carousel({
   autoplayMs,
   itemClassName = ANCHO_POR_DEFECTO,
   flechas = true,
+  espacio = 'gap-6',
 }: {
   label: string;
   children: React.ReactNode;
@@ -38,15 +39,23 @@ export function Carousel({
   itemClassName?: string;
   /** false: sin botones anterior/siguiente (quedan los puntitos y el deslizamiento) */
   flechas?: boolean;
+  /** Separación entre diapositivas (clase de Tailwind; el ancho de cada una debe descontarla) */
+  espacio?: string;
 }) {
   const pista = useRef<HTMLUListElement>(null);
   const originales = Children.toArray(children);
   const n = originales.length;
   const enBucle = Boolean(autoplayMs) && n > 1;
 
+  // Las copias del bucle se agregan recién en el navegador: el HTML del
+  // servidor lleva cada tarjeta una sola vez (más liviano, carga más rápido)
+  // y Google lee igual todas las originales.
+  const [montado, setMontado] = useState(false);
+  useEffect(() => setMontado(true), []);
+
   // Copias suficientes para que, estando en la última original, siempre haya
   // tarjetas a la derecha que mostrar
-  const copias = enBucle ? Math.max(2, Math.ceil(MAX_VISIBLES / n) + 1) : 1;
+  const copias = enBucle && montado ? Math.max(2, Math.ceil(MAX_VISIBLES / n) + 1) : 1;
   const slides = Array.from({ length: copias }, () => originales).flat();
 
   const [actual, setActual] = useState(0);
@@ -165,10 +174,13 @@ export function Carousel({
       onFocus={(e) => e.target.matches(':focus-visible') && setEnPausa(true)}
       onBlur={() => setEnPausa(false)}
     >
+      {/* relative: los textos ocultos (sr-only, position: absolute) de las
+          tarjetas quedan anclados a la pista y recortados por ella; si no, se
+          anclan al contenedor con transform (Reveal) y ensanchan la página */}
       <ul
         ref={pista}
         onScroll={alDesplazar}
-        className="scrollbar-none -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 pt-1 sm:mx-0 sm:px-0"
+        className={`scrollbar-none relative -mx-4 flex snap-x snap-mandatory ${espacio} overflow-x-auto px-4 pb-4 pt-1 sm:mx-0 sm:px-0`}
       >
         {slides.map((slide, i) => {
           const copia = i >= n;

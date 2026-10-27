@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { PostBlocks, TableOfContents } from '@/components/PostBlocks';
 import { PostCard } from '@/components/PostCard';
 import { ViewCounter } from '@/components/ViewCounter';
-import { getPost, getPosts, getSettings } from '@/lib/api';
+import { getCategories, getPost, getPosts, getSettings } from '@/lib/api';
 import { formatDate, isoDate } from '@/lib/format';
 import {
   blogPostingSchema,
@@ -67,7 +67,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function PostPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const [data, settings] = await Promise.all([getPost(slug), getSettings()]);
+  const [data, settings, categorias] = await Promise.all([
+    getPost(slug),
+    getSettings(),
+    getCategories(),
+  ]);
 
   // 404 real (no una página con mensaje y status 200): Google necesita el código
   if (!data) notFound();
@@ -90,23 +94,48 @@ export default async function PostPage({ params }: { params: Params }) {
         ]}
       />
 
-      <article>
-        {/* ── Cabecera ── */}
-        <header className="border-b border-silver-200 bg-brand-soft">
-          <div className="container-icgc max-w-3xl pb-10 pt-8 lg:pb-12 lg:pt-10">
+      {/* Dos columnas que aprovechan la pantalla: el artículo a la izquierda
+          y, a la derecha, el índice (se arma con los subtítulos del gestor),
+          y las categorías del blog. En móvil, uno debajo del otro. */}
+      <div className="container-icgc grid gap-10 pb-16 pt-6 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-12 lg:pb-20 lg:pt-8 xl:grid-cols-[minmax(0,1fr)_21rem]">
+        <article className="min-w-0">
+          {/* ── Cabecera: título, resumen e imagen, en ese orden ── */}
+          <header>
+            <nav aria-label="Ruta de navegación" className="text-sm text-slate-500">
+              <ol className="flex flex-wrap items-center gap-1.5">
+                <li>
+                  <Link href="/blog" className="font-medium text-brand-700 hover:text-brand-900">
+                    Blog
+                  </Link>
+                </li>
+                {post.category && (
+                  <>
+                    <li aria-hidden="true">/</li>
+                    <li>
+                      <Link
+                        href={`/blog?category=${post.category.slug}`}
+                        className="font-medium text-brand-700 hover:text-brand-900"
+                      >
+                        {post.category.name}
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </ol>
+            </nav>
 
             {/* El h1 de la página es el título del artículo. Uno solo. */}
-            <h1 className="text-balance text-3xl font-extrabold leading-[1.15] sm:text-4xl lg:text-[2.75rem]">
+            <h1 className="mt-3 text-balance text-3xl font-extrabold leading-[1.15] sm:text-4xl">
               {post.title}
             </h1>
 
-            {post.subtitle && (
-              <p className="mt-5 text-pretty text-xl leading-relaxed text-slate-600">
-                {post.subtitle}
+            {(post.subtitle || post.excerpt) && (
+              <p className="mt-4 text-pretty text-lg leading-relaxed text-slate-600">
+                {post.subtitle || post.excerpt}
               </p>
             )}
 
-            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
               {post.author && (
                 <span>
                   Por <strong className="font-semibold text-brand-800">{post.author.name}</strong>
@@ -116,29 +145,26 @@ export default async function PostPage({ params }: { params: Params }) {
               <time dateTime={isoDate(post.publishedAt)}>{formatDate(post.publishedAt)}</time>
               <span>{post.readingMinutes} min de lectura</span>
             </div>
-          </div>
-        </header>
 
-        {/* ── Imagen de portada ── */}
-        {post.coverImage && (
-          <div className="container-icgc max-w-4xl -mt-2 pt-10">
-            <Image
-              src={post.coverImage.url}
-              alt={post.coverAlt ?? post.coverImage.alt ?? post.title}
-              width={post.coverImage.width ?? 1280}
-              height={post.coverImage.height ?? 720}
-              // Imagen principal del artículo: es el LCP, se precarga
-              priority
-              sizes="(max-width: 896px) 100vw, 896px"
-              className="h-auto w-full rounded-2xl border border-silver-200 object-cover shadow-card"
-            />
-          </div>
-        )}
+            {post.coverImage && (
+              <Image
+                src={post.coverImage.url}
+                alt={post.coverAlt ?? post.coverImage.alt ?? post.title}
+                width={post.coverImage.width ?? 1280}
+                height={post.coverImage.height ?? 720}
+                // Imagen principal del artículo: es el LCP, se precarga
+                priority
+                sizes="(max-width: 1024px) 100vw, 1000px"
+                // Recortada a un alto razonable: acompaña al texto sin tapar la pantalla
+                className="mt-7 aspect-[2/1] max-h-[24rem] w-full rounded-xl border border-silver-200 object-cover shadow-card"
+              />
+            )}
+          </header>
 
-        {/* ── Contenido ── */}
-        <div className="container-icgc max-w-3xl py-12 lg:py-16">
-          <TableOfContents blocks={post.blocks} />
-          <PostBlocks blocks={post.blocks} />
+          {/* ── Contenido ── */}
+          <div className="mt-10">
+            <PostBlocks blocks={post.blocks} />
+          </div>
 
           {post.tags.length > 0 && (
             <footer className="mt-14 border-t border-silver-200 pt-8">
@@ -159,8 +185,37 @@ export default async function PostPage({ params }: { params: Params }) {
               </ul>
             </footer>
           )}
-        </div>
-      </article>
+        </article>
+
+        {/* ── Columna derecha: se queda a la vista mientras se lee ── */}
+        <aside aria-label="Navegación del artículo" className="min-w-0">
+          <div className="space-y-6 lg:sticky lg:top-28">
+            <TableOfContents blocks={post.blocks} />
+
+            {categorias.length > 0 && (
+              <nav aria-labelledby="categorias-blog" className="rounded-xl border border-silver-200 bg-white p-5">
+                <h2 id="categorias-blog" className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-700">
+                  Categorías
+                </h2>
+                <ul className="space-y-1 text-sm">
+                  {categorias.map((c) => (
+                    <li key={c.id}>
+                      <Link
+                        href={`/blog?category=${c.slug}`}
+                        aria-current={c.id === post.category?.id ? 'page' : undefined}
+                        className="flex items-center justify-between rounded-md px-2 py-1.5 text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-800 aria-[current=page]:font-bold aria-[current=page]:text-brand-800"
+                      >
+                        {c.name}
+                        <span className="text-xs text-slate-400">{c.postCount}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
+          </div>
+        </aside>
+      </div>
 
       {/* Suma una visita. Va en el cliente para no romper la caché del HTML. */}
       <ViewCounter slug={post.slug} />

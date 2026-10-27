@@ -335,10 +335,12 @@ export function courseSchema(
     topics?: string[];
     /** Aún no abre: se declara como preventa en vez de "disponible" */
     comingSoon?: boolean;
+    /** Precio en soles; sin precio la oferta va sin monto */
+    price?: number | null;
   },
   settings: SiteSettingsDTO,
 ) {
-  const url = absoluteUrl(`/cursos#${course.slug}`);
+  const url = absoluteUrl(`/cursos/${course.slug}`);
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
@@ -360,7 +362,8 @@ export function courseSchema(
     ...(course.topics?.length ? { teaches: course.topics } : {}),
     offers: {
       '@type': 'Offer',
-      category: 'Educational',
+      category: course.price ? 'Paid' : 'Educational',
+      ...(course.price ? { price: course.price.toFixed(2), priceCurrency: 'PEN' } : {}),
       availability: course.comingSoon
         ? 'https://schema.org/PreOrder'
         : 'https://schema.org/InStock',

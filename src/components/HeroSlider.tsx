@@ -52,7 +52,7 @@ export function HeroSlider({
             >
               {/* En móvil queda tenue detrás del texto; en escritorio, a la derecha */}
               <div className="absolute inset-0 flex items-center justify-end px-[6%] max-lg:opacity-25">
-                <div className="flex h-56 w-56 items-center justify-center rounded-full bg-white/95 p-6 shadow-2xl ring-8 ring-white/10 sm:h-72 sm:w-72 lg:h-[22rem] lg:w-[22rem]">
+                <div className="h-56 w-56 drop-shadow-2xl sm:h-72 sm:w-72 lg:h-[22rem] lg:w-[22rem]">
                   <Image
                     src={slide.src}
                     alt={slide.alt}

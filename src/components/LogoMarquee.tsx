@@ -2,6 +2,9 @@ import Image from 'next/image';
 
 export type Cliente = { nombre: string; logo: string; width: number; height: number };
 
+/** Los escudos y logos casi cuadrados se ven diminutos a la altura de uno ancho: van más altos. */
+const esCuadrado = (c: Cliente) => c.width / c.height < 1.4;
+
 /**
  * Cinta de logos que se desplaza sola (animación CSS, sin JS).
  *
@@ -26,10 +29,10 @@ export function LogoMarquee({ clientes }: { clientes: readonly Cliente[] }) {
             alt={oculta || i >= clientes.length ? '' : `Logo de ${c.nombre}`}
             width={c.width}
             height={c.height}
-            // Se muestran a 48 px de alto (~300 px de ancho): sin esto Next
+            // Se muestran a 56 px de alto (~300 px de ancho): sin esto Next
             // descargaba el logo a 1920 px y pesaba de más (LCP/INP)
             sizes="300px"
-            className="h-12 w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+            className={`${esCuadrado(c) ? 'h-20' : 'h-14'} w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0`}
           />
         </li>
       ))}

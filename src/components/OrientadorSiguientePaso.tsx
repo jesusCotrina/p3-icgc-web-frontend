@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useId, useState } from 'react';
 import { WhatsAppIcon } from '@/components/Icons';
@@ -26,7 +25,7 @@ const NECESIDADES: readonly Necesidad[] = [
     texto: 'Orientación en gestión comunal o marco legal',
     paso: 'una orientación en gestión comunal y marco legal',
     destino: {
-      href: '/cursos#marco-legal-comunal',
+      href: '/cursos/marco-legal-comunal',
       etiqueta: 'Ver el curso de marco legal comunal',
     },
   },
@@ -93,43 +92,38 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
         )
       : '';
 
-  const opcion = (activa: boolean) =>
-    `flex h-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-semibold transition-all ${
+  /** Pastilla seleccionable, igual que en "Programa a medida" de /cursos */
+  const pastilla = (activa: boolean) =>
+    `inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan-300 ${
       activa
-        ? 'border-white bg-white text-brand-900 shadow-lg'
-        : 'border-white/25 bg-white/10 text-white backdrop-blur-sm hover:border-white/60 hover:bg-white/20'
-    }`;
-
-  const marca = (activa: boolean) =>
-    `inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-      activa ? 'border-brand-600 bg-brand-600' : 'border-white/70'
+        ? 'border-white bg-white text-brand-900 shadow'
+        : 'border-white/25 bg-white/10 text-white hover:border-white/60 hover:bg-white/20'
     }`;
 
   return (
-    <div className="relative isolate overflow-hidden rounded-2xl px-6 py-12 sm:px-12 lg:px-16">
-      {/* Foto de fondo con velo oscuro: el texto blanco se lee sobre cualquier zona */}
-      <Image
-        src="/hero/paisaje-andino-laguna-quellacocha.webp"
-        alt=""
-        fill
-        sizes="(max-width: 1440px) 100vw, 1440px"
-        className="-z-20 object-cover"
-      />
+    <div className="relative isolate overflow-hidden rounded-2xl px-6 py-8 sm:px-8 lg:px-10">
+      {/* Fondo: degradado con una luz de color */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-950/95 via-brand-900/90 to-brand-800/80"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
       />
+      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
 
-      <div className="mx-auto max-w-4xl">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">
-          Encuentra tu siguiente paso
-        </p>
-        <h2 id="cta-titulo" className="mt-3 text-balance text-3xl text-white sm:text-4xl">
-          ¿En qué etapa está tu comunidad?
-        </h2>
+      <div className="grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
+        <div>
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
+            Encuentra tu siguiente paso
+          </p>
+          <h2 id="cta-titulo" className="mt-2 text-balance text-2xl text-white">
+            ¿En qué etapa está tu comunidad?
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-brand-100">
+            Elige qué necesitan y en qué punto están: te escribimos la consulta por WhatsApp.
+          </p>
+        </div>
 
         <form
-          className="mt-8 space-y-8"
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             if (!listo) return;
@@ -146,12 +140,10 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
           }}
         >
           <fieldset>
-            <legend className="text-base font-bold text-white">
-              ¿Qué necesita tu comunidad hoy?
-            </legend>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <legend className="text-sm font-bold text-white">¿Qué necesitan?</legend>
+            <div className="mt-2 flex flex-wrap gap-2">
               {NECESIDADES.map((n) => (
-                <label key={n.id} className={opcion(necesidad === n.id)}>
+                <label key={n.id} className={pastilla(necesidad === n.id)}>
                   <input
                     type="radio"
                     name={`${id}-necesidad`}
@@ -163,9 +155,6 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
                     }}
                     className="sr-only"
                   />
-                  <span aria-hidden="true" className={marca(necesidad === n.id)}>
-                    {necesidad === n.id && <span className="h-2 w-2 rounded-full bg-white" />}
-                  </span>
                   {n.texto}
                 </label>
               ))}
@@ -173,10 +162,10 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
           </fieldset>
 
           <fieldset>
-            <legend className="text-base font-bold text-white">¿En qué etapa se encuentran?</legend>
-            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <legend className="text-sm font-bold text-white">¿En qué etapa están?</legend>
+            <div className="mt-2 flex flex-wrap gap-2">
               {ETAPAS.map((e) => (
-                <label key={e.id} className={opcion(etapa === e.id)}>
+                <label key={e.id} className={pastilla(etapa === e.id)}>
                   <input
                     type="radio"
                     name={`${id}-etapa`}
@@ -188,9 +177,6 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
                     }}
                     className="sr-only"
                   />
-                  <span aria-hidden="true" className={marca(etapa === e.id)}>
-                    {etapa === e.id && <span className="h-2 w-2 rounded-full bg-white" />}
-                  </span>
                   {e.texto}
                 </label>
               ))}
@@ -203,33 +189,33 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
             className="btn-light disabled:cursor-not-allowed disabled:opacity-50"
           >
             <WhatsAppIcon size={18} />
-            Ver mi siguiente paso
+            Enviar por WhatsApp
           </button>
-        </form>
 
-        {/* aria-live: el lector de pantalla anuncia que se abrió WhatsApp */}
-        <div aria-live="polite">
-          {mostrar && elegidaNecesidad && elegidaEtapa && (
-            <p className="mt-6 animate-fade-up text-sm leading-relaxed text-brand-100">
-              Abrimos WhatsApp con tu consulta: te recomendamos {elegidaNecesidad.paso}.{' '}
-              <a
-                href={urlWhatsapp}
-                {...propsEnlace(urlWhatsapp)}
-                className="font-semibold text-white underline underline-offset-2"
-              >
-                Si no se abrió, toca aquí para enviarla
-              </a>{' '}
-              o{' '}
-              <Link
-                href={elegidaNecesidad.destino.href}
-                className="font-semibold text-white underline underline-offset-2"
-              >
-                {elegidaNecesidad.destino.etiqueta.toLowerCase()}
-              </Link>
-              .
-            </p>
-          )}
-        </div>
+          {/* aria-live: el lector de pantalla anuncia que se abrió WhatsApp */}
+          <div aria-live="polite">
+            {mostrar && elegidaNecesidad && elegidaEtapa && (
+              <p className="animate-fade-up text-sm leading-relaxed text-brand-100">
+                Te recomendamos {elegidaNecesidad.paso}.{' '}
+                <a
+                  href={urlWhatsapp}
+                  {...propsEnlace(urlWhatsapp)}
+                  className="font-semibold text-white underline underline-offset-2"
+                >
+                  Si no se abrió WhatsApp, toca aquí
+                </a>{' '}
+                o{' '}
+                <Link
+                  href={elegidaNecesidad.destino.href}
+                  className="font-semibold text-white underline underline-offset-2"
+                >
+                  {elegidaNecesidad.destino.etiqueta.toLowerCase()}
+                </Link>
+                .
+              </p>
+            )}
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AutoReveal } from '@/components/AutoReveal';
 import { Carousel } from '@/components/Carousel';
+import { ConsultaProyecto } from '@/components/ConsultaProyecto';
 import { JsonLd } from '@/components/JsonLd';
 import { ProjectFlipCard } from '@/components/ProjectFlipCard';
 import { ProjectsExplorer } from '@/components/ProjectsExplorer';
@@ -433,24 +434,9 @@ export default async function ProyectosPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="container-icgc py-16">
-        <div className="rounded-2xl bg-brand-gradient px-8 py-14 text-center">
-          <h2 className="text-balance text-3xl text-white">Cuéntanos en qué etapa estás</h2>
-          <p className="mx-auto mt-4 max-w-xl text-brand-100">
-            Da igual si recién tienes la idea o si la obra está paralizada: revisamos tu caso y te
-            decimos qué se puede hacer.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href={urlAsesoria} {...propsEnlace(urlAsesoria)} className="btn-whatsapp">
-              <WhatsAppIcon size={18} />
-              Escribir por WhatsApp
-            </Link>
-            <Link href="/cursos" className="btn-light">
-              Ver los cursos
-            </Link>
-          </div>
-        </div>
+      {/* ── Consulta interactiva: tipo de proyecto y etapa, directo a WhatsApp ── */}
+      <section aria-labelledby="consulta-titulo" className="container-icgc pb-20 pt-12">
+        <ConsultaProyecto whatsapp={settings.whatsapp} />
       </section>
       {/* Las secciones entran con la misma animación que el inicio */}
       <AutoReveal />
