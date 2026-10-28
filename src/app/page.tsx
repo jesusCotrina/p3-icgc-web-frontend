@@ -489,19 +489,19 @@ export default async function HomePage() {
       </section>
 
       {/* ──────────────────── Proyectos ──────────────────── */}
-      {/* Fondo azul marino con figuras geométricas dibujadas en SVG */}
+      {/* Fondo en un celeste suave de la marca, con líneas finas en SVG */}
       <section
         aria-labelledby="proyectos-titulo"
-        className="relative isolate overflow-hidden bg-brand-950 py-16 text-white lg:py-20"
+        className="relative isolate overflow-hidden bg-gradient-to-br from-brand-300/70 via-brand-100 to-sky-200 py-16 lg:py-20"
       >
-        <FondoLineas className="-z-10 opacity-70" />
+        <FondoLineas className="-z-10" />
         <div className="container-icgc">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow !text-cyan-300">Proyectos</p>
-            <h2 id="proyectos-titulo" className="mt-3 text-balance text-3xl text-white sm:text-4xl">
+            <p className="eyebrow">Proyectos</p>
+            <h2 id="proyectos-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
               Proyectos que acompañamos
             </h2>
-            <p className="mt-4 text-pretty text-lg font-semibold text-brand-100">
+            <p className="mt-4 text-pretty text-lg font-semibold text-slate-600">
               Hacemos realidad el proyecto de tu comunidad: de la idea a la obra terminada.
             </p>
           </Reveal>
@@ -511,14 +511,14 @@ export default async function HomePage() {
             <ul className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
               {proyectos.map((proyecto) => (
                 <li key={proyecto.slug}>
-                  <ProjectFlipCard proyecto={proyecto} alto="h-[27rem]" rectas resumido />
+                  <ProjectFlipCard proyecto={proyecto} alto="h-[27rem]" rectas mosaico />
                 </li>
               ))}
             </ul>
           </Reveal>
 
           <Reveal className="mt-10 text-center">
-            <Link href="/proyectos" className="btn-light font-bold">
+            <Link href="/proyectos" className="btn-primary font-bold">
               Ver todos los proyectos
               <svg
                 width="16"
@@ -585,6 +585,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ──────────────── Empresas y comunidades ──────────────── */}
+      <SeccionClientes />
+
       {/* ──────────────────── Blog: destacadas ──────────────────── */}
       <section
         aria-labelledby="blog-titulo"
@@ -629,9 +632,6 @@ export default async function HomePage() {
       </section>
 
       {/* ─────────── Cierre: orientador "Encuentra tu siguiente paso" ─────────── */}
-      {/* ──────────────── Empresas y comunidades ──────────────── */}
-      <SeccionClientes />
-
       {/* Franja de borde a borde que llega hasta el pie (el -mb compensa su margen) */}
       <section aria-labelledby="cta-titulo" className="-mb-12">
         <OrientadorSiguientePaso whatsapp={settings.whatsapp} aPantallaCompleta />

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { AutoReveal } from '@/components/AutoReveal';
+import { FondoLineas } from '@/components/FondoLineas';
 import { JsonLd } from '@/components/JsonLd';
 import { OrientadorSiguientePaso } from '@/components/OrientadorSiguientePaso';
 import { SeccionClientes } from '@/components/SeccionClientes';
@@ -66,14 +67,15 @@ export default async function ServiciosPage() {
         ]}
       />
 
-      {/* ── Cabecera ── */}
-      <section className="border-b border-silver-200 bg-brand-soft">
+      {/* ── Cabecera: degradado celeste suave de la marca ── */}
+      <section className="relative isolate overflow-hidden bg-gradient-to-br from-brand-300/70 via-brand-100 to-sky-200">
+        <FondoLineas className="-z-10" />
         <div className="container-icgc max-w-6xl py-10 lg:py-12">
-          <p className="eyebrow">Servicios</p>
+          <p className="eyebrow !text-brand-700">Servicios</p>
           <h1 className="mt-2 max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
             Servicios de consultoría para comunidades
           </h1>
-          <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-slate-600">
+          <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-slate-700">
             Acompañamos a comunidades campesinas y a sus empresas en todo el camino: desde ordenar
             la organización y negociar con empresas mineras y privadas hasta ejecutar sus obras y
             capacitar a sus dirigentes.

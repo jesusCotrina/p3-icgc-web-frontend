@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Montserrat } from 'next/font/google';
 import { Footer } from '@/components/Footer';
+import { GoogleTag, GoogleTagNoScript } from '@/components/GoogleTag';
 import { Header } from '@/components/Header';
 import { IndicadorNavegacion } from '@/components/IndicadorNavegacion';
 import { JsonLd } from '@/components/JsonLd';
@@ -103,7 +104,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // lang correcto: le dice a Google en qué idioma y para qué país es el contenido
     <html lang="es-PE" className={montserrat.variable}>
+      <head>
+        {/* Google Tag Manager / Analytics: el código se cambia en gestor → Ajustes */}
+        <GoogleTag codigo={settings.googleAnalyticsId} />
+      </head>
       <body className="flex min-h-screen flex-col">
+        <GoogleTagNoScript codigo={settings.googleAnalyticsId} />
         {/* Accesibilidad: saltar la navegación con el teclado */}
         <a href="#contenido" className="skip-link">
           Saltar al contenido principal

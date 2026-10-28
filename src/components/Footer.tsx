@@ -174,7 +174,18 @@ export function Footer({
                   </a>
                 </li>
               )}
-              <li>{direccion.texto}, Perú</li>
+              {/* La dirección como texto: se lee sin cargar el mapa y Google la indexa */}
+              <li>
+                <address className="not-italic">{direccion.texto}, Perú</address>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block font-semibold text-white underline-offset-2 hover:underline"
+                >
+                  Cómo llegar al instituto en Google Maps <span aria-hidden="true">→</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -193,33 +204,6 @@ export function Footer({
                 className="block h-44 w-full border-0"
               />
             </div>
-            {/* La dirección también como texto: se lee sin cargar el mapa y Google la indexa */}
-            <address className="mt-3 flex items-start gap-2 text-sm not-italic text-brand-100">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-                className="mt-0.5 shrink-0 text-brand-300"
-              >
-                <path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" />
-                <circle cx="12" cy="9" r="2.5" />
-              </svg>
-              {direccion.texto}, Perú
-            </address>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-block text-sm text-brand-200 transition-colors hover:text-white"
-            >
-              Cómo llegar al instituto en Google Maps
-            </a>
           </div>
         </div>
 

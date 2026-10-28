@@ -32,6 +32,7 @@ export function ProjectFlipCard({
   alto = 'h-[26rem]',
   rectas = false,
   resumido = false,
+  mosaico = false,
 }: {
   proyecto: ProjectDTO;
   /** Nivel del título según la jerarquía de la página que la usa */
@@ -43,6 +44,12 @@ export function ProjectFlipCard({
   rectas?: boolean;
   /** Cara posterior breve: solo estado, región, inversión y el objetivo */
   resumido?: boolean;
+  /**
+   * Al estilo de ppdperu.org: sin giro ni estado, región y título al centro y
+   * la foto apagada que recobra su color al pasar el mouse. Toda la tarjeta
+   * es el enlace a la página del proyecto.
+   */
+  mosaico?: boolean;
 }) {
   const esquinas = rectas ? 'rounded-none' : 'rounded-md';
   const estado = PROJECT_STATUS_LABELS[proyecto.status];
@@ -61,6 +68,44 @@ export function ProjectFlipCard({
         { etiqueta: 'Duración', valor: proyecto.duration, completo: true },
         { etiqueta: 'Comunidad', valor: proyecto.community, completo: true },
       ];
+
+  if (mosaico) {
+    return (
+      <article className={`group relative ${alto} overflow-hidden ${esquinas} bg-slate-800`}>
+        {proyecto.coverImage && (
+          <Image
+            src={proyecto.coverImage.url}
+            alt={proyecto.coverAlt ?? proyecto.coverImage.alt ?? ''}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            // Apagada y algo gris en reposo; al pasar el mouse, todo su color
+            className="object-cover brightness-[0.85] saturate-[0.55] transition duration-500 group-hover:scale-105 group-hover:brightness-100 group-hover:saturate-100 group-focus-within:brightness-100 group-focus-within:saturate-100 motion-reduce:transition-none"
+          />
+        )}
+        {/* Velo parejo para que el texto blanco se lea; se aclara al pasar el mouse */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-brand-950/40 transition-colors duration-500 group-hover:bg-brand-950/20"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">{region}</p>
+          <Titulo className="mt-3 text-balance text-xl font-bold leading-snug text-white">
+            {/* El enlace cubre toda la tarjeta (::after); el texto del título es el anchor text */}
+            <Link
+              href={`/proyectos/${proyecto.slug}`}
+              className="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-4 focus-visible:after:ring-inset focus-visible:after:ring-white"
+            >
+              {proyecto.title}
+            </Link>
+          </Titulo>
+          <span
+            aria-hidden="true"
+            className="mt-4 h-0.5 w-10 bg-amber-300 transition-all duration-500 group-hover:w-20"
+          />
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article
