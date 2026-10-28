@@ -236,20 +236,6 @@ export default async function PostPage({ params }: { params: Params }) {
         </section>
       )}
 
-      {/* ── CTA ── */}
-      <section className="container-icgc py-16">
-        <div className="rounded-2xl bg-brand-gradient px-8 py-12 text-center">
-          <h2 className="text-balance text-2xl text-white sm:text-3xl">
-            Lleva esta capacitación a tu comunidad
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-brand-100">
-            El ICGC diseña programas a medida para comunidades y organizaciones de todo el Perú.
-          </p>
-          <Link href="/nosotros#contacto" className="btn-light mt-8">
-            Solicitar información
-          </Link>
-        </div>
-      </section>
       {/* Las secciones entran con la misma animación que el inicio */}
       <AutoReveal />
     </>

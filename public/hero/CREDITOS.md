@@ -27,7 +27,6 @@ Las portadas del blog se subieron por el gestor: el crédito va en el pie de fot
 
 | Archivo | Autor | Licencia | Original |
 |---|---|---|---|
-| inicio/asamblea-comunal-tiquihua.webp | Txolo | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Asamblea_comunal_en_la_comunidad_de_Tiquihua.jpg |
 | inicio/taller-mapeo-participativo.webp | Candy Sotomayor | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Taller_Mapeo_participativo_para_la_justicia_clim%C3%A1tica_02.jpg |
 
 ## Portadas del blog (subidas al servidor)

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { IndicadorNavegacion } from '@/components/IndicadorNavegacion';
@@ -10,7 +10,8 @@ import './globals.css';
 
 // next/font autohospeda la fuente: sin petición a Google Fonts en tiempo de
 // ejecución, sin FOUT y sin penalización en los Core Web Vitals.
-const inter = Inter({
+// Montserrat: la misma letra de la web de la PUCP (Gobierno y Políticas Públicas).
+const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
@@ -101,7 +102,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     // lang correcto: le dice a Google en qué idioma y para qué país es el contenido
-    <html lang="es-PE" className={inter.variable}>
+    <html lang="es-PE" className={montserrat.variable}>
       <body className="flex min-h-screen flex-col">
         {/* Accesibilidad: saltar la navegación con el teclado */}
         <a href="#contenido" className="skip-link">

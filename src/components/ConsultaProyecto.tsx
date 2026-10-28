@@ -14,13 +14,13 @@ const TIPOS = [
   'Otro',
 ] as const;
 
-/** Cada etapa sugiere el servicio que corresponde (ancla en /servicios). */
+/** Cada etapa sugiere el servicio que corresponde (su página en /servicios). */
 const ETAPAS = [
-  { texto: 'Es solo una idea', servicio: 'expedientes-tecnicos', etiqueta: 'expedientes técnicos' },
-  { texto: 'Tenemos perfil o expediente', servicio: 'inversion-publica', etiqueta: 'proyectos de inversión pública' },
-  { texto: 'Vamos a licitar', servicio: 'licitaciones', etiqueta: 'licitaciones con el Estado' },
-  { texto: 'La obra está en marcha', servicio: 'ejecucion-de-obras', etiqueta: 'ejecución y supervisión de obras' },
-  { texto: 'La obra está paralizada', servicio: 'ejecucion-de-obras', etiqueta: 'ejecución y supervisión de obras' },
+  { texto: 'Es solo una idea', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
+  { texto: 'Tenemos perfil o expediente', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
+  { texto: 'Vamos a licitar', servicio: 'licitaciones-y-contratos', etiqueta: 'licitaciones y administración de contratos' },
+  { texto: 'La obra está en marcha', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
+  { texto: 'La obra está paralizada', servicio: 'gestion-social-y-conflictos', etiqueta: 'gestión social y manejo de conflictos' },
 ] as const;
 
 /**
@@ -31,7 +31,14 @@ const ETAPAS = [
  * REGLA SEO: preguntas y opciones vienen en el HTML del servidor; el cliente
  * solo arma el mensaje. Radios reales dentro de <fieldset> (teclado y lector).
  */
-export function ConsultaProyecto({ whatsapp }: { whatsapp: string | null }) {
+export function ConsultaProyecto({
+  whatsapp,
+  aPantallaCompleta = false,
+}: {
+  whatsapp: string | null;
+  /** Franja de borde a borde (cierre de /proyectos) en vez de una tarjeta */
+  aPantallaCompleta?: boolean;
+}) {
   const id = useId();
   const [tipo, setTipo] = useState<string | null>(null);
   const [etapa, setEtapa] = useState<(typeof ETAPAS)[number] | null>(null);
@@ -51,14 +58,29 @@ export function ConsultaProyecto({ whatsapp }: { whatsapp: string | null }) {
     }`;
 
   return (
-    <div className="relative isolate overflow-hidden rounded-2xl px-6 py-8 sm:px-8 lg:px-10">
+    <div
+      className={`relative isolate overflow-hidden ${
+        aPantallaCompleta ? 'py-12 lg:py-14' : 'rounded-2xl px-6 py-8 sm:px-8 lg:px-10'
+      }`}
+    >
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
       />
       <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
+      {/* A pantalla completa, termina en el azul con que empieza el pie: un solo degradado */}
+      {aPantallaCompleta && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-b from-transparent to-[#0B2545]"
+        />
+      )}
 
-      <div className="grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
+      <div
+        className={`grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10 ${
+          aPantallaCompleta ? 'container-icgc' : ''
+        }`}
+      >
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
             Asesoría en proyectos
@@ -115,7 +137,7 @@ export function ConsultaProyecto({ whatsapp }: { whatsapp: string | null }) {
               <>
                 Te puede servir nuestro servicio de{' '}
                 <Link
-                  href={`/servicios#${etapa.servicio}`}
+                  href={`/servicios/${etapa.servicio}`}
                   className="font-semibold text-white underline underline-offset-2"
                 >
                   {etapa.etiqueta}

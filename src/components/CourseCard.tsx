@@ -59,13 +59,20 @@ export function CourseCard({
   curso,
   masInfoUrl,
   nivel: Titulo = 'h3',
+  compacta = false,
 }: {
   curso: CourseDTO;
   masInfoUrl: string;
   /** Nivel del título según la jerarquía de la página que la usa */
   nivel?: 'h2' | 'h3';
+  /** Versión más chica (carrusel del inicio): los mismos datos, menos tamaño */
+  compacta?: boolean;
 }) {
   const url = `/cursos/${curso.slug}`;
+  // Tamaños de la versión normal y de la compacta
+  const t = compacta
+    ? { cuerpo: 'p-3.5', titulo: 'text-[0.95rem]', datos: 'mt-2.5 text-[0.78rem]', precio: 'text-lg', separador: 'mt-2.5 pt-2.5', boton: 'py-1.5 text-[0.8rem]', wsp: 'h-9 w-9', pie: 'pt-3' }
+    : { cuerpo: 'p-4', titulo: 'text-base', datos: 'mt-3 text-[0.8rem]', precio: 'text-xl', separador: 'mt-3 pt-3', boton: 'py-2 text-sm', wsp: 'h-10 w-10', pie: 'pt-4' };
 
   return (
     // Borde de 2px que al pasar el mouse se vuelve un degradado azul oscuro que
@@ -88,17 +95,17 @@ export function CourseCard({
           {curso.comingSoon && <AvisoProximamente className="absolute right-3 top-3" />}
         </Link>
 
-        <div className="flex flex-1 flex-col p-4">
+        <div className={`flex flex-1 flex-col ${t.cuerpo}`}>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-brand-600">
             Curso · {MODALIDAD[curso.mode]}
           </p>
-          <Titulo className="mt-1.5 text-balance text-base font-bold leading-snug">
+          <Titulo className={`mt-1.5 text-balance font-bold leading-snug ${t.titulo}`}>
             <Link href={url} className="text-brand-900 hover:text-brand-600">
               {curso.name}
             </Link>
           </Titulo>
 
-          <ul className="mt-3 grid gap-1.5 text-[0.8rem] text-slate-700">
+          <ul className={`grid gap-1.5 text-slate-700 ${t.datos}`}>
             <Dato icono={<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}>
               <span>
                 <strong className="font-semibold text-brand-900">{curso.lectiveHours}</strong> horas
@@ -110,17 +117,17 @@ export function CourseCard({
             </Dato>
           </ul>
 
-          <p className="mt-3 border-t border-silver-200 pt-3">
+          <p className={`border-t border-silver-200 ${t.separador}`}>
             <span className="block text-[0.7rem] font-bold uppercase tracking-wider text-slate-500">
               Inversión
             </span>
-            <span className="text-xl font-extrabold text-brand-900">
+            <span className={`font-extrabold text-brand-900 ${t.precio}`}>
               {curso.price != null ? soles.format(curso.price) : 'Consultar'}
             </span>
           </p>
 
-          <div className="mt-auto flex items-center gap-2 pt-4">
-            <Link href={url} className="btn-primary flex-1 px-3 py-2 text-sm">
+          <div className={`mt-auto flex items-center gap-2 ${t.pie}`}>
+            <Link href={url} className={`btn-primary flex-1 px-3 ${t.boton}`}>
               Ver el curso
               <span className="sr-only"> {curso.name}</span>
             </Link>
@@ -128,7 +135,7 @@ export function CourseCard({
               href={masInfoUrl}
               {...propsEnlace(masInfoUrl)}
               aria-label={`Consultar por WhatsApp sobre el curso ${curso.name}`}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-brand-200 bg-brand-50 text-brand-700 transition-colors hover:bg-brand-100"
+              className={`inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-200 bg-brand-50 text-brand-700 transition-colors hover:bg-brand-100 ${t.wsp}`}
             >
               <WhatsAppIcon size={18} />
             </Link>

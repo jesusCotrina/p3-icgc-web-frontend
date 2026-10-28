@@ -6,7 +6,8 @@ import { ContactForm } from '@/components/ContactForm';
 import { JsonLd } from '@/components/JsonLd';
 import { getSettings, logoSrc } from '@/lib/api';
 import { direccionDelSitio } from '@/lib/direccion';
-import { MISION, VALORES } from '@/lib/institucional';
+import { inicialesDe } from '@/lib/format';
+import { LEMA, MISION, QUIENES_SOMOS, VALORES, VISION } from '@/lib/institucional';
 import { absoluteUrl, breadcrumbSchema, buildMetadata } from '@/lib/seo';
 
 export const revalidate = 86400;
@@ -70,13 +71,7 @@ export default async function NosotrosPage() {
         bio: settings.leaderBio,
         foto: settings.leaderPhoto,
         fotoAlt: settings.leaderPhotoAlt ?? `Retrato de ${settings.leaderName}`,
-        iniciales: settings.leaderName
-          .replace(/(.*?)/g, '')
-          .split(/s+/)
-          .filter(Boolean)
-          .slice(0, 2)
-          .map((p) => p[0]!.toUpperCase())
-          .join(''),
+        iniciales: inicialesDe(settings.leaderName),
         trayectoria: settings.leaderCareer.map((paso) => ({
           titulo: paso.period,
           texto: paso.text,
@@ -154,10 +149,11 @@ export default async function NosotrosPage() {
             <h1 className="mt-4 text-balance text-4xl font-extrabold leading-tight text-white sm:text-5xl">
               Fortalecemos la gestión comunal desde adentro
             </h1>
+            <p className="mt-5 text-balance text-lg font-bold uppercase tracking-wide text-cyan-200">
+              {LEMA.inicio} {LEMA.destacado} {LEMA.final}
+            </p>
             <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-brand-100">
-              El ICGC nació del trabajo directo con juntas directivas que necesitaban herramientas
-              concretas: cómo llevar un libro de actas, cómo presentar un expediente, cómo manejar
-              un conflicto de linderos. Eso seguimos haciendo.
+              {QUIENES_SOMOS[0]}
             </p>
           </div>
 
@@ -183,13 +179,18 @@ export default async function NosotrosPage() {
             <p className="mt-5 leading-relaxed text-slate-600">{MISION}</p>
           </div>
           <div>
-            <h2 className="text-3xl">Nuestro enfoque</h2>
-            <p className="mt-5 leading-relaxed text-slate-600">
-              Trabajamos con casos reales y documentos reales. Cada participante termina el programa
-              con un producto aplicable: un padrón actualizado, un perfil de proyecto o un acta
-              correctamente redactada.
-            </p>
+            <h2 id="vision" className="text-3xl">
+              Nuestra visión
+            </h2>
+            <p className="mt-5 leading-relaxed text-slate-600">{VISION}</p>
           </div>
+        </div>
+
+        <div className="mt-14 rounded-2xl border border-brand-100 bg-brand-soft p-7 sm:p-9">
+          <h2 id="equipo" className="text-2xl">
+            Un equipo multidisciplinario
+          </h2>
+          <p className="mt-4 leading-relaxed text-slate-700">{QUIENES_SOMOS[1]}</p>
         </div>
 
         <ul data-revelar-hijos className="mt-16 grid gap-6 md:grid-cols-3">

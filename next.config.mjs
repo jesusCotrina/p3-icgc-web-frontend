@@ -32,6 +32,11 @@ const { protocol, hostname, port } = hostDelBackend();
 
 const nextConfig = {
   reactStrictMode: true,
+
+  // Desarrollo: la web se abre también por la IP de la red local (celular,
+  // otra PC). Sin esto Next.js trata esos pedidos como de otro origen y puede
+  // bloquear sus archivos internos (la página carga pero sin JS ni animaciones).
+  allowedDevOrigins: ['192.168.18.8', 'localhost', '127.0.0.1'],
   poweredByHeader: false,
 
   // SEO: una sola forma canónica de cada URL (sin barra final)

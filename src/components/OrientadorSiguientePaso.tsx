@@ -18,7 +18,7 @@ const NECESIDADES: readonly Necesidad[] = [
     id: 'proyecto',
     texto: 'Formular o impulsar un proyecto',
     paso: 'una asesoría para sacar adelante tu proyecto',
-    destino: { href: '/proyectos', etiqueta: 'Ver cómo acompañamos los proyectos' },
+    destino: { href: '/servicios/gestion-de-proyectos-y-obras', etiqueta: 'Ver el servicio de gestión de proyectos y obras' },
   },
   {
     id: 'gestion',
@@ -39,7 +39,7 @@ const NECESIDADES: readonly Necesidad[] = [
     id: 'licitacion',
     texto: 'Prepararse para una licitación',
     paso: 'preparar a tu comunidad para competir en una licitación',
-    destino: { href: '/proyectos#licitaciones', etiqueta: 'Ver la asesoría en licitaciones' },
+    destino: { href: '/servicios/licitaciones-y-contratos', etiqueta: 'Ver el servicio de licitaciones y contratos' },
   },
 ];
 
@@ -73,7 +73,14 @@ const ETAPAS = [
  * respuesta se arma en el cliente. Las opciones son radios reales dentro de
  * <fieldset>, así funciona con teclado y lector de pantalla.
  */
-export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null }) {
+export function OrientadorSiguientePaso({
+  whatsapp,
+  aPantallaCompleta = false,
+}: {
+  whatsapp: string | null;
+  /** Franja de borde a borde (cierre del inicio) en vez de una tarjeta */
+  aPantallaCompleta?: boolean;
+}) {
   const id = useId();
   const [necesidad, setNecesidad] = useState<string | null>(null);
   const [etapa, setEtapa] = useState<string | null>(null);
@@ -101,15 +108,31 @@ export function OrientadorSiguientePaso({ whatsapp }: { whatsapp: string | null 
     }`;
 
   return (
-    <div className="relative isolate overflow-hidden rounded-2xl px-6 py-8 sm:px-8 lg:px-10">
+    <div
+      className={`relative isolate overflow-hidden ${
+        aPantallaCompleta ? 'py-12 lg:py-14' : 'rounded-2xl px-6 py-8 sm:px-8 lg:px-10'
+      }`}
+    >
       {/* Fondo: degradado con una luz de color */}
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
       />
       <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
+      {/* A pantalla completa, la franja termina en el azul con que empieza el pie:
+          franja y pie se ven como un solo degradado */}
+      {aPantallaCompleta && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-b from-transparent to-[#0B2545]"
+        />
+      )}
 
-      <div className="grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
+      <div
+        className={`grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10 ${
+          aPantallaCompleta ? 'container-icgc' : ''
+        }`}
+      >
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
             Encuentra tu siguiente paso

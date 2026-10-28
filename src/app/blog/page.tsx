@@ -204,7 +204,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
 
           {items.length > 0 ? (
             <>
-              <div data-revelar-hijos className="grid gap-7 sm:grid-cols-2">
+              <div data-revelar-hijos className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {items.map((post, i) => (
                   <PostCard
                     key={post.id}

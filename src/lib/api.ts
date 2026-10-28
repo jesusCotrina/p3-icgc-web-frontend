@@ -243,3 +243,19 @@ export async function getCourse(slug: string): Promise<CourseDTO | null> {
 export function getProjects(): Promise<ProjectDTO[]> {
   return safeFetch<ProjectDTO[]>('/public/projects', [], { tags: ['projects'] });
 }
+
+/** Igual que getPost: null solo con un 404 real; si el backend cae, se lanza el error. */
+export async function getProject(slug: string): Promise<ProjectDTO | null> {
+  try {
+    return await apiFetch<ProjectDTO>(`/public/projects/${encodeURIComponent(slug)}`, {
+      tags: ['projects'],
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    avisar(`/public/projects/${slug}`, error);
+    throw error;
+  }
+}
+
+/** Los proyectos de muestra no se indexan: serían páginas de relleno para Google. */
+export const esProyectoDeEjemplo = (p: { title: string }) => /^proyecto de ejemplo/i.test(p.title);

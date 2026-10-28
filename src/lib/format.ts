@@ -33,3 +33,18 @@ export function formatBytes(bytes: number): string {
   const value = bytes / 1024 ** i;
   return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
+
+/**
+ * Iniciales para el avatar cuando aún no hay foto: "Mg. Ing. Fernando D. Benito
+ * Calixto" → "FB". Se saltan los títulos y las iniciales con punto, y lo que va
+ * entre paréntesis.
+ */
+export function inicialesDe(nombre: string): string {
+  return nombre
+    .replace(/\(.*?\)/g, '')
+    .split(/\s+/)
+    .filter((palabra) => palabra && !palabra.endsWith('.'))
+    .slice(0, 2)
+    .map((palabra) => palabra[0]!.toUpperCase())
+    .join('');
+}

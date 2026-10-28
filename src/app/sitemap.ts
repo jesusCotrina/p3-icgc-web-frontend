@@ -1,5 +1,13 @@
 import type { MetadataRoute } from 'next';
-import { getCourses, getProjects, getSettings, getSitemapData, SITE_URL } from '@/lib/api';
+import {
+  esProyectoDeEjemplo,
+  getCourses,
+  getProjects,
+  getSettings,
+  getSitemapData,
+  SITE_URL,
+} from '@/lib/api';
+import { SERVICIOS } from '@/lib/servicios';
 
 /**
  * sitemap.xml dinamico.
@@ -95,5 +103,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...estaticas, ...paginasCursos, ...articulos, ...temas];
+  // Cada servicio tiene su página: es lo que la gente busca para contratar
+  const paginasServicios: MetadataRoute.Sitemap = SERVICIOS.map((s) => ({
+    url: `${SITE_URL}/servicios/${s.slug}`,
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    images: [`${SITE_URL}${s.imagen}`],
+  }));
+
+  // Cada proyecto tiene su página; los de muestra quedan fuera (no se indexan)
+  const paginasProyectos: MetadataRoute.Sitemap = proyectos
+    .filter((p) => !esProyectoDeEjemplo(p))
+    .map((p) => ({
+      url: `${SITE_URL}/proyectos/${p.slug}`,
+      lastModified: new Date(p.updatedAt),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+      ...(p.coverImage ? { images: [p.coverImage.url] } : {}),
+    }));
+
+  return [
+    ...estaticas,
+    ...paginasServicios,
+    ...paginasCursos,
+    ...paginasProyectos,
+    ...articulos,
+    ...temas,
+  ];
 }

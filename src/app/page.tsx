@@ -3,9 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel } from '@/components/Carousel';
 import { CourseCard } from '@/components/CourseCard';
+import { FondoLineas } from '@/components/FondoLineas';
 import { HeroSlider } from '@/components/HeroSlider';
 import { JsonLd } from '@/components/JsonLd';
-import { type Cliente, LogoMarquee } from '@/components/LogoMarquee';
+import { SeccionClientes } from '@/components/SeccionClientes';
 import { PeruMap } from '@/components/PeruMap';
 import { PostCard } from '@/components/PostCard';
 import { ProjectFlipCard } from '@/components/ProjectFlipCard';
@@ -15,11 +16,13 @@ import { Reveal } from '@/components/Reveal';
 import { StatsCounter } from '@/components/StatsCounter';
 import { textoCompleto, Typewriter } from '@/components/Typewriter';
 import { BookIcon, HandshakeIcon } from '@/components/Icons';
-import { ServiciosCarrusel } from '@/components/ServiciosCarrusel';
+import { ServicioCard } from '@/components/ServicioCard';
+import { inicialesDe } from '@/lib/format';
 import { getCourses, getPosts, getProjects, getSettings, logoSrc } from '@/lib/api';
 import { presenciaPorRegion, resumenPresencia } from '@/lib/presencia';
-import { MISION, RESUMEN_INSTITUTO, VALORES } from '@/lib/institucional';
+import { EN_UNA_FRASE, LEMA } from '@/lib/institucional';
 import { absoluteUrl, buildMetadata, truncate } from '@/lib/seo';
+import { SERVICIOS } from '@/lib/servicios';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
 
 // ISR: el HTML se regenera cada 10 minutos. Google recibe una página estática
@@ -78,69 +81,6 @@ const FRASES_CERCANAS = [
   'Capacitamos a tu equipo para que gestione con autonomía y sin trabas.',
 ] as const;
 
-/** Empresas y comunidades que trabajan con el instituto (logos en public/clientes). */
-const CLIENTES: readonly Cliente[] = [
-  {
-    nombre: 'Comunidad Campesina Santa Rosa de Colquijirca',
-    logo: '/clientes/comunidad-santa-rosa-colquijirca.webp',
-    width: 323,
-    height: 320,
-  },
-  {
-    nombre: 'ECOSARC Colquijirca',
-    logo: '/clientes/ecosarc-colquijirca.webp',
-    width: 540,
-    height: 320,
-  },
-  {
-    nombre: 'Comunidad Campesina de Quichas',
-    logo: '/clientes/comunidad-campesina-quichas.webp',
-    width: 327,
-    height: 320,
-  },
-  {
-    nombre: 'ECOSERMUQ, Empresa Comunal de Servicios Múltiples Quichas',
-    logo: '/clientes/ecosermuq-quichas.webp',
-    width: 371,
-    height: 320,
-  },
-  {
-    nombre: 'ECOSERM VIP',
-    logo: '/clientes/ecoserm-vip.webp',
-    width: 365,
-    height: 320,
-  },
-  {
-    nombre: 'Paltarumi',
-    logo: '/clientes/paltarumi.webp',
-    width: 761,
-    height: 320,
-  },
-];
-
-/** Tarjeta de "Quiénes somos": se eleva y una línea azul recorre su borde al pasar el mouse. */
-function TarjetaQuienes({ children }: { children: React.ReactNode }) {
-  return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-silver-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-brand-200 hover:shadow-[0_32px_60px_-18px_rgba(28,109,208,0.55)] focus-within:-translate-y-2 focus-within:border-brand-200 focus-within:shadow-[0_32px_60px_-18px_rgba(28,109,208,0.55)] motion-reduce:transform-none">
-      {/* Borde que se dibuja: arranca en la esquina superior izquierda,
-          da la vuelta a la tarjeta y cierra en la misma esquina */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 h-full w-full overflow-visible"
-      >
-        <rect
-          x="1.5"
-          y="1.5"
-          rx="15"
-          pathLength={100}
-          className="fill-none stroke-brand-600 [height:calc(100%-3px)] [stroke-dasharray:100] [stroke-dashoffset:100] [stroke-width:3] [width:calc(100%-3px)] transition-[stroke-dashoffset] duration-[1100ms] ease-in-out group-focus-within:[stroke-dashoffset:0] group-hover:[stroke-dashoffset:0] motion-reduce:transition-none"
-        />
-      </svg>
-      {children}
-    </article>
-  );
-}
-
 export default async function HomePage() {
   // Todo sale del gestor (vía API) y se resuelve en paralelo en el servidor
   const [settings, destacadosRes, cursos, todosLosProyectos] = await Promise.all([
@@ -161,17 +101,12 @@ export default async function HomePage() {
         foto: settings.leaderPhoto,
         fotoAlt: settings.leaderPhotoAlt ?? `Retrato de ${settings.leaderName}`,
         resumen: settings.leaderBio ? truncate(settings.leaderBio.split(/\n{2,}/)[0]!, 170) : null,
-        iniciales: settings.leaderName
-          .replace(/\(.*?\)/g, '')
-          .split(/\s+/)
-          .filter(Boolean)
-          .slice(0, 2)
-          .map((p) => p[0]!.toUpperCase())
-          .join(''),
+        iniciales: inicialesDe(settings.leaderName),
       }
     : null;
   // El carrusel del inicio muestra hasta 8 (4 a la vista en escritorio)
-  const proyectos = todosLosProyectos.slice(0, 8);
+  // 6 en el inicio (mosaico de 3 × 2); el resto, en /proyectos
+  const proyectos = todosLosProyectos.slice(0, 6);
 
   // Una sola fuente para el hero y el mapa: los proyectos publicados
   const totales = resumenPresencia(todosLosProyectos);
@@ -224,14 +159,8 @@ export default async function HomePage() {
 
       {/* ───────────────────────── Hero ───────────────────────── */}
       <section className="relative isolate overflow-hidden bg-brand-950">
-        {/* El logo entra como una diapositiva más, después de las fotos (la
-            primera foto sigue siendo la imagen principal para el LCP) */}
-        <HeroSlider
-          slides={[
-            ...HERO_SLIDES,
-            { src: logoSrc(settings), alt: settings.logoAlt, tipo: 'logo' as const },
-          ]}
-        />
+        {/* Solo fotos: el logo se presenta en "Quiénes somos" */}
+        <HeroSlider slides={HERO_SLIDES} />
 
         {/* Velo neutro solo detrás del texto (izquierda): la foto conserva sus
             colores y el título se sigue leyendo sobre cualquier imagen */}
@@ -288,210 +217,184 @@ export default async function HomePage() {
       </section>
 
       {/* ──────────────────── Quiénes somos ──────────────────── */}
-      {/* Fondo en degradado de azul marino a turquesa (el mismo de "Programa a
-          medida"); arranca en el azul en que termina el hero, sin corte. */}
+      {/* Presentación grande y con poco texto: el lema en tipografía enorme y
+          el logo en el centro de unas órbitas. Fondo en degradado azul marino a
+          turquesa con figuras de línea; arranca en el azul en que termina el
+          hero, sin corte. */}
       <section
         aria-labelledby="quienes-titulo"
-        className="relative isolate overflow-x-clip pb-16 pt-8 text-white lg:pb-24 lg:pt-10"
+        className="relative isolate overflow-hidden pb-20 pt-10 text-white lg:pb-28 lg:pt-14"
       >
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
         />
-        {/* Destellos de color */}
+        <FondoLineas className="-z-10 opacity-60" />
         <div
           aria-hidden="true"
-          className="absolute -right-24 top-40 -z-10 h-96 w-96 rounded-full bg-cyan-400/30 blur-3xl"
+          className="absolute -right-24 top-40 -z-10 h-[28rem] w-[28rem] rounded-full bg-cyan-400/25 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="absolute -left-32 top-1/2 -z-10 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl"
+          className="absolute -left-32 bottom-0 -z-10 h-80 w-80 rounded-full bg-amber-300/15 blur-3xl"
         />
         {/* Arranca en el mismo azul marino en que termina el hero */}
         <div
           aria-hidden="true"
           className="absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-brand-950 via-brand-950/70 to-transparent"
         />
-        {/* Trama de puntos, como textura */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 opacity-[0.12] [background-image:radial-gradient(rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,transparent,black_25%,transparent_70%)]"
-        />
 
         <div className="container-icgc">
-          <Reveal desde="izquierda" className="max-w-2xl">
-            <p className="eyebrow !text-cyan-300">Quiénes somos</p>
-            <h2
-              id="quienes-titulo"
-              className="mt-4 text-balance text-2xl leading-tight text-white sm:text-3xl lg:text-4xl"
-            >
-              Un instituto al servicio de las{' '}
-              <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-200 bg-clip-text text-transparent">
-                comunidades
-              </span>
-            </h2>
-            <p className="mt-5 text-pretty leading-relaxed text-white/80">
-              Asesoramos y capacitamos a comunidades campesinas, nativas y organizaciones del Perú
-              para que sus proyectos se formulen, se financien y se ejecuten bien.
-            </p>
-          </Reveal>
-
-          {/* Misión a la izquierda y valores a la derecha, a la misma altura */}
-          <div className="mt-10 grid items-center gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-6">
-              <Reveal desde="izquierda">
-                <figure className="relative aspect-[16/10] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/20">
-                  <Image
-                    src="/inicio/asamblea-comunal-tiquihua.webp"
-                    alt="Comuneros reunidos en asamblea comunal frente al local de la comunidad de Tiquihua, en los Andes"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="zoom-al-scroll object-cover"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-brand-950/50 via-transparent to-transparent"
-                  />
-                </figure>
-              </Reveal>
-              {/* El recuadro sube y se monta sobre la foto */}
-              <Reveal
-                retrasoMs={200}
-                className="relative z-10 -mt-14 ml-4 mr-4 sm:-mt-20 sm:ml-8 sm:mr-12"
+          <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+            {/* ── Título grande, descripción corta y el lema debajo ── */}
+            <Reveal desde="izquierda">
+              <p className="eyebrow !text-cyan-300">Quiénes somos</p>
+              <h2
+                id="quienes-titulo"
+                className="mt-5 text-balance text-[2.3rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[4rem]"
               >
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-600 to-cyan-600 p-6 shadow-[0_24px_48px_-16px_rgba(6,22,43,0.85)] sm:p-7">
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.9)_1px,transparent_1px)] [background-size:14px_14px] [mask-image:linear-gradient(135deg,black,transparent_60%)]"
-                  />
-                  <div className="relative">
-                    <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-cyan-100">
-                      Lo que nos mueve
-                    </p>
-                    <h3 className="mt-2 text-xl text-white sm:text-2xl">Nuestra misión</h3>
-                    <p className="mt-3 text-pretty text-sm leading-relaxed text-white/90 sm:text-base">
-                      {MISION}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+                Un instituto al servicio de las{' '}
+                <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-200 bg-clip-text text-transparent">
+                  comunidades
+                </span>
+              </h2>
+              <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-white/80">
+                Asesoría, consultoría y capacitación para comunidades campesinas, empresas
+                comunales, organizaciones y empresas, con especial atención a la construcción y la
+                minería.
+              </p>
+              <div
+                aria-hidden="true"
+                className="mt-7 h-1.5 w-24 rounded-full bg-gradient-to-r from-cyan-300 to-amber-200"
+              />
+              {/* El lema oficial del instituto */}
+              <p className="mt-6 max-w-xl text-balance text-base font-extrabold uppercase leading-snug tracking-wide text-cyan-200 sm:text-lg">
+                “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
+              </p>
+              <Link href="/nosotros" className="btn-light mt-8 font-bold">
+                Conoce al ICGC
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </Link>
+            </Reveal>
 
-            <div className="lg:col-span-6">
-              {/* Panel de vidrio esmerilado sobre el paisaje */}
-              <Reveal
-                desde="derecha"
-                className="rounded-3xl bg-white/10 p-6 shadow-2xl ring-1 ring-white/20 backdrop-blur-md sm:p-8"
-              >
-                <h3 className="text-xl text-white sm:text-2xl">Nuestros valores</h3>
+            {/* ── El logo, en el centro de unas órbitas que giran despacio ── */}
+            <Reveal desde="derecha" className="mx-auto w-full max-w-[30rem]">
+              <div className="relative aspect-square">
                 <div
                   aria-hidden="true"
-                  className="mt-3 h-1 w-14 rounded-full bg-gradient-to-r from-cyan-300 to-amber-200"
+                  className="absolute inset-[12%] rounded-full bg-cyan-300/30 blur-3xl"
                 />
-                <ol className="mt-6 space-y-6">
-                  {VALORES.map((v, i) => (
-                    <li key={v.titulo} className="flex gap-4">
-                      <span
-                        aria-hidden="true"
-                        className="bg-gradient-to-b from-cyan-200 to-cyan-500 bg-clip-text font-display text-3xl font-black leading-none text-transparent"
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <div>
-                        <p className="font-bold text-white">{v.titulo}</p>
-                        <p className="mt-1 text-pretty text-sm leading-relaxed text-white/75">
-                          {v.texto}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </Reveal>
-            </div>
-          </div>
-
-          {/* El instituto y su líder, en horizontal */}
-          <div className="mt-16 grid gap-6 lg:mt-24 lg:grid-cols-2">
-            <Reveal desde="izquierda" className="h-full">
-              <TarjetaQuienes>
-                <div className="flex h-full flex-col gap-6 p-7 sm:flex-row sm:items-center">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 rounded-full border border-white/15"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-[7%] animate-[spin_60s_linear_infinite] rounded-full border-2 border-dashed border-cyan-200/35 motion-reduce:animate-none"
+                />
+                {/* Dos lunas: una turquesa y otra dorada, en sentidos opuestos */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 animate-[spin_18s_linear_infinite] motion-reduce:animate-none"
+                >
+                  <span className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_18px_4px_rgba(103,232,249,0.7)]" />
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-[7%] animate-[spin_26s_linear_infinite] [animation-direction:reverse] motion-reduce:animate-none"
+                >
+                  <span className="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-amber-300 shadow-[0_0_16px_4px_rgba(252,211,77,0.65)]" />
+                </div>
+                <div className="absolute inset-[14%] flex items-center justify-center rounded-full bg-white/10 ring-1 ring-white/25 backdrop-blur-sm">
                   <Image
                     src={logoSrc(settings)}
                     alt={settings.logoAlt}
+                    width={320}
+                    height={320}
+                    sizes="(max-width: 640px) 60vw, 280px"
+                    className="h-[90%] w-[90%] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
+                  />
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ── Misión, visión y equipo: una frase cada uno ── */}
+          <ul
+            data-revelar-hijos
+            className="mt-16 grid gap-8 border-t border-white/15 pt-10 md:grid-cols-3 lg:mt-20"
+          >
+            {EN_UNA_FRASE.map((idea) => (
+              <li key={idea.titulo}>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
+                  {idea.titulo}
+                </p>
+                <p className="mt-2 text-pretty text-lg font-semibold leading-snug text-white">
+                  {idea.texto}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          {/* ── El gerente, como respaldo ── */}
+          {lider && (
+            <Reveal className="mt-14">
+              <div className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 ring-1 ring-white/20 backdrop-blur-md sm:flex-row sm:items-center sm:p-8">
+                {lider.foto ? (
+                  <Image
+                    src={lider.foto.url}
+                    alt={lider.fotoAlt}
                     width={112}
                     height={112}
                     sizes="112px"
-                    className="h-28 w-28 shrink-0 object-contain"
+                    className="h-24 w-24 shrink-0 rounded-full object-cover object-top ring-4 ring-amber-200/60"
                   />
-                  <div className="flex flex-1 flex-col">
-                    <p className="text-xs font-bold uppercase tracking-wider text-brand-500">
-                      El instituto
-                    </p>
-                    <h3 className="mt-1 text-xl transition-colors group-hover:text-brand-700">
-                      Sobre el ICGC
-                    </h3>
-                    <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
-                      {RESUMEN_INSTITUTO}
-                    </p>
-                    <Link href="/nosotros" className="btn-primary mt-5 w-fit py-2.5">
-                      Más información
-                      <span className="sr-only"> sobre el instituto</span>
-                    </Link>
-                  </div>
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 text-3xl font-black text-white ring-4 ring-amber-200/60"
+                  >
+                    {lider.iniciales}
+                  </span>
+                )}
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
+                    Respaldados por
+                  </p>
+                  <h3 className="mt-1 text-2xl text-white">{lider.nombre}</h3>
+                  {lider.cargo && (
+                    <p className="text-sm font-semibold text-white/70">{lider.cargo}</p>
+                  )}
+                  <p className="mt-3 text-pretty text-lg italic leading-snug text-white/90">
+                    “Experiencia probada en campo: de la asamblea comunal a la mesa de negociación.”
+                  </p>
                 </div>
-              </TarjetaQuienes>
+                <Link href="/nosotros#lider" className="btn-light shrink-0 font-bold">
+                  Conócelo
+                  <span className="sr-only"> ({lider.nombre})</span>
+                </Link>
+              </div>
             </Reveal>
-
-            {lider && (
-              <Reveal desde="derecha" retrasoMs={150} className="h-full">
-                <TarjetaQuienes>
-                  <div className="flex h-full flex-col gap-6 p-7 sm:flex-row sm:items-center">
-                    {/* La foto real se carga en el gestor; mientras tanto, iniciales */}
-                    {lider.foto ? (
-                      <Image
-                        src={lider.foto.url}
-                        alt={lider.fotoAlt}
-                        width={112}
-                        height={112}
-                        sizes="112px"
-                        className="h-28 w-28 shrink-0 rounded-full object-cover ring-4 ring-brand-100"
-                      />
-                    ) : (
-                      <span
-                        aria-hidden="true"
-                        className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-3xl font-black text-white ring-4 ring-brand-100"
-                      >
-                        {lider.iniciales}
-                      </span>
-                    )}
-                    <div className="flex flex-1 flex-col">
-                      <p className="text-xs font-bold uppercase tracking-wider text-brand-500">
-                        {lider.cargo ?? 'Nuestro líder'}
-                      </p>
-                      <h3 className="mt-1 text-xl transition-colors group-hover:text-brand-700">
-                        {lider.nombre}
-                      </h3>
-                      {lider.resumen && (
-                        <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
-                          {lider.resumen}
-                        </p>
-                      )}
-                      <Link href="/nosotros#lider" className="btn-primary mt-5 w-fit py-2.5">
-                        Más información
-                        <span className="sr-only"> sobre {lider.nombre}</span>
-                      </Link>
-                    </div>
-                  </div>
-                </TarjetaQuienes>
-              </Reveal>
-            )}
-          </div>
+          )}
         </div>
       </section>
 
-      {/* ──────────────────── Servicios (carrusel) ──────────────────── */}
+      {/* ──────────────────── Servicios (grilla 3 × 3) ──────────────────── */}
       <section aria-labelledby="servicios-titulo" className="bg-brand-soft py-16 lg:py-20">
-        <div className="container-icgc">
+        {/* Más angosta que el resto: tarjetas más chicas, igual de 3 en 3 */}
+        <div className="container-icgc max-w-6xl">
           <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-3xl">
               <p className="eyebrow">Servicios</p>
@@ -499,20 +402,40 @@ export default async function HomePage() {
                 Todo lo que tu comunidad necesita, en un solo lugar
               </h2>
             </div>
-            <Link href="/servicios" className="btn-secondary">
+            <Link
+              href="/servicios"
+              className="btn border-2 border-brand-600 bg-white font-extrabold text-brand-700 hover:bg-brand-600 hover:text-white"
+            >
               Ver todos los servicios
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
           </Reveal>
-          <Reveal retrasoMs={150}>
-            <ServiciosCarrusel />
-          </Reveal>
+          <ul data-revelar-hijos className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {SERVICIOS.map((servicio) => (
+              <li key={servicio.slug}>
+                <ServicioCard servicio={servicio} />
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* ──────────────────── Cursos (carrusel) ──────────────────── */}
       <section
         aria-labelledby="cursos-titulo"
-        className="container-icgc overflow-x-clip pb-16 lg:pb-20"
+        className="container-icgc max-w-6xl overflow-x-clip pb-16 lg:pb-20"
       >
         <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-3xl">
@@ -521,8 +444,24 @@ export default async function HomePage() {
               Nuestros cursos
             </h2>
           </div>
-          <Link href="/cursos" className="btn-secondary">
+          <Link
+            href="/cursos"
+            className="btn border-2 border-brand-600 bg-white font-extrabold text-brand-700 hover:bg-brand-600 hover:text-white"
+          >
             Ver el detalle de los cursos
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
           </Link>
         </Reveal>
 
@@ -530,12 +469,14 @@ export default async function HomePage() {
           <Carousel
             label="Cursos de capacitación"
             autoplayMs={4000}
-            // Tarjetas más chicas que el carrusel por defecto: 4 por fila en pantallas grandes
-            itemClassName="w-[75%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] xl:w-[calc((100%-4.5rem)/4)]"
+            flechasLaterales
+            // 3 tarjetas a la vista en escritorio; el bucle gira sin fin hacia ambos lados
+            itemClassName="w-[70%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
           >
             {cursos.map((curso) => (
               <CourseCard
                 key={curso.slug}
+                compacta
                 curso={curso}
                 masInfoUrl={whatsappUrl(
                   settings,
@@ -548,39 +489,50 @@ export default async function HomePage() {
       </section>
 
       {/* ──────────────────── Proyectos ──────────────────── */}
-      <section aria-labelledby="proyectos-titulo" className="bg-brand-soft py-16 lg:py-20">
+      {/* Fondo azul marino con figuras geométricas dibujadas en SVG */}
+      <section
+        aria-labelledby="proyectos-titulo"
+        className="relative isolate overflow-hidden bg-brand-950 py-16 text-white lg:py-20"
+      >
+        <FondoLineas className="-z-10 opacity-70" />
         <div className="container-icgc">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Proyectos</p>
-            <h2 id="proyectos-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
+            <p className="eyebrow !text-cyan-300">Proyectos</p>
+            <h2 id="proyectos-titulo" className="mt-3 text-balance text-3xl text-white sm:text-4xl">
               Proyectos que acompañamos
             </h2>
-            <p className="mt-4 text-pretty text-slate-600">
-              Acompañamos a comunidades campesinas, nativas y entidades públicas en proyectos de
-              riego, infraestructura comunal, saneamiento del territorio y protección de sus
-              recursos, desde la formulación del expediente hasta la ejecución de la obra.
+            <p className="mt-4 text-pretty text-lg font-semibold text-brand-100">
+              Hacemos realidad el proyecto de tu comunidad: de la idea a la obra terminada.
             </p>
           </Reveal>
 
-          {/* Carrusel que avanza solo y sin flechas: en el celular ya no se
-              apilan las 4 tarjetas una debajo de otra */}
-          <Reveal retrasoMs={120} className="mt-12">
-            <Carousel
-              label="Proyectos que acompañamos"
-              autoplayMs={4500}
-              flechas={false}
-              espacio="gap-3"
-              itemClassName="w-[80%] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)] xl:w-[calc((100%-2.25rem)/4)]"
-            >
+          {/* Mosaico 3 × 2: las tarjetas van pegadas y forman un solo rectángulo */}
+          <Reveal retrasoMs={120} className="mx-auto mt-12 max-w-5xl">
+            <ul className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
               {proyectos.map((proyecto) => (
-                <ProjectFlipCard key={proyecto.slug} proyecto={proyecto} alto="h-[24rem]" />
+                <li key={proyecto.slug}>
+                  <ProjectFlipCard proyecto={proyecto} alto="h-[27rem]" rectas resumido />
+                </li>
               ))}
-            </Carousel>
+            </ul>
           </Reveal>
 
           <Reveal className="mt-10 text-center">
-            <Link href="/proyectos" className="btn-primary">
+            <Link href="/proyectos" className="btn-light font-bold">
               Ver todos los proyectos
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
           </Reveal>
         </div>
@@ -589,65 +541,56 @@ export default async function HomePage() {
       {/* ──────────────────── Mapa de presencia ──────────────────── */}
       <section aria-labelledby="huella-titulo" className="py-16 lg:py-20">
         <div className="container-icgc">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Dónde trabajamos</p>
-            <h2 id="huella-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Nuestra huella en el Perú
-            </h2>
-            <p className="mt-4 text-pretty text-slate-600">
-              Trabajamos de la mano con las comunidades en distintas regiones del país, llevando
-              asesoría técnica y capacitación hasta donde se ejecutan los proyectos.
-            </p>
-          </Reveal>
-
-          <Reveal retrasoMs={150} className="mt-12">
+          <Reveal retrasoMs={150}>
             <PeruMap
               presencia={presencia}
               resumen={
-                <dl className="grid grid-cols-3 gap-4 text-center">
-                  {[
-                    {
-                      valor: totales.regiones,
-                      etiqueta: totales.regiones === 1 ? 'región' : 'regiones',
-                    },
-                    { valor: totales.proyectos, etiqueta: 'proyectos' },
-                    {
-                      valor: totales.comunidades,
-                      etiqueta: 'comunidades beneficiadas',
-                    },
-                  ].map((t) => (
-                    <div key={t.etiqueta} className="flex flex-col rounded-xl bg-brand-soft p-4">
-                      <dt className="text-xs text-slate-500 sm:text-sm">{t.etiqueta}</dt>
-                      <dd className="order-first text-3xl font-black text-brand-700 sm:text-4xl">
-                        {t.valor}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+                <>
+                  {/* Título a la derecha del mapa, arriba de las cifras */}
+                  <div className="mb-7">
+                    <p className="eyebrow">Dónde trabajamos</p>
+                    <h2 id="huella-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
+                      Nuestra huella en el Perú
+                    </h2>
+                    <p className="mt-4 text-pretty text-slate-600">
+                      Trabajamos de la mano con las comunidades en distintas regiones del país,
+                      llevando asesoría técnica y capacitación hasta donde se ejecutan los
+                      proyectos.
+                    </p>
+                  </div>
+                  <dl className="grid grid-cols-3 gap-4 text-center">
+                    {[
+                      {
+                        valor: totales.regiones,
+                        etiqueta: totales.regiones === 1 ? 'región' : 'regiones',
+                      },
+                      { valor: totales.proyectos, etiqueta: 'proyectos' },
+                      {
+                        valor: totales.comunidades,
+                        etiqueta: 'comunidades beneficiadas',
+                      },
+                    ].map((t) => (
+                      <div key={t.etiqueta} className="flex flex-col rounded-xl bg-brand-soft p-4">
+                        <dt className="text-xs text-slate-500 sm:text-sm">{t.etiqueta}</dt>
+                        <dd className="order-first text-3xl font-black text-brand-700 sm:text-4xl">
+                          {t.valor}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </>
               }
             />
           </Reveal>
         </div>
       </section>
 
-      {/* ──────────────── Empresas y comunidades ──────────────── */}
-      <section aria-labelledby="clientes-titulo" className="py-16 lg:py-20">
-        <div className="container-icgc">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Confían en nosotros</p>
-            <h2 id="clientes-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Empresas y comunidades que trabajan con nosotros
-            </h2>
-          </Reveal>
-          <Reveal retrasoMs={150} className="mt-12">
-            <LogoMarquee clientes={CLIENTES} />
-          </Reveal>
-        </div>
-      </section>
-
       {/* ──────────────────── Blog: destacadas ──────────────────── */}
-      <section aria-labelledby="blog-titulo" className="bg-brand-soft py-16 lg:py-20">
-        <div className="container-icgc">
+      <section
+        aria-labelledby="blog-titulo"
+        className="bg-brand-soft pb-12 pt-16 lg:pb-14 lg:pt-20"
+      >
+        <div className="container-icgc max-w-6xl">
           <Reveal className="mx-auto mb-10 max-w-2xl text-center">
             <p className="eyebrow">Blog</p>
             <h2 id="blog-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
@@ -657,7 +600,11 @@ export default async function HomePage() {
 
           <Reveal retrasoMs={150}>
             {destacados.length > 0 ? (
-              <Carousel label="Publicaciones destacadas del blog" autoplayMs={5000}>
+              <Carousel
+                label="Publicaciones destacadas del blog"
+                autoplayMs={5000}
+                flechasLaterales
+              >
                 {destacados.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
@@ -670,8 +617,11 @@ export default async function HomePage() {
             )}
           </Reveal>
 
-          <div className="mt-10 text-center">
-            <Link href="/blog" className="btn-secondary">
+          <div className="mt-8 text-center">
+            <Link
+              href="/blog"
+              className="btn border-2 border-brand-600 bg-white font-extrabold text-brand-700 hover:bg-brand-600 hover:text-white"
+            >
               Ver todas las publicaciones
             </Link>
           </div>
@@ -679,10 +629,12 @@ export default async function HomePage() {
       </section>
 
       {/* ─────────── Cierre: orientador "Encuentra tu siguiente paso" ─────────── */}
-      <section aria-labelledby="cta-titulo" className="container-icgc pb-20">
-        <Reveal>
-          <OrientadorSiguientePaso whatsapp={settings.whatsapp} />
-        </Reveal>
+      {/* ──────────────── Empresas y comunidades ──────────────── */}
+      <SeccionClientes />
+
+      {/* Franja de borde a borde que llega hasta el pie (el -mb compensa su margen) */}
+      <section aria-labelledby="cta-titulo" className="-mb-12">
+        <OrientadorSiguientePaso whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
     </>
   );

@@ -30,6 +30,7 @@ export function Carousel({
   itemClassName = ANCHO_POR_DEFECTO,
   flechas = true,
   espacio = 'gap-6',
+  flechasLaterales = false,
 }: {
   label: string;
   children: React.ReactNode;
@@ -41,6 +42,8 @@ export function Carousel({
   flechas?: boolean;
   /** Separación entre diapositivas (clase de Tailwind; el ancho de cada una debe descontarla) */
   espacio?: string;
+  /** Flechas a los costados de las tarjetas (y puntitos más chicos abajo) */
+  flechasLaterales?: boolean;
 }) {
   const pista = useRef<HTMLUListElement>(null);
   const originales = Children.toArray(children);
@@ -162,6 +165,59 @@ export function Carousel({
   const flecha =
     'inline-flex h-11 w-11 items-center justify-center rounded-full border border-silver-200 bg-white text-brand-800 shadow-card transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40';
 
+  const botonAnterior = (clase: string) => (
+    <button
+      type="button"
+      onClick={anterior}
+      disabled={!enBucle && actual === 0}
+      aria-label="Anterior"
+      className={clase}
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+    </button>
+  );
+
+  const botonSiguiente = (clase: string) => (
+    <button
+      type="button"
+      onClick={siguiente}
+      disabled={!enBucle && actual >= paginas - 1}
+      aria-label="Siguiente"
+      className={clase}
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m9 18 6-6-6-6" />
+      </svg>
+    </button>
+  );
+
+  // Flechas laterales: flotan sobre el borde de la pista, centradas en alto.
+  // En celular se ocultan (se desliza con el dedo y quedan los puntitos).
+  const lateral =
+    'absolute top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-silver-200 bg-white text-brand-800 shadow-card-hover transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40 sm:inline-flex';
+
   return (
     <div
       role="region"
@@ -174,58 +230,47 @@ export function Carousel({
       onFocus={(e) => e.target.matches(':focus-visible') && setEnPausa(true)}
       onBlur={() => setEnPausa(false)}
     >
-      {/* relative: los textos ocultos (sr-only, position: absolute) de las
-          tarjetas quedan anclados a la pista y recortados por ella; si no, se
-          anclan al contenedor con transform (Reveal) y ensanchan la página */}
-      <ul
-        ref={pista}
-        onScroll={alDesplazar}
-        className={`scrollbar-none relative -mx-4 flex snap-x snap-mandatory ${espacio} overflow-x-auto px-4 pb-4 pt-1 sm:mx-0 sm:px-0`}
-      >
-        {slides.map((slide, i) => {
-          const copia = i >= n;
-          return (
-            <li
-              key={i}
-              aria-roledescription={copia ? undefined : 'diapositiva'}
-              aria-label={copia ? undefined : `${i + 1} de ${n}`}
-              aria-hidden={copia || undefined}
-              data-copia={copia || undefined}
-              className={`shrink-0 snap-start ${itemClassName}`}
-            >
-              {slide}
-            </li>
-          );
-        })}
-      </ul>
+      {/* Con flechas laterales, una franja a cada lado: las flechas viven ahí
+          y nunca tapan las tarjetas */}
+      <div className={`relative ${flechasLaterales ? 'sm:px-14' : ''}`}>
+        {/* relative: los textos ocultos (sr-only, position: absolute) de las
+            tarjetas quedan anclados a la pista y recortados por ella; si no, se
+            anclan al contenedor con transform (Reveal) y ensanchan la página */}
+        <ul
+          ref={pista}
+          onScroll={alDesplazar}
+          className={`scrollbar-none relative -mx-4 flex snap-x snap-mandatory ${espacio} overflow-x-auto px-4 pb-4 pt-1 sm:mx-0 sm:px-0`}
+        >
+          {slides.map((slide, i) => {
+            const copia = i >= n;
+            return (
+              <li
+                key={i}
+                aria-roledescription={copia ? undefined : 'diapositiva'}
+                aria-label={copia ? undefined : `${i + 1} de ${n}`}
+                aria-hidden={copia || undefined}
+                data-copia={copia || undefined}
+                className={`shrink-0 snap-start ${itemClassName}`}
+              >
+                {slide}
+              </li>
+            );
+          })}
+        </ul>
+
+        {flechas && flechasLaterales && paginas > 1 && (
+          <>
+            {botonAnterior(`${lateral} left-1`)}
+            {botonSiguiente(`${lateral} right-1`)}
+          </>
+        )}
+      </div>
 
       {paginas > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-4">
-          {flechas && (
-            <button
-              type="button"
-              onClick={anterior}
-              disabled={!enBucle && actual === 0}
-              aria-label="Anterior"
-              className={flecha}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            </button>
-          )}
+        <div className={`flex items-center justify-center gap-4 ${flechasLaterales ? 'mt-3' : 'mt-6'}`}>
+          {flechas && !flechasLaterales && botonAnterior(flecha)}
 
-          <div className="flex items-center gap-2">
+          <div className={`flex items-center ${flechasLaterales ? 'gap-1.5' : 'gap-2'}`}>
             {Array.from({ length: paginas }, (_, i) => (
               <button
                 key={i}
@@ -233,36 +278,20 @@ export function Carousel({
                 onClick={() => desplazarA(i)}
                 aria-label={`Ir a la diapositiva ${i + 1}`}
                 aria-current={i === actual ? 'true' : undefined}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  i === actual ? 'w-8 bg-brand-600' : 'w-2.5 bg-brand-200 hover:bg-brand-300'
+                className={`rounded-full transition-all duration-300 ${
+                  flechasLaterales
+                    ? i === actual
+                      ? 'h-1.5 w-5 bg-brand-600'
+                      : 'h-1.5 w-1.5 bg-brand-200 hover:bg-brand-300'
+                    : i === actual
+                      ? 'h-2.5 w-8 bg-brand-600'
+                      : 'h-2.5 w-2.5 bg-brand-200 hover:bg-brand-300'
                 }`}
               />
             ))}
           </div>
 
-          {flechas && (
-            <button
-              type="button"
-              onClick={siguiente}
-              disabled={!enBucle && actual >= paginas - 1}
-              aria-label="Siguiente"
-              className={flecha}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </button>
-          )}
+          {flechas && !flechasLaterales && botonSiguiente(flecha)}
         </div>
       )}
     </div>

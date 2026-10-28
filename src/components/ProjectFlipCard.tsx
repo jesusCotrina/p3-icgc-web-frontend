@@ -30,6 +30,8 @@ export function ProjectFlipCard({
   nivel: Titulo = 'h3',
   textoEnlace = 'Más información',
   alto = 'h-[26rem]',
+  rectas = false,
+  resumido = false,
 }: {
   proyecto: ProjectDTO;
   /** Nivel del título según la jerarquía de la página que la usa */
@@ -37,25 +39,37 @@ export function ProjectFlipCard({
   textoEnlace?: string;
   /** Alto de la tarjeta (clase de Tailwind) */
   alto?: string;
+  /** Esquinas rectas y sin sombra: las tarjetas forman un solo mosaico */
+  rectas?: boolean;
+  /** Cara posterior breve: solo estado, región, inversión y el objetivo */
+  resumido?: boolean;
 }) {
+  const esquinas = rectas ? 'rounded-none' : 'rounded-md';
   const estado = PROJECT_STATUS_LABELS[proyecto.status];
   const region = nombreRegion(proyecto.region);
-  const resumen = [
-    // Los cortos van de a dos; los largos ocupan toda la fila para no cortarse
-    { etiqueta: 'Estado', valor: estado, completo: false },
-    { etiqueta: 'Región', valor: region, completo: false },
-    { etiqueta: 'Duración', valor: proyecto.duration, completo: true },
-    { etiqueta: 'Comunidad', valor: proyecto.community, completo: true },
-  ];
+  const resumen = resumido
+    ? // Solo lo más importante, cada dato en su fila
+      [
+        { etiqueta: 'Estado', valor: estado, completo: true },
+        { etiqueta: 'Región', valor: region, completo: true },
+        { etiqueta: 'Inversión', valor: proyecto.capital, completo: true },
+      ]
+    : [
+        // Los cortos van de a dos; los largos ocupan toda la fila para no cortarse
+        { etiqueta: 'Estado', valor: estado, completo: false },
+        { etiqueta: 'Región', valor: region, completo: false },
+        { etiqueta: 'Duración', valor: proyecto.duration, completo: true },
+        { etiqueta: 'Comunidad', valor: proyecto.community, completo: true },
+      ];
 
   return (
     <article
       tabIndex={0}
-      className={`group ${alto} rounded-md [perspective:1200px] focus-visible:outline-none`}
+      className={`group ${alto} ${esquinas} [perspective:1200px] focus-visible:outline-none`}
     >
-      <div className="relative h-full w-full rounded-md shadow-card transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus-within:[transform:rotateY(180deg)] motion-reduce:transition-none">
+      <div className={`relative h-full w-full ${esquinas} ${rectas ? '' : 'shadow-card'} transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus-within:[transform:rotateY(180deg)] motion-reduce:transition-none`}>
         {/* ── Cara frontal: foto + título ── */}
-        <div className="absolute inset-0 overflow-hidden rounded-md bg-slate-800 [backface-visibility:hidden]">
+        <div className={`absolute inset-0 overflow-hidden ${esquinas} bg-slate-800 [backface-visibility:hidden]`}>
           {proyecto.coverImage && (
             <Image
               src={proyecto.coverImage.url}
@@ -85,14 +99,14 @@ export function ProjectFlipCard({
         </div>
 
         {/* ── Cara posterior: datos resumidos sobre un degradado claro ── */}
-        <div className="absolute inset-0 flex flex-col overflow-hidden rounded-md bg-gradient-to-br from-white via-brand-50 to-cyan-100 p-5 text-slate-900 ring-1 ring-brand-100 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <div className={`absolute inset-0 flex flex-col overflow-hidden ${esquinas} bg-gradient-to-br from-white via-brand-50 to-cyan-100 p-5 text-slate-900 ring-1 ring-brand-100 [backface-visibility:hidden] [transform:rotateY(180deg)]`}>
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">
             Resumen del proyecto
           </p>
           <p className="mt-2 line-clamp-2 text-base font-extrabold leading-snug text-brand-900">
             {proyecto.title}
           </p>
-          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">
+          <dl className={`grid grid-cols-2 gap-x-4 text-sm ${resumido ? 'mt-4 gap-y-3' : 'mt-3 gap-y-2.5'}`}>
             {resumen.map((dato) => (
               <div key={dato.etiqueta} className={`min-w-0 ${dato.completo ? 'col-span-2' : ''}`}>
                 <dt className="text-[0.7rem] font-bold uppercase tracking-wide text-brand-700">
@@ -104,11 +118,13 @@ export function ProjectFlipCard({
               </div>
             ))}
           </dl>
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-slate-700">
+          <p
+            className={`text-sm leading-relaxed text-slate-700 ${resumido ? 'mt-4 line-clamp-4' : 'mt-3 line-clamp-2'}`}
+          >
             {proyecto.objective}
           </p>
 
-          <Link href={`/proyectos#${proyecto.slug}`} className="btn-primary mt-auto w-full">
+          <Link href={`/proyectos/${proyecto.slug}`} className="btn-primary mt-auto w-full">
             {textoEnlace}
             <span className="sr-only"> sobre el proyecto {proyecto.title}</span>
           </Link>

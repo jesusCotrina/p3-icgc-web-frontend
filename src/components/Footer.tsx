@@ -88,9 +88,11 @@ export function Footer({
   const mapaUrl = `https://www.google.com/maps?q=${encodeURIComponent(lugar)}&output=embed`;
 
   return (
-    <footer className="mt-24 bg-brand-gradient text-brand-100">
-      <div className="container-icgc py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.6fr)]">
+    // Arriba arranca en azul marino liso y recién después aparece su degradado:
+    // así empalma sin corte con una franja oscura justo encima (cierre del inicio)
+    <footer className="mt-12 bg-[linear-gradient(180deg,#0B2545_0,rgba(11,37,69,0)_9rem),linear-gradient(135deg,#0B2545_0%,#1452A3_55%,#2E8BE0_100%)] text-brand-100">
+      <div className="container-icgc py-10 lg:py-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.6fr)]">
           {/* Identidad */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3">
@@ -103,7 +105,7 @@ export function Footer({
               />
               <span className="text-xl font-extrabold text-white">ICGC</span>
             </div>
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-brand-200">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-brand-200">
               {settings.tagline}
             </p>
           </div>
@@ -113,7 +115,7 @@ export function Footer({
             <h2 id="footer-nav" className="text-sm font-bold uppercase tracking-wider text-white">
               Navegación
             </h2>
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-4 space-y-2 text-sm">
               {[
                 { href: '/servicios', label: 'Servicios de consultoría' },
                 { href: '/proyectos', label: 'Asesoría en proyectos' },
@@ -136,7 +138,7 @@ export function Footer({
             <h2 id="footer-temas" className="text-sm font-bold uppercase tracking-wider text-white">
               Temas
             </h2>
-            <ul className="mt-5 space-y-3 text-sm">
+            <ul className="mt-4 space-y-2 text-sm">
               {categories.length > 0 ? (
                 categories.slice(0, 6).map((c) => (
                   <li key={c.id}>
@@ -157,7 +159,7 @@ export function Footer({
           {/* Contacto */}
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">Contacto</h2>
-            <ul className="mt-5 space-y-3 text-sm text-brand-200">
+            <ul className="mt-4 space-y-2 text-sm text-brand-200">
               {settings.email && (
                 <li>
                   <a href={`mailto:${settings.email}`} className="hover:text-white">
@@ -180,7 +182,7 @@ export function Footer({
               de la página, no debe competir con el LCP */}
           <div className="min-w-0 md:col-span-2 lg:col-span-4 xl:col-span-1">
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">Ubicación</h2>
-            <div className="mt-5 overflow-hidden rounded-xl border border-white/15">
+            <div className="mt-4 overflow-hidden rounded-xl border border-white/15">
               <iframe
                 src={mapaUrl}
                 title={`Mapa de ubicación del ${settings.siteName} en ${lugar}`}
@@ -188,7 +190,7 @@ export function Footer({
                 height="220"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="block h-56 w-full border-0"
+                className="block h-44 w-full border-0"
               />
             </div>
             {/* La dirección también como texto: se lee sin cargar el mapa y Google la indexa */}
@@ -221,7 +223,7 @@ export function Footer({
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-5 border-t border-white/15 pt-8 text-xs text-brand-300 md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-white/15 pt-5 text-xs text-brand-300 md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {settings.siteName}. Todos los derechos reservados.{' '}
             {/* La atribución de las fotos con licencia Creative Commons va en esa página */}
