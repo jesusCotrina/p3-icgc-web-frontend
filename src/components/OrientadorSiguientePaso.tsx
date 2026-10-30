@@ -25,8 +25,8 @@ const NECESIDADES: readonly Necesidad[] = [
     texto: 'Orientación en gestión comunal o marco legal',
     paso: 'una orientación en gestión comunal y marco legal',
     destino: {
-      href: '/cursos/marco-legal-comunal',
-      etiqueta: 'Ver el curso de marco legal comunal',
+      href: '/cursos/gestion-normativa-y-liderazgo-comunal',
+      etiqueta: 'Ver el curso de gestión, normativa y liderazgo comunal',
     },
   },
   {
@@ -39,7 +39,7 @@ const NECESIDADES: readonly Necesidad[] = [
     id: 'licitacion',
     texto: 'Prepararse para una licitación',
     paso: 'preparar a tu comunidad para competir en una licitación',
-    destino: { href: '/servicios/licitaciones-y-contratos', etiqueta: 'Ver el servicio de licitaciones y contratos' },
+    destino: { href: '/servicios/gestion-de-proyectos-y-operaciones', etiqueta: 'Ver el servicio de gestión de proyectos y licitaciones' },
   },
 ];
 
@@ -101,10 +101,10 @@ export function OrientadorSiguientePaso({
 
   /** Pastilla seleccionable, igual que en "Programa a medida" de /cursos */
   const pastilla = (activa: boolean) =>
-    `inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan-300 ${
+    `inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-900 ${
       activa
-        ? 'border-white bg-white text-brand-900 shadow'
-        : 'border-white/25 bg-white/10 text-white hover:border-white/60 hover:bg-white/20'
+        ? 'border-brand-900 bg-brand-900 text-white shadow'
+        : 'border-dorado/40 bg-white text-brand-900 hover:border-brand-900 hover:bg-brand-50'
     }`;
 
   return (
@@ -113,20 +113,12 @@ export function OrientadorSiguientePaso({
         aPantallaCompleta ? 'py-12 lg:py-14' : 'rounded-2xl px-6 py-8 sm:px-8 lg:px-10'
       }`}
     >
-      {/* Fondo: degradado con una luz de color */}
+      {/* Fondo arena (paleta) con una luz dorada suave */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
+        className="absolute inset-0 -z-10 bg-arena"
       />
-      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
-      {/* A pantalla completa, la franja termina en el azul con que empieza el pie:
-          franja y pie se ven como un solo degradado */}
-      {aPantallaCompleta && (
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-b from-transparent to-[#0B2545]"
-        />
-      )}
+      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-dorado/15 blur-3xl" />
 
       <div
         className={`grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10 ${
@@ -134,13 +126,13 @@ export function OrientadorSiguientePaso({
         }`}
       >
         <div>
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-dorado-oscuro">
             Encuentra tu siguiente paso
           </p>
-          <h2 id="cta-titulo" className="mt-2 text-balance text-2xl text-white">
-            ¿En qué etapa está tu comunidad?
+          <h2 id="cta-titulo" className="mt-2 text-balance text-2xl font-extrabold text-brand-900">
+            ¿En Qué Etapa Está tu Comunidad?
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-brand-100">
+          <p className="mt-2 text-sm leading-relaxed text-texto">
             Elige qué necesitan y en qué punto están: te escribimos la consulta por WhatsApp.
           </p>
         </div>
@@ -163,7 +155,7 @@ export function OrientadorSiguientePaso({
           }}
         >
           <fieldset>
-            <legend className="text-sm font-bold text-white">¿Qué necesitan?</legend>
+            <legend className="text-sm font-bold text-brand-900">¿Qué necesitan?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {NECESIDADES.map((n) => (
                 <label key={n.id} className={pastilla(necesidad === n.id)}>
@@ -185,7 +177,7 @@ export function OrientadorSiguientePaso({
           </fieldset>
 
           <fieldset>
-            <legend className="text-sm font-bold text-white">¿En qué etapa están?</legend>
+            <legend className="text-sm font-bold text-brand-900">¿En qué etapa están?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {ETAPAS.map((e) => (
                 <label key={e.id} className={pastilla(etapa === e.id)}>
@@ -209,7 +201,7 @@ export function OrientadorSiguientePaso({
           <button
             type="submit"
             disabled={!listo}
-            className="btn-light disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             <WhatsAppIcon size={18} />
             Enviar por WhatsApp
@@ -218,19 +210,19 @@ export function OrientadorSiguientePaso({
           {/* aria-live: el lector de pantalla anuncia que se abrió WhatsApp */}
           <div aria-live="polite">
             {mostrar && elegidaNecesidad && elegidaEtapa && (
-              <p className="animate-fade-up text-sm leading-relaxed text-brand-100">
+              <p className="animate-fade-up text-sm leading-relaxed text-texto">
                 Te recomendamos {elegidaNecesidad.paso}.{' '}
                 <a
                   href={urlWhatsapp}
                   {...propsEnlace(urlWhatsapp)}
-                  className="font-semibold text-white underline underline-offset-2"
+                  className="font-semibold text-brand-900 underline underline-offset-2"
                 >
                   Si no se abrió WhatsApp, toca aquí
                 </a>{' '}
                 o{' '}
                 <Link
                   href={elegidaNecesidad.destino.href}
-                  className="font-semibold text-white underline underline-offset-2"
+                  className="font-semibold text-brand-900 underline underline-offset-2"
                 >
                   {elegidaNecesidad.destino.etiqueta.toLowerCase()}
                 </Link>

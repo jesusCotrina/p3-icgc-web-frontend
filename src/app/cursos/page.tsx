@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AutoReveal } from '@/components/AutoReveal';
 import { CourseCard } from '@/components/CourseCard';
+import { FondoLineas } from '@/components/FondoLineas';
 import { JsonLd } from '@/components/JsonLd';
 import { ProgramaAMedida } from '@/components/ProgramaAMedida';
 import { getCourses, getSettings } from '@/lib/api';
@@ -37,7 +38,6 @@ export default async function CursosPage() {
       settings,
       `Hola, vengo de la página web. Quiero más información sobre el curso "${curso.name}".`,
     );
-  const horasTotales = cursos.reduce((total, c) => total + c.lectiveHours, 0);
 
   return (
     <>
@@ -64,13 +64,14 @@ export default async function CursosPage() {
         ]}
       />
 
-      {/* ── Cabecera ── */}
-      <section className="border-b border-silver-200 bg-brand-soft">
+      {/* ── Cabecera: arena con una sola línea dorada ── */}
+      <section className="relative isolate overflow-hidden border-b border-dorado/25 bg-arena">
+        <FondoLineas lineas="una" className="-z-10" />
         <div className="container-icgc flex max-w-6xl flex-wrap items-end justify-between gap-6 py-10 lg:py-12">
           <div className="max-w-3xl">
             <p className="eyebrow">Capacitación</p>
             <h1 className="mt-2 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-              Cursos de capacitación en gestión comunal
+              Cursos de Capacitación en Gestión Comunal
             </h1>
             <p className="mt-4 text-pretty text-lg leading-relaxed text-slate-600">
               Programas en vivo, con material digital y certificado del ICGC, pensados para
@@ -79,10 +80,7 @@ export default async function CursosPage() {
           </div>
           {cursos.length > 0 && (
             <dl className="flex gap-3">
-              {[
-                { valor: cursos.length, etiqueta: cursos.length === 1 ? 'curso' : 'cursos' },
-                { valor: horasTotales, etiqueta: 'horas lectivas' },
-              ].map((dato) => (
+              {[{ valor: cursos.length, etiqueta: cursos.length === 1 ? 'curso' : 'cursos' }].map((dato) => (
                 <div key={dato.etiqueta} className="rounded-xl border border-brand-100 bg-white px-5 py-3 text-center shadow-card">
                   <dt className="sr-only">{dato.etiqueta}</dt>
                   <dd>
@@ -99,7 +97,7 @@ export default async function CursosPage() {
       {/* ── Catálogo ── */}
       <section aria-labelledby="cursos-titulo" className="container-icgc max-w-6xl py-12 lg:py-14">
         <h2 id="cursos-titulo" className="sr-only">
-          Nuestros cursos
+          Nuestros Cursos
         </h2>
         {cursos.length === 0 ? (
           <p className="rounded-xl border border-dashed border-silver-300 p-12 text-center text-slate-500">
@@ -117,9 +115,9 @@ export default async function CursosPage() {
       </section>
 
       {/* ── Programa a medida: se arma y se envía por WhatsApp ── */}
-      <section aria-labelledby="medida-titulo" className="container-icgc max-w-6xl pb-20">
+      <section aria-labelledby="medida-titulo">
         <ProgramaAMedida temas={cursos.map((c) => c.name)} whatsapp={settings.whatsapp} />
-        <p className="mt-5 text-center text-sm text-slate-600">
+        <p className="container-icgc mt-5 text-center text-sm text-slate-600">
           ¿Prefieres escribirnos con calma?{' '}
           <Link href="/nosotros#contacto" className="font-semibold text-brand-700 underline underline-offset-2">
             Usa el formulario de contacto del ICGC

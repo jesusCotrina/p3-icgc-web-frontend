@@ -8,7 +8,7 @@ import { PostBlocks, TableOfContents } from '@/components/PostBlocks';
 import { PostCard } from '@/components/PostCard';
 import { ViewCounter } from '@/components/ViewCounter';
 import { getCategories, getPost, getPosts, getSettings } from '@/lib/api';
-import { formatDate, isoDate } from '@/lib/format';
+import { enTitulo, formatDate, isoDate } from '@/lib/format';
 import {
   blogPostingSchema,
   breadcrumbSchema,
@@ -126,7 +126,7 @@ export default async function PostPage({ params }: { params: Params }) {
 
             {/* El h1 de la página es el título del artículo. Uno solo. */}
             <h1 className="mt-3 text-balance text-3xl font-extrabold leading-[1.15] sm:text-4xl">
-              {post.title}
+              {enTitulo(post.title)}
             </h1>
 
             {(post.subtitle || post.excerpt) && (
@@ -169,7 +169,7 @@ export default async function PostPage({ params }: { params: Params }) {
           {post.tags.length > 0 && (
             <footer className="mt-14 border-t border-silver-200 pt-8">
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                Temas de este artículo
+                Temas de Este Artículo
               </h2>
               <ul className="mt-4 flex flex-wrap gap-2.5">
                 {post.tags.map((tag) => (
@@ -203,7 +203,7 @@ export default async function PostPage({ params }: { params: Params }) {
                       <Link
                         href={`/blog?category=${c.slug}`}
                         aria-current={c.id === post.category?.id ? 'page' : undefined}
-                        className="flex items-center justify-between rounded-md px-2 py-1.5 text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-800 aria-[current=page]:font-bold aria-[current=page]:text-brand-800"
+                        className="flex items-center justify-between rounded-md px-2 py-1.5 text-texto transition-colors hover:bg-brand-50 hover:text-brand-800 aria-[current=page]:font-bold aria-[current=page]:text-brand-800"
                       >
                         {c.name}
                         <span className="text-xs text-slate-400">{c.postCount}</span>
@@ -225,7 +225,7 @@ export default async function PostPage({ params }: { params: Params }) {
         <section aria-labelledby="relacionados" className="border-t border-silver-200 bg-brand-soft">
           <div className="container-icgc py-16 lg:py-20">
             <h2 id="relacionados" className="text-2xl sm:text-3xl">
-              Sigue leyendo sobre gestión comunal
+              Sigue Leyendo sobre Gestión Comunal
             </h2>
             <div data-revelar-hijos className="mt-9 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item) => (

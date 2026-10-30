@@ -78,6 +78,29 @@ const nextConfig = {
       { source: '/programas', destination: '/cursos', permanent: true },
       // El formulario de contacto ahora vive al final de /nosotros
       { source: '/contacto', destination: '/nosotros#contacto', permanent: true },
+      // De 9 a 6 servicios (oct. 2026): cada página que se fue apunta al servicio que la absorbió
+      ...[
+        ['organizacion-y-gestion-comunal', 'empresas-comunales'],
+        ['negociacion-de-tierras-y-convenios', 'gestion-social-y-conflictos'],
+        ['gestion-de-proyectos-y-obras', 'gestion-de-proyectos-y-operaciones'],
+        ['licitaciones-y-contratos', 'gestion-de-proyectos-y-operaciones'],
+        ['gestion-empresarial-y-financiera', 'capacitacion'],
+      ].map(([antes, ahora]) => ({
+        source: `/servicios/${antes}`,
+        destination: `/servicios/${ahora}`,
+        permanent: true,
+      })),
+      // Catálogo nuevo de cursos (oct. 2026): los anteriores quedaron ocultos
+      ...[
+        ['gestion-y-organizacion-comunal', 'gestion-normativa-y-liderazgo-comunal'],
+        ['marco-legal-comunal', 'gestion-normativa-y-liderazgo-comunal'],
+        ['formulacion-de-proyectos', 'gestion-de-proyectos-comunales'],
+        ['liderazgo-y-conflictos', 'negociacion-y-manejo-de-conflictos'],
+      ].map(([antes, ahora]) => ({
+        source: `/cursos/${antes}`,
+        destination: `/cursos/${ahora}`,
+        permanent: true,
+      })),
     ];
   },
 };

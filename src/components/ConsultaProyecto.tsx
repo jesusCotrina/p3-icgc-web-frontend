@@ -16,10 +16,10 @@ const TIPOS = [
 
 /** Cada etapa sugiere el servicio que corresponde (su página en /servicios). */
 const ETAPAS = [
-  { texto: 'Es solo una idea', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
-  { texto: 'Tenemos perfil o expediente', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
-  { texto: 'Vamos a licitar', servicio: 'licitaciones-y-contratos', etiqueta: 'licitaciones y administración de contratos' },
-  { texto: 'La obra está en marcha', servicio: 'gestion-de-proyectos-y-obras', etiqueta: 'gestión de proyectos y obras' },
+  { texto: 'Es solo una idea', servicio: 'expedientes-tecnicos-y-proyectos-sociales', etiqueta: 'expedientes técnicos y proyectos sociales' },
+  { texto: 'Tenemos perfil o expediente', servicio: 'expedientes-tecnicos-y-proyectos-sociales', etiqueta: 'expedientes técnicos y proyectos sociales' },
+  { texto: 'Vamos a licitar', servicio: 'gestion-de-proyectos-y-operaciones', etiqueta: 'gestión de proyectos, licitaciones y contratos' },
+  { texto: 'La obra está en marcha', servicio: 'gestion-de-proyectos-y-operaciones', etiqueta: 'gestión de proyectos y operaciones' },
   { texto: 'La obra está paralizada', servicio: 'gestion-social-y-conflictos', etiqueta: 'gestión social y manejo de conflictos' },
 ] as const;
 
@@ -51,10 +51,10 @@ export function ConsultaProyecto({
   );
 
   const pastilla = (activa: boolean) =>
-    `inline-flex cursor-pointer items-center rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan-300 ${
+    `inline-flex cursor-pointer items-center rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-900 ${
       activa
-        ? 'border-white bg-white text-brand-900 shadow'
-        : 'border-white/25 bg-white/10 text-white hover:border-white/60 hover:bg-white/20'
+        ? 'border-brand-900 bg-brand-900 text-white shadow'
+        : 'border-dorado/40 bg-white text-brand-900 hover:border-brand-900 hover:bg-brand-50'
     }`;
 
   return (
@@ -65,14 +65,14 @@ export function ConsultaProyecto({
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
+        className="absolute inset-0 -z-10 bg-arena"
       />
-      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
+      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-dorado/15 blur-3xl" />
       {/* A pantalla completa, termina en el azul con que empieza el pie: un solo degradado */}
       {aPantallaCompleta && (
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-b from-transparent to-[#0B2545]"
+          className="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-b from-transparent to-[#173B65]"
         />
       )}
 
@@ -82,13 +82,13 @@ export function ConsultaProyecto({
         }`}
       >
         <div>
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-dorado-oscuro">
             Asesoría en proyectos
           </p>
-          <h2 id="consulta-titulo" className="mt-2 text-balance text-2xl text-white">
-            ¿Tu comunidad tiene un proyecto?
+          <h2 id="consulta-titulo" className="mt-2 text-balance text-2xl font-extrabold text-brand-900">
+            ¿Tu Comunidad Tiene un Proyecto?
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-brand-100">
+          <p className="mt-2 text-sm leading-relaxed text-texto">
             Cuéntanos qué proyecto es y en qué punto está: revisamos tu caso y te decimos qué se
             puede hacer.
           </p>
@@ -96,7 +96,7 @@ export function ConsultaProyecto({
 
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <fieldset>
-            <legend className="text-sm font-bold text-white">¿Qué tipo de proyecto?</legend>
+            <legend className="text-sm font-bold text-brand-900">¿Qué tipo de proyecto?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {TIPOS.map((t) => (
                 <label key={t} className={pastilla(tipo === t)}>
@@ -114,7 +114,7 @@ export function ConsultaProyecto({
           </fieldset>
 
           <fieldset>
-            <legend className="text-sm font-bold text-white">¿En qué punto está?</legend>
+            <legend className="text-sm font-bold text-brand-900">¿En qué punto está?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {ETAPAS.map((e) => (
                 <label key={e.texto} className={pastilla(etapa?.texto === e.texto)}>
@@ -132,13 +132,13 @@ export function ConsultaProyecto({
           </fieldset>
 
           {/* Sugerencia según la etapa elegida */}
-          <p aria-live="polite" className="text-sm text-brand-100 empty:hidden">
+          <p aria-live="polite" className="text-sm text-texto empty:hidden">
             {etapa && (
               <>
                 Te puede servir nuestro servicio de{' '}
                 <Link
                   href={`/servicios/${etapa.servicio}`}
-                  className="font-semibold text-white underline underline-offset-2"
+                  className="font-semibold text-brand-900 underline underline-offset-2"
                 >
                   {etapa.etiqueta}
                 </Link>

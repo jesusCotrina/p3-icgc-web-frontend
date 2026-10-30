@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatDateShort, isoDate } from '@/lib/format';
+import { enTitulo, formatDateShort, isoDate } from '@/lib/format';
 import type { PostSummaryDTO } from '@/lib/types';
 
 /**
@@ -66,7 +66,7 @@ export function PostCard({
           {/* El enlace envuelve el título: el anchor text describe el destino,
               que es exactamente lo que Google usa para entender la página. */}
           <Link href={href} className="transition-colors hover:text-brand-600">
-            {post.title}
+            {enTitulo(post.title)}
           </Link>
         </Heading>
 

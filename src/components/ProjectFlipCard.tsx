@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { nombreRegion } from '@/lib/presencia';
 import { PROJECT_STATUS_LABELS, type ProjectDTO, type ProjectStatus } from '@/lib/types';
+import { enTitulo } from '@/lib/format';
 
 /**
  * Etiqueta de estado con fondo sólido: sobre la foto, el blanco translúcido
@@ -45,9 +46,9 @@ export function ProjectFlipCard({
   /** Cara posterior breve: solo estado, región, inversión y el objetivo */
   resumido?: boolean;
   /**
-   * Al estilo de ppdperu.org: sin giro ni estado, región y título al centro y
-   * la foto apagada que recobra su color al pasar el mouse. Toda la tarjeta
-   * es el enlace a la página del proyecto.
+   * Al estilo de ppdperu.org: sin giro ni estado; al centro la empresa, una
+   * raya, la comunidad y su ubicación. La foto apagada recobra su color al
+   * pasar el mouse. Toda la tarjeta es el enlace a la página del proyecto.
    */
   mosaico?: boolean;
 }) {
@@ -88,20 +89,41 @@ export function ProjectFlipCard({
           className="absolute inset-0 bg-brand-950/40 transition-colors duration-500 group-hover:bg-brand-950/20"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">{region}</p>
-          <Titulo className="mt-3 text-balance text-xl font-bold leading-snug text-white">
-            {/* El enlace cubre toda la tarjeta (::after); el texto del título es el anchor text */}
+          {/* La empresa (minera u otra) arriba; sin empresa, la región */}
+          <p className="text-balance text-sm font-extrabold uppercase tracking-[0.14em] text-dorado-claro">
+            {proyecto.company || region}
+          </p>
+          <span
+            aria-hidden="true"
+            className="my-4 h-0.5 w-12 bg-dorado-claro transition-all duration-500 group-hover:w-24"
+          />
+          <Titulo className="line-clamp-4 text-balance text-xl font-bold leading-snug text-white">
+            {/* El enlace cubre toda la tarjeta (::after); la comunidad es el anchor text */}
             <Link
               href={`/proyectos/${proyecto.slug}`}
               className="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-4 focus-visible:after:ring-inset focus-visible:after:ring-white"
             >
-              {proyecto.title}
+              {enTitulo(proyecto.community || proyecto.title)}
             </Link>
           </Titulo>
-          <span
-            aria-hidden="true"
-            className="mt-4 h-0.5 w-10 bg-amber-300 transition-all duration-500 group-hover:w-20"
-          />
+          <p className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="shrink-0"
+            >
+              <path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {proyecto.location}
+          </p>
         </div>
       </article>
     );
@@ -136,15 +158,15 @@ export function ProjectFlipCard({
             {estado}
           </span>
           <div className="absolute inset-x-0 bottom-0 p-5 [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber-300">{region}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-dorado-claro">{region}</p>
             <Titulo className="mt-2 text-balance text-lg font-bold leading-snug text-white">
-              {proyecto.title}
+              {enTitulo(proyecto.title)}
             </Titulo>
           </div>
         </div>
 
         {/* ── Cara posterior: datos resumidos sobre un degradado claro ── */}
-        <div className={`absolute inset-0 flex flex-col overflow-hidden ${esquinas} bg-gradient-to-br from-white via-brand-50 to-cyan-100 p-5 text-slate-900 ring-1 ring-brand-100 [backface-visibility:hidden] [transform:rotateY(180deg)]`}>
+        <div className={`absolute inset-0 flex flex-col overflow-hidden ${esquinas} bg-gradient-to-br from-white via-brand-50 to-brand-100 p-5 text-texto ring-1 ring-brand-100 [backface-visibility:hidden] [transform:rotateY(180deg)]`}>
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-700">
             Resumen del proyecto
           </p>
@@ -157,14 +179,14 @@ export function ProjectFlipCard({
                 <dt className="text-[0.7rem] font-bold uppercase tracking-wide text-brand-700">
                   {dato.etiqueta}
                 </dt>
-                <dd className="mt-0.5 line-clamp-1 font-semibold text-slate-900" title={dato.valor}>
+                <dd className="mt-0.5 line-clamp-1 font-semibold text-texto" title={dato.valor}>
                   {dato.valor}
                 </dd>
               </div>
             ))}
           </dl>
           <p
-            className={`text-sm leading-relaxed text-slate-700 ${resumido ? 'mt-4 line-clamp-4' : 'mt-3 line-clamp-2'}`}
+            className={`text-sm leading-relaxed text-texto ${resumido ? 'mt-4 line-clamp-4' : 'mt-3 line-clamp-2'}`}
           >
             {proyecto.objective}
           </p>

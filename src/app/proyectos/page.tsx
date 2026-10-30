@@ -51,6 +51,7 @@ export default async function ProyectosPage() {
                 '@type': 'Project',
                 name: p.title,
                 description: p.objective,
+                ...(p.company ? { funder: { '@type': 'Organization', name: p.company } } : {}),
                 url: absoluteUrl(`/proyectos/${p.slug}`),
                 ...(p.coverImage ? { image: p.coverImage.url } : {}),
                 location: `${p.location}, ${nombreRegion(p.region)}, Perú`,
@@ -70,7 +71,7 @@ export default async function ProyectosPage() {
           <div className="xl:sticky xl:top-28 xl:self-start">
             <p className="eyebrow">Proyectos</p>
             <h1 className="mt-3 text-balance text-3xl font-extrabold leading-tight">
-              Proyectos que acompañamos en el Perú
+              Proyectos que Acompañamos en el Perú
             </h1>
             <p className="mt-3 text-pretty text-sm leading-relaxed text-slate-600">
               Obras y procesos que acompañamos junto a comunidades campesinas, nativas y entidades
@@ -84,14 +85,7 @@ export default async function ProyectosPage() {
                 items={proyectos.map((proyecto) => ({
                   slug: proyecto.slug,
                   tarjeta: (
-                    <ProjectFlipCard
-                      proyecto={proyecto}
-                      nivel="h2"
-                      textoEnlace="Ver ficha del proyecto"
-                      alto="h-[27rem]"
-                      rectas
-                      resumido
-                    />
+                    <ProjectFlipCard proyecto={proyecto} nivel="h2" alto="h-[27rem]" rectas mosaico />
                   ),
                 }))}
               />
@@ -112,7 +106,7 @@ export default async function ProyectosPage() {
         <div className="container-icgc py-14 lg:py-16">
           <p className="eyebrow">Consultoría y asesoría</p>
           <h2 id="consultoria-titulo" className="mt-3 max-w-3xl text-balance text-3xl sm:text-4xl">
-            Acompañamos tu proyecto de principio a fin
+            Acompañamos tu Proyecto de Principio a Fin
           </h2>
           <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-slate-600">
             Desde la licitación hasta la liquidación de la obra. Trabajamos con comunidades
@@ -131,7 +125,7 @@ export default async function ProyectosPage() {
         <div className="container-icgc">
           <p className="eyebrow">Cómo trabajamos</p>
           <h2 id="proceso" className="mt-3 text-balance text-3xl sm:text-4xl">
-            Cuatro etapas, sin sorpresas
+            Cuatro Etapas, sin Sorpresas
           </h2>
 
           <ol data-revelar-hijos className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -147,7 +141,7 @@ export default async function ProyectosPage() {
       </section>
 
       {/* ── Consulta interactiva: tipo de proyecto y etapa, directo a WhatsApp ── */}
-      <section aria-labelledby="consulta-titulo" className="-mb-12">
+      <section aria-labelledby="consulta-titulo">
         <ConsultaProyecto whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
       {/* Las secciones entran con la misma animación que el inicio */}

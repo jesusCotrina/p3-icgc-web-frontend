@@ -41,10 +41,10 @@ export function ProgramaAMedida({
 
   /** Pastilla seleccionable: la misma para temas, modalidad y grupo */
   const pastilla = (activa: boolean) =>
-    `inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.8rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-cyan-300 ${
+    `inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-[0.78rem] font-semibold transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-900 ${
       activa
-        ? 'border-white bg-white text-brand-900 shadow'
-        : 'border-white/25 bg-white/10 text-white hover:border-white/60 hover:bg-white/20'
+        ? 'border-brand-900 bg-brand-900 text-white shadow'
+        : 'border-dorado/40 bg-white text-brand-900 hover:border-brand-900 hover:bg-brand-50'
     }`;
 
   const grupoDeRadios = (
@@ -67,31 +67,32 @@ export function ProgramaAMedida({
     ));
 
   return (
-    <div className="relative isolate overflow-hidden rounded-2xl px-6 py-8 sm:px-8 lg:px-10">
-      {/* Fondo: degradado con una luz de color */}
+    // Franja a todo el ancho y baja: el contenido va en el contenedor de la página
+    <div className="relative isolate overflow-hidden py-8 lg:py-9">
+      {/* Fondo arena (paleta) con una luz dorada suave */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
+        className="absolute inset-0 -z-10 bg-arena"
       />
-      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-cyan-400/25 blur-3xl" />
+      <div aria-hidden="true" className="absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-dorado/15 blur-3xl" />
 
-      <div className="grid gap-7 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
+      <div className="container-icgc grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,8fr)] lg:items-center lg:gap-10">
         <div>
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-cyan-300">
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-dorado-oscuro">
             Programa a medida
           </p>
-          <h2 id="medida-titulo" className="mt-2 text-balance text-2xl text-white">
-            ¿Necesitas un programa a medida?
+          <h2 id="medida-titulo" className="mt-2 text-balance text-2xl font-extrabold text-brand-900">
+            ¿Necesitas un Programa a Medida?
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-brand-100">
+          <p className="mt-2 text-sm leading-relaxed text-texto">
             Adaptamos temas, fechas y modalidad a tu comunidad u organización, con certificado del
             ICGC. Elige lo que necesitas y te respondemos por WhatsApp.
           </p>
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
           <fieldset>
-            <legend className="text-sm font-bold text-white">Temas</legend>
+            <legend className="text-sm font-bold text-brand-900">Temas</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {opciones.map((tema) => {
                 const activo = elegidos.includes(tema);
@@ -111,25 +112,24 @@ export function ProgramaAMedida({
             </div>
           </fieldset>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-4">
+          <div className="flex flex-wrap items-end gap-x-8 gap-y-3">
             <fieldset>
-              <legend className="text-sm font-bold text-white">Modalidad</legend>
+              <legend className="text-sm font-bold text-brand-900">Modalidad</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {grupoDeRadios('modalidad', MODALIDADES, modalidad, setModalidad)}
               </div>
             </fieldset>
             <fieldset>
-              <legend className="text-sm font-bold text-white">Participantes</legend>
+              <legend className="text-sm font-bold text-brand-900">Participantes</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {grupoDeRadios('grupo', GRUPOS, grupo, setGrupo)}
               </div>
             </fieldset>
+            <a href={url} {...propsEnlace(url)} className="btn-primary py-2.5">
+              <WhatsAppIcon size={18} />
+              Enviar por WhatsApp
+            </a>
           </div>
-
-          <a href={url} {...propsEnlace(url)} className="btn-light">
-            <WhatsAppIcon size={18} />
-            Enviar por WhatsApp
-          </a>
         </form>
       </div>
     </div>

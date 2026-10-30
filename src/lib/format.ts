@@ -48,3 +48,34 @@ export function inicialesDe(nombre: string): string {
     .map((palabra) => palabra[0]!.toUpperCase())
     .join('');
 }
+
+/** Palabras cortas que van en minúscula dentro de un título (salvo al inicio). */
+const MENORES = new Set([
+  'a', 'al', 'ante', 'con', 'de', 'del', 'e', 'el', 'en', 'la', 'las', 'lo', 'los', 'o',
+  'le', 'les', 'me', 'mi', 'mis', 'nos', 'para', 'por', 'que', 'se', 'sin', 'sobre', 'su', 'sus',
+  'te', 'tu', 'tus', 'u', 'un', 'una', 'y',
+]);
+
+/**
+ * Título con mayúscula inicial en cada palabra, al estilo del sitio:
+ * "un instituto al servicio de las comunidades" → "Un Instituto al Servicio de las Comunidades".
+ * Las palabras cortas (de, la, y, para...) quedan en minúscula salvo al inicio o
+ * después de ":"; las siglas y nombres con mayúsculas internas (ICGC, SUNARP,
+ * QA/QC, S.A.A.) no se tocan. `continua`: el texto sigue a otro tramo del
+ * mismo título, así que su primera palabra no cuenta como inicio.
+ */
+export function enTitulo(texto: string, continua = false): string {
+  let inicio = !continua;
+  return texto.replace(/[^\s]+/g, (palabra) => {
+    const letras = palabra.replace(/[^\p{L}]/gu, '');
+    const esPrimera = inicio;
+    inicio = /[:.?!]$/.test(palabra);
+    if (!letras) return palabra;
+    // Siglas o mayúsculas internas: se respetan
+    if (/\p{Lu}/u.test(letras.slice(1))) return palabra;
+    const base = letras.toLowerCase();
+    if (!esPrimera && MENORES.has(base)) return palabra.toLowerCase();
+    // Primera letra de la palabra (después de ¿ ¡ “ ( etc.) en mayúscula
+    return palabra.replace(/\p{L}/u, (l) => l.toUpperCase());
+  });
+}

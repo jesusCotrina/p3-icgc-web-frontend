@@ -24,8 +24,9 @@ export const NAV_LINKS = [
 export function Header({ settings }: { settings: SiteSettingsDTO }) {
   const waUrl = whatsappUrl(settings, 'general');
 
+  // Blanco, con el contraste de la paleta: nombre en azul institucional y detalles en dorado
   return (
-    <header className="sticky top-0 z-40 border-b border-silver-200 bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-silver-200 bg-white/95 backdrop-blur-md">
       <div className="container-icgc flex h-20 items-center justify-between gap-4">
         <Link
           href="/"
@@ -43,12 +44,12 @@ export function Header({ settings }: { settings: SiteSettingsDTO }) {
           {/* El nombre completo es la marca que queremos asociar en Google.
               En móvil se corta a "ICGC" para que quepa sin romper la barra. */}
           <span className="leading-tight">
-            <span className="block text-base font-extrabold tracking-tight text-brand-900 sm:hidden">
+            <span className="block text-lg font-extrabold tracking-tight text-brand-900 sm:hidden">
               ICGC
             </span>
-            <span className="hidden max-w-[15rem] text-[0.95rem] font-extrabold leading-[1.15] tracking-tight text-brand-900 sm:block xl:max-w-none">
+            <span className="hidden max-w-[17rem] text-[1.08rem] font-extrabold leading-[1.15] tracking-tight text-texto sm:block xl:max-w-none">
               Instituto de Capacitación
-              <span className="block font-bold text-brand-600">en Gestión Comunal</span>
+              <span className="block font-bold text-brand-900">en Gestión Comunal</span>
             </span>
           </span>
         </Link>
@@ -59,7 +60,7 @@ export function Header({ settings }: { settings: SiteSettingsDTO }) {
 
           {/* El número sale de los datos generales del gestor; si está vacío,
               whatsappUrl() devuelve el formulario de /nosotros y el botón sigue sirviendo. */}
-          <Link href={waUrl} {...propsEnlace(waUrl)} className="btn-whatsapp hidden md:inline-flex">
+          <Link href={waUrl} {...propsEnlace(waUrl)} className="btn-primary hidden font-bold md:inline-flex">
             <WhatsAppIcon size={18} />
             Solicitar información
           </Link>

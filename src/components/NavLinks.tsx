@@ -37,8 +37,8 @@ export function NavLinks({ links }: { links: readonly NavLink[] }) {
             aria-current={activo ? 'page' : undefined}
             className={`relative rounded-lg px-3.5 py-2 text-sm transition-colors after:absolute after:inset-x-3.5 after:-bottom-0.5 after:h-0.5 after:rounded-full after:transition-colors ${
               activo
-                ? 'bg-brand-50 font-semibold text-brand-700 after:bg-brand-600'
-                : 'font-medium text-brand-800 after:bg-transparent hover:bg-brand-50 hover:text-brand-600'
+                ? 'bg-brand-50 font-semibold text-brand-900 after:bg-dorado'
+                : 'font-medium text-texto after:bg-transparent hover:bg-brand-50 hover:text-brand-900'
             }`}
           >
             {link.label}

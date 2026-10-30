@@ -5,11 +5,13 @@ import { notFound } from 'next/navigation';
 import { AutoReveal } from '@/components/AutoReveal';
 import { CheckIcon, WhatsAppIcon } from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
+import { OrientadorSiguientePaso } from '@/components/OrientadorSiguientePaso';
 import { ServicioCard } from '@/components/ServicioCard';
 import { getSettings } from '@/lib/api';
 import { absoluteUrl, breadcrumbSchema, buildMetadata } from '@/lib/seo';
 import { COMO_TRABAJAMOS, SERVICIOS, servicioPorSlug } from '@/lib/servicios';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
+import { enTitulo } from '@/lib/format';
 
 export const revalidate = 86400;
 // Los servicios viven en el código: un slug que no está en la lista es un 404 real
@@ -104,7 +106,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
             <p className="eyebrow mt-4">Servicio</p>
             {/* El h1 de la página es el nombre del servicio. Uno solo. */}
             <h1 className="mt-2 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-              {servicio.titulo}
+              {enTitulo(servicio.titulo)}
             </h1>
             <p className="mt-4 text-pretty text-lg leading-relaxed text-slate-600">
               {servicio.descripcion}
@@ -137,7 +139,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
       {/* ── Qué incluye ── */}
       <section aria-labelledby="incluye" className="container-icgc max-w-6xl py-12 lg:py-14">
         <h2 id="incluye" className="text-2xl sm:text-3xl">
-          ¿Qué incluye el servicio?
+          ¿Qué Incluye el Servicio?
         </h2>
         <ul data-revelar-hijos className="mt-7 grid gap-4 sm:grid-cols-2">
           {servicio.incluye.map((punto) => (
@@ -148,7 +150,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
                 <CheckIcon size={16} />
               </span>
-              <span className="pt-1 font-semibold leading-snug text-slate-800">{punto}</span>
+              <span className="pt-1 font-semibold leading-snug text-texto">{punto}</span>
             </li>
           ))}
         </ul>
@@ -158,7 +160,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
       <section aria-labelledby="como-trabajamos" className="bg-brand-soft py-12 lg:py-14">
         <div className="container-icgc max-w-6xl">
           <h2 id="como-trabajamos" className="text-2xl sm:text-3xl">
-            Cómo trabajamos
+            Cómo Trabajamos
           </h2>
           <ol data-revelar-hijos className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {COMO_TRABAJAMOS.map((paso) => (
@@ -176,7 +178,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
       {servicio.relacionados.length > 0 && (
         <section aria-labelledby="relacionados" className="container-icgc max-w-6xl pt-12 lg:pt-14">
           <h2 id="relacionados" className="text-2xl sm:text-3xl">
-            Para saber más
+            Para Saber Más
           </h2>
           <ul className="mt-5 flex flex-wrap gap-3">
             {servicio.relacionados.map((r) => (
@@ -197,7 +199,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
       {/* ── Otros servicios ── */}
       <section aria-labelledby="otros-servicios" className="container-icgc max-w-6xl py-12 lg:py-16">
         <h2 id="otros-servicios" className="text-2xl sm:text-3xl">
-          Otros servicios del ICGC
+          Otros Servicios del ICGC
         </h2>
         <ul data-revelar-hijos className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {otros.map((s) => (
@@ -206,6 +208,11 @@ export default async function ServicioPage({ params }: { params: Params }) {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* ── Siguiente paso: la misma franja arena que cierra el inicio y /servicios ── */}
+      <section aria-labelledby="cta-titulo">
+        <OrientadorSiguientePaso whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
       <AutoReveal />
     </>

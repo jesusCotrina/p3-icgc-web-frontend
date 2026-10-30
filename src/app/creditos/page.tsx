@@ -71,7 +71,7 @@ export default async function CreditosPage() {
 
   return (
     <section className="container-icgc pb-16 pt-8 lg:pt-10">
-      <h1 className="text-3xl font-extrabold">Créditos de las fotos</h1>
+      <h1 className="text-3xl font-extrabold">Créditos de las Fotos</h1>
       <p className="mt-3 max-w-2xl text-pretty text-slate-600">
         Agradecemos a los autores que comparten sus fotografías con licencias libres. Estas son las
         imágenes que usamos en el sitio, con su autor y su licencia.

@@ -45,6 +45,17 @@ export function BookIcon({ className = '', size = 18 }: IconProps) {
   );
 }
 
+/** Maletín: para "Ver servicios". */
+export function BriefcaseIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+      <path d="M2 13h20" />
+    </svg>
+  );
+}
+
 /** Apretón de manos estilizado: para "Quiero asesoría". */
 export function HandshakeIcon({ className = '', size = 18 }: IconProps) {
   return (
@@ -83,6 +94,66 @@ export function ArrowRightIcon({ className = '', size = 16 }: IconProps) {
     <svg width={size} height={size} {...base} strokeWidth={2.5} className={className}>
       <path d="M5 12h14" />
       <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+}
+
+/** Cámara de video: modalidad en vivo / virtual. */
+export function VideoIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11" />
+      <rect x="2" y="6" width="14" height="12" rx="2" />
+    </svg>
+  );
+}
+
+/** Reloj: horas lectivas. */
+export function ClockIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </svg>
+  );
+}
+
+/** Calendario: duración. */
+export function CalendarIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  );
+}
+
+/** Documento: material del curso. */
+export function FileIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4M10 13h6M10 17h6M8 9h2" />
+    </svg>
+  );
+}
+
+/** Medalla: certificación. */
+export function AwardIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <circle cx="12" cy="8" r="6" />
+      <path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1" />
+    </svg>
+  );
+}
+
+/** Persona: docente a cargo. */
+export function UserIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
     </svg>
   );
 }

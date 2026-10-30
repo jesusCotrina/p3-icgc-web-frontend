@@ -9,7 +9,7 @@
  * Va DENTRO del encabezado: el <h1> lleva el aria-label con el texto completo
  * para que el lector de pantalla no lo lea letra por letra.
  */
-type Segmento = { texto: string; className?: string };
+export type Segmento = { texto: string; className?: string };
 
 export function Typewriter({
   segmentos,
@@ -24,18 +24,32 @@ export function Typewriter({
   const retraso = () => ({ '--d': `${inicioMs + indice++ * msPorLetra}ms` }) as React.CSSProperties;
   const paso = { '--paso': `${msPorLetra}ms` } as React.CSSProperties;
 
+  const ultimo = segmentos.length - 1;
+
   return (
     <span aria-hidden="true" style={paso}>
-      {segmentos.map((segmento, s) => (
-        <span key={s} className={segmento.className}>
-          {Array.from(segmento.texto).map((letra, l) => (
-            <span key={l} className="tw-letra" style={retraso()}>
-              {letra}
-            </span>
-          ))}
-        </span>
-      ))}
-      <span className="tw-cursor" style={retraso()} />
+      {segmentos.map((segmento, s) => {
+        const letras = Array.from(segmento.texto);
+        return (
+          <span key={s} className={segmento.className}>
+            {letras.map((letra, l) => {
+              const span = (
+                <span key={l} className="tw-letra" style={retraso()}>
+                  {letra}
+                </span>
+              );
+              // La última letra y el cursor van juntos: el cursor nunca baja solo a otra línea
+              if (s !== ultimo || l !== letras.length - 1) return span;
+              return (
+                <span key={l} className="whitespace-nowrap">
+                  {span}
+                  <span className="tw-cursor" style={retraso()} />
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
     </span>
   );
 }

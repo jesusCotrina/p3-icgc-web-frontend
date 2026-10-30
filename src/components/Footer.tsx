@@ -88,9 +88,9 @@ export function Footer({
   const mapaUrl = `https://www.google.com/maps?q=${encodeURIComponent(lugar)}&output=embed`;
 
   return (
-    // Arriba arranca en azul marino liso y recién después aparece su degradado:
-    // así empalma sin corte con una franja oscura justo encima (cierre del inicio)
-    <footer className="mt-12 bg-[linear-gradient(180deg,#0B2545_0,rgba(11,37,69,0)_9rem),linear-gradient(135deg,#0B2545_0%,#1452A3_55%,#2E8BE0_100%)] text-brand-100">
+    // Azul institucional a secundario (paleta). El mt-12 deja una franja blanca
+    // entre el cierre arena de cada página y el pie
+    <footer className="mt-12 bg-brand-gradient text-brand-100">
       <div className="container-icgc py-10 lg:py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.6fr)]">
           {/* Identidad */}

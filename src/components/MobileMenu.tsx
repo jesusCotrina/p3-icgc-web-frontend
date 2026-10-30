@@ -47,7 +47,7 @@ export function MobileMenu({
         aria-expanded={open}
         aria-controls="menu-movil"
         aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-silver-200 text-brand-800 transition-colors hover:bg-brand-50"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-silver-200 text-brand-900 transition-colors hover:bg-brand-50"
       >
         <svg
           width="22"

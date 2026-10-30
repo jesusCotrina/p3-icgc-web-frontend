@@ -1,6 +1,6 @@
 import type { Cliente } from '@/components/LogoMarquee';
 
-/** Empresas y comunidades que trabajan con el instituto (logos en public/clientes). */
+/** Comunidades y sus empresas comunales que trabajan con el instituto (logos en public/clientes). */
 export const CLIENTES: readonly Cliente[] = [
   {
     nombre: 'Comunidad Campesina Santa Rosa de Colquijirca',
@@ -32,6 +32,36 @@ export const CLIENTES: readonly Cliente[] = [
     width: 365,
     height: 320,
   },
+];
+
+
+/** Empresas mineras con las que se negoció (segunda cinta, "Negociación con Empresas Mineras"). */
+export const MINERAS: readonly Cliente[] = [
+  {
+    nombre: 'Compañía Minera Raura',
+    logo: '/clientes/minera-raura.avif',
+    width: 354,
+    height: 123,
+  },
+  {
+    nombre: 'Compañía de Minas Buenaventura',
+    logo: '/clientes/buenaventura.avif',
+    width: 652,
+    height: 106,
+  },
+  {
+    nombre: 'Sociedad Minera El Brocal',
+    logo: '/clientes/minera-el-brocal.webp',
+    width: 460,
+    height: 138,
+  },
+  {
+    nombre: 'Hochschild Mining',
+    logo: '/clientes/hochschild-mining.webp',
+    width: 619,
+    height: 320,
+    grande: true,
+  },
   {
     nombre: 'Paltarumi',
     logo: '/clientes/paltarumi.webp',
@@ -39,4 +69,3 @@ export const CLIENTES: readonly Cliente[] = [
     height: 320,
   },
 ];
-

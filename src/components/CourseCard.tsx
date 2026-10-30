@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { CourseDTO } from '@/lib/types';
 import { WhatsAppIcon } from '@/components/Icons';
 import { propsEnlace } from '@/lib/whatsapp';
+import { enTitulo } from '@/lib/format';
 
 /** Ícono pequeño de cada dato del curso (decorativo, el texto ya lo dice). */
 function Dato({ icono, children }: { icono: React.ReactNode; children: React.ReactNode }) {
@@ -79,7 +80,7 @@ export function CourseCard({
     // se desvanece a blanco translúcido, como vidrio
     <article
       data-curso={curso.slug}
-      className="group h-full rounded-xl bg-silver-200 p-[2px] transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-brand-900 hover:via-brand-500/60 hover:to-sky-200/80 hover:shadow-[0_14px_34px_-12px_rgba(11,37,69,0.45),inset_0_1px_0_rgba(255,255,255,0.6)]"
+      className="group h-full rounded-xl bg-silver-200 p-[2px] transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-brand-900 hover:via-brand-500/60 hover:to-brand-200/80 hover:shadow-[0_14px_34px_-12px_rgba(11,37,69,0.45),inset_0_1px_0_rgba(255,255,255,0.6)]"
     >
       <div className="flex h-full flex-col overflow-hidden rounded-[0.65rem] bg-white">
         <Link href={url} tabIndex={-1} aria-hidden="true" className="relative block aspect-[16/9] overflow-hidden bg-brand-50">
@@ -101,11 +102,11 @@ export function CourseCard({
           </p>
           <Titulo className={`mt-1.5 text-balance font-bold leading-snug ${t.titulo}`}>
             <Link href={url} className="text-brand-900 hover:text-brand-600">
-              {curso.name}
+              {enTitulo(curso.name)}
             </Link>
           </Titulo>
 
-          <ul className={`grid gap-1.5 text-slate-700 ${t.datos}`}>
+          <ul className={`grid gap-1.5 text-texto ${t.datos}`}>
             <Dato icono={<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}>
               <span>
                 <strong className="font-semibold text-brand-900">{curso.lectiveHours}</strong> horas

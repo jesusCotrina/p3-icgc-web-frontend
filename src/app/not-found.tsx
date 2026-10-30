@@ -16,7 +16,7 @@ export default function NotFound() {
     <section className="container-icgc flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
       <p className="text-7xl font-black text-brand-200">404</p>
       <h1 className="mt-5 text-balance text-3xl sm:text-4xl">
-        No encontramos la página que buscas
+        No Encontramos la Página que Buscas
       </h1>
       <p className="mt-4 max-w-md text-slate-600">
         Puede que el enlace haya cambiado o que la página ya no exista. Te dejamos algunos caminos

@@ -67,15 +67,15 @@ export default async function ServiciosPage() {
         ]}
       />
 
-      {/* ── Cabecera: degradado celeste suave de la marca ── */}
-      <section className="relative isolate overflow-hidden bg-gradient-to-br from-brand-300/70 via-brand-100 to-sky-200">
-        <FondoLineas className="-z-10" />
+      {/* ── Cabecera: arena con una sola línea dorada ── */}
+      <section className="relative isolate overflow-hidden border-b border-dorado/25 bg-arena">
+        <FondoLineas lineas="una" className="-z-10" />
         <div className="container-icgc max-w-6xl py-10 lg:py-12">
-          <p className="eyebrow !text-brand-700">Servicios</p>
+          <p className="eyebrow">Servicios</p>
           <h1 className="mt-2 max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-            Servicios de consultoría para comunidades
+            Servicios de Consultoría para Comunidades
           </h1>
-          <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-slate-700">
+          <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-texto">
             Acompañamos a comunidades campesinas y a sus empresas en todo el camino: desde ordenar
             la organización y negociar con empresas mineras y privadas hasta ejecutar sus obras y
             capacitar a sus dirigentes.
@@ -86,7 +86,7 @@ export default async function ServiciosPage() {
       {/* ── Servicios ── */}
       <section aria-labelledby="lista-servicios" className="container-icgc max-w-6xl py-12 lg:py-14">
         <h2 id="lista-servicios" className="sr-only">
-          Nuestros servicios
+          Nuestros Servicios
         </h2>
         <ul data-revelar-hijos className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {SERVICIOS.map((s) => (
@@ -101,7 +101,7 @@ export default async function ServiciosPage() {
       <SeccionClientes />
 
       {/* ── Siguiente paso: franja de borde a borde que empalma con el pie ── */}
-      <section aria-labelledby="cta-titulo" className="-mb-12">
+      <section aria-labelledby="cta-titulo">
         <OrientadorSiguientePaso whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
       <AutoReveal />

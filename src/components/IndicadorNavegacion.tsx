@@ -46,7 +46,7 @@ export function IndicadorNavegacion() {
   return (
     <div role="status" aria-live="polite" className="aparecer-con-retraso">
       <div className="fixed inset-x-0 top-0 z-[100] h-1 overflow-hidden">
-        <div className="barra-navegacion h-full bg-gradient-to-r from-brand-500 via-cyan-400 to-brand-600" />
+        <div className="barra-navegacion h-full bg-gradient-to-r from-dorado via-dorado-claro to-dorado" />
       </div>
       <div className="fixed left-1/2 top-24 z-[100] flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-800 shadow-card-hover ring-1 ring-brand-100">
         <span

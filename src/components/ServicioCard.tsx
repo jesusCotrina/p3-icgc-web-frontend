@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Servicio } from '@/lib/servicios';
+import { BriefcaseIcon } from './Icons';
+import { enTitulo } from '@/lib/format';
 
 /**
  * Tarjeta de servicio: foto baja, título, una frase corta y "Más detalles".
@@ -38,11 +40,17 @@ export function ServicioCard({
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
-        <Titulo className="text-balance text-[1.02rem] font-bold leading-snug">
-          <Link href={url} className="text-brand-900 transition-colors group-hover:text-brand-600">
-            {servicio.titulo}
-          </Link>
-        </Titulo>
+        {/* El mismo ícono en todas: marca visual, no cambia el texto del enlace */}
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors group-hover:bg-brand-900">
+            <BriefcaseIcon size={18} />
+          </span>
+          <Titulo className="text-balance pt-1 text-[1.02rem] font-bold leading-snug">
+            <Link href={url} className="text-brand-900 transition-colors group-hover:text-brand-600">
+              {enTitulo(servicio.titulo)}
+            </Link>
+          </Titulo>
+        </div>
         <p className="mt-2 flex-1 text-pretty text-sm leading-relaxed text-slate-600">
           {servicio.resumen}
         </p>

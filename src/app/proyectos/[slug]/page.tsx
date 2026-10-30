@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AutoReveal } from '@/components/AutoReveal';
 import { ConsultaProyecto } from '@/components/ConsultaProyecto';
-import { CheckIcon, WhatsAppIcon } from '@/components/Icons';
+import { BlueprintIcon, WhatsAppIcon } from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
 import { ProjectFlipCard } from '@/components/ProjectFlipCard';
 import { esProyectoDeEjemplo, getProject, getProjects, getSettings } from '@/lib/api';
 import { nombreRegion } from '@/lib/presencia';
 import { absoluteUrl, breadcrumbSchema, buildMetadata } from '@/lib/seo';
-import { PROJECT_STATUS_LABELS, type ProjectStatus } from '@/lib/types';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
+import { enTitulo } from '@/lib/format';
 
 // HTML estático; el gestor lo invalida al guardar (etiqueta "projects")
 export const revalidate = 86400;
@@ -19,14 +19,6 @@ export const revalidate = 86400;
 export const dynamicParams = true;
 
 type Params = Promise<{ slug: string }>;
-
-/** Color de la etiqueta de estado. */
-const ESTILO_ESTADO: Record<ProjectStatus, string> = {
-  IN_PROGRESS: 'bg-amber-100 text-amber-900',
-  COMPLETED: 'bg-emerald-100 text-emerald-900',
-  IN_FORMULATION: 'bg-brand-100 text-brand-900',
-  STOPPED: 'bg-rose-100 text-rose-900',
-};
 
 export async function generateStaticParams() {
   const proyectos = await getProjects();
@@ -78,16 +70,6 @@ export default async function ProyectoPage({ params }: { params: Params }) {
     ...proyectos.filter((p) => p.slug !== proyecto.slug && p.region !== proyecto.region),
   ].slice(0, 3);
 
-  const datos = [
-    { etiqueta: 'Inversión', valor: proyecto.capital },
-    { etiqueta: 'Duración', valor: proyecto.duration },
-    { etiqueta: 'Área', valor: proyecto.area },
-    { etiqueta: 'Comunidad', valor: proyecto.community },
-    { etiqueta: 'Comunidades beneficiadas', valor: String(proyecto.communitiesBenefited) },
-    { etiqueta: 'Quién lo ejecuta', valor: proyecto.implementingEntity },
-    { etiqueta: 'Ubicación', valor: `${proyecto.location} (${region})` },
-  ];
-
   return (
     <>
       <JsonLd
@@ -99,6 +81,22 @@ export default async function ProyectoPage({ params }: { params: Params }) {
             name: proyecto.title,
             description: proyecto.objective,
             url: absoluteUrl(`/proyectos/${proyecto.slug}`),
+            ...(proyecto.company ? { funder: { '@type': 'Organization', name: proyecto.company } } : {}),
+            // Los trabajos realizados, como partes del proyecto
+            ...(proyecto.items.length > 0
+              ? {
+                  subjectOf: {
+                    '@type': 'ItemList',
+                    name: `Trabajos realizados: ${proyecto.title}`,
+                    itemListElement: proyecto.items.map((item, i) => ({
+                      '@type': 'ListItem',
+                      position: i + 1,
+                      name: item.title,
+                      description: item.description,
+                    })),
+                  },
+                }
+              : {}),
             ...(proyecto.coverImage ? { image: proyecto.coverImage.url } : {}),
             location: {
               '@type': 'Place',
@@ -143,18 +141,22 @@ export default async function ProyectoPage({ params }: { params: Params }) {
               </ol>
             </nav>
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className={`rounded-full px-3 py-1 text-xs font-bold ${ESTILO_ESTADO[proyecto.status]}`}>
-                {PROJECT_STATUS_LABELS[proyecto.status]}
-              </span>
+              {proyecto.company && (
+                <span className="rounded-full bg-brand-900 px-3 py-1 text-xs font-bold uppercase tracking-wider text-dorado-claro">
+                  {proyecto.company}
+                </span>
+              )}
               <span className="rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700 ring-1 ring-brand-100">
-                {region}
+                {proyecto.location}
+                {proyecto.location.includes(region) ? '' : ` · ${region}`}
               </span>
             </div>
             {/* El h1 de la página es el nombre del proyecto. Uno solo. */}
             <h1 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-              {proyecto.title}
+              {enTitulo(proyecto.title)}
             </h1>
-            <p className="mt-4 text-pretty text-lg leading-relaxed text-slate-600">
+            <p className="mt-3 text-lg font-bold text-brand-800">{proyecto.community}</p>
+            <p className="mt-3 text-pretty text-lg leading-relaxed text-slate-600">
               {proyecto.objective}
             </p>
             <Link href={urlWhatsapp} {...propsEnlace(urlWhatsapp)} className="btn-whatsapp mt-7 font-bold">
@@ -178,53 +180,46 @@ export default async function ProyectoPage({ params }: { params: Params }) {
         </div>
       </section>
 
-      {/* ── Todos los datos ── */}
-      <section aria-labelledby="datos" className="container-icgc max-w-6xl py-12 lg:py-14">
-        <h2 id="datos" className="text-2xl sm:text-3xl">
-          Datos del proyecto
-        </h2>
-        <dl data-revelar-hijos className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {datos.map((dato) => (
-            <div key={dato.etiqueta} className="rounded-xl border border-silver-200 bg-white p-5 shadow-card">
-              <dt className="text-xs font-bold uppercase tracking-wider text-brand-700">
-                {dato.etiqueta}
-              </dt>
-              <dd className="mt-1.5 font-semibold leading-snug text-slate-900">{dato.valor}</dd>
-            </div>
-          ))}
-        </dl>
-
-        {proyecto.achievements.length > 0 && (
-          <>
-            <h2 className="mt-12 text-2xl sm:text-3xl">Avances y logros</h2>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {proyecto.achievements.map((logro) => (
-                <li
-                  key={logro}
-                  className="flex gap-3.5 rounded-xl border border-silver-200 bg-white p-4 shadow-card"
-                >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
-                    <CheckIcon size={14} />
-                  </span>
-                  <span className="pt-0.5 leading-relaxed text-slate-700">{logro}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </section>
+      {/* ── Trabajos realizados: uno por tarjeta, cada uno con su ícono ── */}
+      {proyecto.items.length > 0 && (
+        <section aria-labelledby="trabajos" className="container-icgc max-w-6xl py-12 lg:py-14">
+          <h2 id="trabajos" className="text-2xl sm:text-3xl">
+            Trabajos Realizados
+          </h2>
+          <ul data-revelar-hijos className="mt-7 grid gap-4 sm:grid-cols-2">
+            {proyecto.items.map((item) => (
+              <li
+                key={item.title}
+                className="flex gap-4 rounded-xl border border-silver-200 bg-white p-5 shadow-card"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+                  <BlueprintIcon size={20} />
+                </span>
+                <div>
+                  <h3 className="text-lg font-bold leading-snug text-brand-900">{enTitulo(item.title)}</h3>
+                  {item.description && (
+                    <p className="mt-1.5 text-pretty leading-relaxed text-slate-600">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* ── Otros proyectos: enlazado interno ── */}
       {otros.length > 0 && (
         <section aria-labelledby="otros-proyectos" className="bg-brand-soft py-12 lg:py-14">
           <div className="container-icgc max-w-6xl">
             <h2 id="otros-proyectos" className="text-2xl sm:text-3xl">
-              Otros proyectos del ICGC
+              Otros Proyectos del ICGC
             </h2>
             <ul className="mt-7 grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
               {otros.map((p) => (
                 <li key={p.slug}>
-                  <ProjectFlipCard proyecto={p} alto="h-[24rem]" rectas resumido />
+                  <ProjectFlipCard proyecto={p} alto="h-[24rem]" rectas mosaico />
                 </li>
               ))}
             </ul>
@@ -233,7 +228,7 @@ export default async function ProyectoPage({ params }: { params: Params }) {
       )}
 
       {/* ── Cierre: franja de borde a borde que empalma con el pie ── */}
-      <section aria-labelledby="consulta-titulo" className="-mb-12">
+      <section aria-labelledby="consulta-titulo">
         <ConsultaProyecto whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
       <AutoReveal />

@@ -264,7 +264,7 @@ export function TableOfContents({ blocks }: { blocks: PostBlockDTO[] }) {
   return (
     <nav aria-labelledby="toc-title" className="rounded-xl border border-brand-100 bg-brand-50/60 p-5">
       <h2 id="toc-title" className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-700">
-        En este artículo
+        En Este Artículo
       </h2>
       <ol className="space-y-1 text-sm">
         {headings.map((h) => (

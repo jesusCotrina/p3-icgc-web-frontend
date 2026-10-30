@@ -6,7 +6,9 @@ Todas provienen de Wikimedia Commons. Se redimensionaron a 1920 px y se convirti
 |---|---|---|---|
 | linderaje-comunidad-campesina-yanacona.webp | AleliPao | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Linderaje_comunidad_campesina_Yanacona.jpg |
 | comunidad-campesina-santa-cruz-de-cumi.webp | Ordzonhyd Rudyard Tarco Palomino | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Comunidad_Campesina_Santa_Cruz_de_Cumi_04.jpg |
-| paisaje-andino-laguna-quellacocha.webp | Nina Reicer | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Quellacocha_(Amazing_Andean_landscape_with_glacial_lake)_04.jpg |
+| entrega-de-maquinaria-a-la-comunidad-hd.webp | ICGC (foto propia, mejorada con Real-ESRGAN) | — | — |
+
+Las fotos de `public/servicios/` también son propias del ICGC (no llevan crédito).
 
 ## Proyectos y cursos
 

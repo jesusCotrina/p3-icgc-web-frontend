@@ -3,11 +3,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AutoReveal } from '@/components/AutoReveal';
 import { ContactForm } from '@/components/ContactForm';
+import { AwardIcon } from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
 import { getSettings, logoSrc } from '@/lib/api';
 import { direccionDelSitio } from '@/lib/direccion';
-import { inicialesDe } from '@/lib/format';
-import { LEMA, MISION, QUIENES_SOMOS, VALORES, VISION } from '@/lib/institucional';
+import { enTitulo, inicialesDe } from '@/lib/format';
+import {
+  AREAS_EQUIPO,
+  EQUIPO_INTRO,
+  LEMA,
+  MISION,
+  QUIENES_SOMOS,
+  RECONOCIMIENTOS,
+  RECONOCIMIENTOS_INTRO,
+  VISION,
+} from '@/lib/institucional';
 import { absoluteUrl, breadcrumbSchema, buildMetadata } from '@/lib/seo';
 
 export const revalidate = 86400;
@@ -25,39 +35,15 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-const HITOS = [
-  {
-    año: '2010',
-    texto: 'Primeros talleres de capacitación a juntas directivas en la sierra central.',
-  },
-  {
-    año: '2015',
-    texto: 'Formalización del instituto y lanzamiento del primer diplomado.',
-  },
-  {
-    año: '2019',
-    texto: 'Expansión a comunidades nativas de la Amazonía peruana.',
-  },
-  { año: '2023', texto: 'Modalidad blended: alcance a 12 regiones del país.' },
-] as const;
-
-/** Línea de tiempo vertical: la usan la historia del instituto y la del líder. */
-function LineaDeTiempo({ pasos }: { pasos: readonly { titulo: string; texto: string }[] }) {
-  return (
-    <ol className="mt-10 space-y-8 border-l-2 border-brand-200 pl-8">
-      {pasos.map((paso) => (
-        <li key={`${paso.titulo}-${paso.texto}`} className="relative">
-          <span
-            aria-hidden="true"
-            className="absolute -left-[2.3rem] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-brand-500"
-          />
-          <h3 className="text-xl text-brand-600">{paso.titulo}</h3>
-          <p className="mt-1.5 max-w-2xl leading-relaxed text-slate-600">{paso.texto}</p>
-        </li>
-      ))}
-    </ol>
-  );
-}
+/**
+ * Tarjeta que sobresale al pasar el mouse (o al enfocarla con el teclado):
+ * sube, se agranda la sombra y aparece la raya dorada de arriba.
+ * La usan misión, visión, las áreas del equipo, la trayectoria y los reconocimientos.
+ */
+const TARJETA_RESALTA =
+  'group relative overflow-hidden rounded-2xl border border-brand-100 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-2 hover:border-dorado/50 hover:shadow-card-hover focus-within:-translate-y-2 motion-reduce:transform-none';
+const RAYA_RESALTA =
+  'mb-4 block h-1 w-10 rounded-full bg-dorado transition-all duration-300 group-hover:w-20';
 
 export default async function NosotrosPage() {
   const settings = await getSettings();
@@ -76,6 +62,11 @@ export default async function NosotrosPage() {
           titulo: paso.period,
           texto: paso.text,
         })),
+        // "Curso — Institución": se muestran por separado
+        formacion: settings.leaderEducation.map((linea) => {
+          const [curso, ...resto] = linea.split(/\s+[—–-]\s+/);
+          return { curso: curso!.trim(), institucion: resto.join(' — ').trim() };
+        }),
       }
     : null;
 
@@ -142,170 +133,249 @@ export default async function NosotrosPage() {
         ]}
       />
 
-      <section className="bg-brand-gradient">
+      {/* ── Hero: el título y el logo entran con animación (CSS, sin JS) ── */}
+      <section className="relative isolate overflow-hidden bg-brand-gradient">
+        <div
+          aria-hidden="true"
+          className="absolute -right-24 -top-24 -z-10 h-96 w-96 rounded-full bg-dorado/20 blur-3xl"
+        />
         <div className="container-icgc grid items-center gap-12 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:py-24">
           <div>
-            <p className="eyebrow text-brand-300">Sobre el instituto</p>
-            <h1 className="mt-4 text-balance text-4xl font-extrabold leading-tight text-white sm:text-5xl">
-              Fortalecemos la gestión comunal desde adentro
+            <p className="eyebrow animate-fade-up-lento text-dorado-claro motion-reduce:animate-none">
+              Sobre el instituto
+            </p>
+            <h1 className="mt-4 animate-fade-up-lento text-balance text-4xl font-extrabold leading-tight text-white [animation-delay:120ms] motion-reduce:animate-none sm:text-5xl">
+              Fortalecemos la Gestión Comunal Desde Adentro
             </h1>
-            <p className="mt-5 text-balance text-lg font-bold uppercase tracking-wide text-cyan-200">
+            <p className="mt-5 animate-fade-up-lento text-balance text-lg font-bold uppercase tracking-wide text-dorado-claro [animation-delay:260ms] motion-reduce:animate-none">
               {LEMA.inicio} {LEMA.destacado} {LEMA.final}
             </p>
-            <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-brand-100">
+            <p className="mt-6 max-w-2xl animate-fade-up-lento text-pretty text-lg leading-relaxed text-brand-100 [animation-delay:400ms] motion-reduce:animate-none">
               {QUIENES_SOMOS[0]}
             </p>
           </div>
 
-          <div className="mx-auto w-56 lg:w-full lg:max-w-xs">
-            <Image
-              src={logoSrc(settings)}
-              alt={settings.logoAlt}
-              width={320}
-              height={320}
-              priority
-              className="h-auto w-full drop-shadow-2xl"
-            />
+          <div className="mx-auto w-56 animate-logo-entra motion-reduce:animate-none lg:w-full lg:max-w-xs">
+            <div className="animate-flotar motion-reduce:animate-none">
+              <Image
+                src={logoSrc(settings)}
+                alt={settings.logoAlt}
+                width={320}
+                height={320}
+                priority
+                className="h-auto w-full drop-shadow-2xl"
+              />
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ── Misión y visión: al pasar el mouse, la tarjeta sube y se marca en dorado ── */}
       <section aria-labelledby="mision" className="container-icgc py-20">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div>
-            <h2 id="mision" className="text-3xl">
-              Nuestra misión
-            </h2>
-            <p className="mt-5 leading-relaxed text-slate-600">{MISION}</p>
-          </div>
-          <div>
-            <h2 id="vision" className="text-3xl">
-              Nuestra visión
-            </h2>
-            <p className="mt-5 leading-relaxed text-slate-600">{VISION}</p>
-          </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {[
+            { id: 'mision', titulo: 'Nuestra Misión', texto: MISION },
+            { id: 'vision', titulo: 'Nuestra Visión', texto: VISION },
+          ].map((bloque) => (
+            <article key={bloque.id} className={TARJETA_RESALTA}>
+              <span aria-hidden="true" className={RAYA_RESALTA} />
+              <h2 id={bloque.id} className="text-3xl font-extrabold text-brand-900">
+                {bloque.titulo}
+              </h2>
+              <p className="mt-5 leading-relaxed text-texto">{bloque.texto}</p>
+            </article>
+          ))}
         </div>
 
-        <div className="mt-14 rounded-2xl border border-brand-100 bg-brand-soft p-7 sm:p-9">
-          <h2 id="equipo" className="text-2xl">
-            Un equipo multidisciplinario
+        {/* ── Un equipo multidisciplinario y sus cuatro áreas ── */}
+        <div className="mt-14 rounded-2xl border border-brand-100 bg-brand-50 p-7 sm:p-9">
+          <h2 id="equipo" className="text-2xl font-extrabold text-brand-900">
+            Un Equipo Multidisciplinario
           </h2>
-          <p className="mt-4 leading-relaxed text-slate-700">{QUIENES_SOMOS[1]}</p>
+          <p className="mt-4 max-w-3xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
         </div>
 
-        <ul data-revelar-hijos className="mt-16 grid gap-6 md:grid-cols-3">
-          {VALORES.map((valor) => (
-            <li key={valor.titulo} className="card p-7">
-              <h3 className="text-lg">{valor.titulo}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">{valor.texto}</p>
+        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {AREAS_EQUIPO.map((area) => (
+            <li key={area.titulo} className={`${TARJETA_RESALTA} !p-0`}>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={area.imagen}
+                  alt={area.alt}
+                  fill
+                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 300px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                />
+              </div>
+              <div className="p-6">
+                <span aria-hidden="true" className={RAYA_RESALTA} />
+                <h3 className="text-xl font-bold text-brand-900">{area.titulo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-texto">{area.texto}</p>
+              </div>
             </li>
           ))}
         </ul>
       </section>
 
-      <section aria-labelledby="historia" className="bg-brand-soft py-20">
-        <div className="container-icgc">
-          <h2 id="historia" className="text-3xl">
-            Historia del instituto
-          </h2>
-          <LineaDeTiempo pasos={HITOS.map((h) => ({ titulo: h.año, texto: h.texto }))} />
-        </div>
-      </section>
-
-      {/* ── Franja del líder: misma estética que la de "Sobre el instituto" ── */}
+      {/* ── Sobre el líder: resumen corto + logros por trayectoria + formación numerada ── */}
       {lider && (
-        <section
-          id="lider"
-          aria-labelledby="lider-titulo"
-          className="scroll-mt-20 bg-brand-gradient"
-        >
-          <div className="container-icgc grid items-center gap-12 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:py-20">
-            <div className="mx-auto w-56 lg:w-full lg:max-w-xs">
-              {lider.foto ? (
-                <Image
-                  src={lider.foto.url}
-                  alt={lider.fotoAlt}
-                  width={lider.foto.width ?? 480}
-                  height={lider.foto.height ?? 600}
-                  sizes="(max-width: 1024px) 14rem, 20rem"
-                  className="aspect-[4/5] h-auto w-full rounded-2xl object-cover shadow-2xl ring-4 ring-white/15"
-                />
-              ) : (
-                // Sin foto cargada: iniciales en el mismo formato, para no romper la franja
-                <div
-                  aria-hidden="true"
-                  className="flex aspect-[4/5] w-full items-center justify-center rounded-2xl bg-white/10 text-6xl font-black text-white/80 shadow-2xl ring-4 ring-white/15"
-                >
-                  {lider.iniciales}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <p className="eyebrow text-brand-300">Sobre el líder</p>
-              <h2
-                id="lider-titulo"
-                className="mt-4 text-balance text-3xl font-extrabold leading-tight text-white sm:text-4xl"
-              >
-                {lider.titulo ?? lider.nombre}
-              </h2>
-              <p className="mt-5 text-lg font-semibold text-white">
-                {lider.nombre}
-                {lider.cargo && (
-                  <span className="font-normal text-brand-200"> · {lider.cargo}</span>
-                )}
-              </p>
-              {lider.bio && (
-                <div className="mt-4 max-w-2xl space-y-4 text-pretty text-lg leading-relaxed text-brand-100">
-                  {lider.bio.split(/\n{2,}/).map((parrafo) => (
-                    <p key={parrafo}>{parrafo}</p>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {lider && lider.trayectoria.length > 0 && (
-        <section aria-labelledby="trayectoria" className="py-14">
+        <section id="lider" aria-labelledby="lider-titulo" className="scroll-mt-20 bg-brand-50 py-16 lg:py-20">
           <div className="container-icgc">
-            <h2 id="trayectoria" className="text-2xl">
-              Trayectoria
-            </h2>
-            <ol data-revelar-hijos className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {lider.trayectoria.map((paso, i) => (
-                <li key={`${paso.titulo}-${i}`} className="card relative p-5 pl-6">
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-y-4 left-0 w-1 rounded-r bg-brand-500"
+            <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-14">
+              <div className="mx-auto w-60 lg:w-full lg:max-w-xs">
+                {lider.foto ? (
+                  <Image
+                    src={lider.foto.url}
+                    alt={lider.fotoAlt}
+                    width={lider.foto.width ?? 480}
+                    height={lider.foto.height ?? 600}
+                    sizes="(max-width: 1024px) 15rem, 20rem"
+                    className="aspect-[4/5] h-auto w-full rounded-2xl object-cover object-top shadow-card-hover ring-4 ring-dorado/40"
                   />
-                  <h3 className="text-base text-brand-600">{paso.titulo}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{paso.texto}</p>
-                </li>
-              ))}
-            </ol>
+                ) : (
+                  // Sin foto cargada: iniciales en el mismo formato, para no romper la franja
+                  <div
+                    aria-hidden="true"
+                    className="flex aspect-[4/5] w-full items-center justify-center rounded-2xl bg-brand-gradient text-6xl font-black text-white shadow-card-hover ring-4 ring-dorado/40"
+                  >
+                    {lider.iniciales}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <p className="eyebrow">Sobre el líder</p>
+                <h2
+                  id="lider-titulo"
+                  className="mt-3 text-balance text-3xl font-extrabold leading-tight text-brand-900 sm:text-4xl"
+                >
+                  {enTitulo(lider.titulo ?? lider.nombre)}
+                </h2>
+                <p className="mt-4 text-lg font-bold text-brand-700">
+                  {lider.nombre}
+                  {lider.cargo && (
+                    <span className="font-semibold text-dorado-oscuro"> · {lider.cargo}</span>
+                  )}
+                </p>
+                {lider.bio && (
+                  <div className="mt-4 max-w-2xl space-y-3 text-pretty leading-relaxed text-texto">
+                    {lider.bio.split(/\n{2,}/).map((parrafo) => (
+                      <p key={parrafo}>{parrafo}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {(lider.trayectoria.length > 0 || lider.formacion.length > 0) && (
+              <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+                {lider.trayectoria.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-brand-900">Logros por Trayectoria</h3>
+                    <ol className="mt-6 grid gap-4 sm:grid-cols-2">
+                      {lider.trayectoria.map((paso, i) => (
+                        <li key={`${paso.titulo}-${i}`} className={`${TARJETA_RESALTA} !p-5`}>
+                          <span className="text-3xl font-black text-dorado">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <h4 className="mt-2 font-bold leading-snug text-brand-900">
+                            {enTitulo(paso.titulo)}
+                          </h4>
+                          <p className="mt-1.5 text-sm leading-relaxed text-texto">{paso.texto}</p>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {lider.formacion.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-brand-900">Formación Especializada</h3>
+                    <ol className="mt-6 divide-y divide-brand-100 rounded-2xl border border-brand-100 bg-white p-2 shadow-card">
+                      {lider.formacion.map((estudio, i) => (
+                        <li key={estudio.curso} className="flex gap-4 p-4">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white">
+                            {i + 1}
+                          </span>
+                          <div>
+                            <p className="font-bold leading-snug text-brand-900">{estudio.curso}</p>
+                            {estudio.institucion && (
+                              <p className="mt-0.5 text-sm font-semibold text-dorado-oscuro">
+                                {estudio.institucion}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
       )}
 
-      <section className="border-t border-silver-200 bg-brand-soft">
-        <div className="container-icgc py-16 text-center">
-          <h2 className="text-balance text-3xl">¿Trabajamos juntos?</h2>
-          <p className="mx-auto mt-4 max-w-xl text-slate-600">
-            Si representas a una comunidad, municipalidad u organización, conversemos sobre un
-            programa a medida.
+      {/* ── Reconocimientos: el botón "Ver reconocimientos" del inicio llega aquí ── */}
+      <section
+        id="reconocimientos"
+        aria-labelledby="reconocimientos-titulo"
+        className="scroll-mt-20 bg-arena py-16 lg:py-20"
+      >
+        <div className="container-icgc">
+          <p className="eyebrow">Trayectoria del gerente general</p>
+          <h2 id="reconocimientos-titulo" className="mt-3 text-3xl font-extrabold text-brand-900 sm:text-4xl">
+            Reconocimientos
+          </h2>
+          <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-texto">
+            {RECONOCIMIENTOS_INTRO}
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="#contacto" className="btn-primary">
-              Escribir al instituto
-            </Link>
-            <Link href="/cursos" className="btn-secondary">
-              Ver los cursos disponibles
-            </Link>
-          </div>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {RECONOCIMIENTOS.map((r) => (
+              <li key={r.imagen ?? `${r.titulo}-${r.año}-${r.empresa ?? ''}`} className={`${TARJETA_RESALTA} !p-0`}>
+                <div className="relative aspect-[3/2] overflow-hidden bg-brand-50">
+                  {r.imagen ? (
+                    <Image
+                      src={r.imagen}
+                      alt={r.alt ?? r.titulo}
+                      fill
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 31vw, 290px"
+                      // Los trofeos (fotos verticales) se ven enteros sobre gris azulado
+                      className={`transition-transform duration-500 group-hover:scale-105 ${r.trofeo ? 'bg-brand-50 object-contain p-2' : 'object-cover'}`}
+                    />
+                  ) : (
+                    // Ilustración genérica mientras llega la foto del reconocimiento
+                    <div
+                      aria-hidden="true"
+                      className="flex h-full w-full items-center justify-center bg-brand-gradient transition-transform duration-500 group-hover:scale-105"
+                    >
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-dorado-claro/60 text-dorado-claro">
+                        <AwardIcon size={28} />
+                      </span>
+                      <span className="absolute bottom-3 right-4 text-2xl font-black text-white/15">{r.año}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {r.empresa && (
+                      <span className="rounded-full bg-brand-900 px-2.5 py-0.5 text-xs font-bold text-white">
+                        {r.empresa}
+                      </span>
+                    )}
+                    <span className="rounded-full bg-arena px-2.5 py-0.5 text-xs font-bold text-dorado-oscuro ring-1 ring-dorado/30">
+                      {r.año}
+                    </span>
+                  </div>
+                  <h3 className="mt-2 text-sm font-bold leading-snug text-brand-900">“{r.titulo}”</h3>
+                  <p className="mt-1 text-xs font-semibold text-texto">{r.otorga}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
+
 
       {/* ── Contacto: el formulario guarda los datos en la base de datos ── */}
       <section
@@ -316,7 +386,7 @@ export default async function NosotrosPage() {
         <div>
           <p className="eyebrow">Contacto</p>
           <h2 id="contacto-titulo" className="mt-3 text-3xl">
-            Déjanos tus datos
+            Déjanos tus Datos
           </h2>
           <p className="mt-3 max-w-xl text-slate-600">
             Completa el formulario y el equipo del instituto se comunicará contigo para conversar
@@ -327,7 +397,7 @@ export default async function NosotrosPage() {
 
         <aside aria-labelledby="datos-contacto">
           <h3 id="datos-contacto" className="text-2xl">
-            Datos de contacto
+            Datos de Contacto
           </h3>
 
           {datosContacto.length > 0 && (

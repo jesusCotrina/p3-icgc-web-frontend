@@ -88,7 +88,7 @@ export function PeruMapMarkers({ marcadores }: { marcadores: Marcador[] }) {
               >
                 <path
                   d="M12 0C5.4 0 0 5.2 0 11.7 0 20.5 12 30 12 30s12-9.5 12-18.3C24 5.2 18.6 0 12 0z"
-                  fill={activo ? '#1452A3' : '#E11D48'}
+                  fill={activo ? '#244F7D' : '#E11D48'}
                 />
                 <circle cx="12" cy="11.5" r="4.5" fill="#fff" />
               </svg>

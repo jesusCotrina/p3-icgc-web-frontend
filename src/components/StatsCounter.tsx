@@ -7,19 +7,29 @@ export type Stat = {
   etiqueta: string;
   /** Prefijo fijo que no se anima, p. ej. "+" */
   prefijo?: string;
+  /** Sufijo fijo que no se anima, p. ej. "%" */
+  sufijo?: string;
 };
 
 /** Todas las cifras tardan lo mismo, así terminan juntas aunque sean distintas. */
 const DURACION_SEG = 3.5;
 
 /**
- * Cifras del hero animadas con CountUp.js.
+ * Cifras animadas con CountUp.js (sección "Quiénes somos" del inicio).
  *
  * REGLA SEO: el número final ya viene escrito en el HTML que renderiza el
  * servidor. CountUp solo lo reemplaza una vez que el componente monta, así que
  * Googlebot lee "10" y no un "0" en blanco, y no hay salto de layout (CLS).
  */
-export function StatsCounter({ stats }: { stats: Stat[] }) {
+export function StatsCounter({
+  stats,
+  variante = 'hero',
+}: {
+  stats: readonly Stat[];
+  /** "hero": blanco sobre foto oscura · "tarjetas": 2 × 2 en tarjetas arena sobre fondo claro */
+  variante?: 'hero' | 'tarjetas';
+}) {
+  const tarjetas = variante === 'tarjetas';
   const contenedor = useRef<HTMLDListElement>(null);
 
   useEffect(() => {
@@ -81,20 +91,39 @@ export function StatsCounter({ stats }: { stats: Stat[] }) {
   return (
     <dl
       ref={contenedor}
-      className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-white/15 pt-7"
+      className={
+        tarjetas
+          ? 'grid grid-cols-2 gap-4 sm:gap-5'
+          : 'mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-white/15 pt-7'
+      }
     >
       {stats.map((stat) => (
-        <div key={stat.etiqueta}>
+        <div
+          key={stat.etiqueta}
+          className={
+            tarjetas
+              ? 'rounded-2xl border border-dorado/25 bg-arena p-5 shadow-card sm:p-7'
+              : undefined
+          }
+        >
           <dt className="sr-only">{stat.etiqueta}</dt>
           <dd>
-            <span className="block text-3xl font-extrabold text-white sm:text-4xl">
+            <span
+              className={`block font-extrabold ${tarjetas ? 'text-4xl text-brand-900 sm:text-5xl' : 'text-3xl text-white sm:text-4xl'}`}
+            >
               {stat.prefijo}
               {/* data-contador guarda el valor real; el texto visible ya es el final */}
               <span data-contador={stat.valor}>{stat.valor}</span>
+              {stat.sufijo}
             </span>
-            <span className="mt-1.5 block text-xs leading-snug text-brand-200">
+            <span
+              className={`mt-1.5 block leading-snug ${tarjetas ? 'text-sm font-medium text-texto' : 'text-xs text-brand-200'}`}
+            >
               {stat.etiqueta}
             </span>
+            {tarjetas && (
+              <span aria-hidden="true" className="mt-4 block h-1 w-10 rounded-full bg-dorado" />
+            )}
           </dd>
         </div>
       ))}

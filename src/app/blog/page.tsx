@@ -228,7 +228,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
             </>
           ) : (
             <div className="rounded-2xl border border-dashed border-silver-300 p-16 text-center">
-              <h2 className="text-xl">Todavía no hay artículos aquí</h2>
+              <h2 className="text-xl">Todavía No Hay Artículos Aquí</h2>
               <p className="mx-auto mt-3 max-w-md text-slate-600">
                 Las publicaciones que se creen desde el gestor aparecerán en esta página
                 automáticamente.

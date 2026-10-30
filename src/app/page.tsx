@@ -1,26 +1,26 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BordeOndulado } from '@/components/BordeOndulado';
 import { Carousel } from '@/components/Carousel';
 import { CourseCard } from '@/components/CourseCard';
 import { FondoLineas } from '@/components/FondoLineas';
 import { HeroSlider } from '@/components/HeroSlider';
 import { JsonLd } from '@/components/JsonLd';
 import { SeccionClientes } from '@/components/SeccionClientes';
-import { PeruMap } from '@/components/PeruMap';
 import { PostCard } from '@/components/PostCard';
 import { ProjectFlipCard } from '@/components/ProjectFlipCard';
-import { FrasesRotativas } from '@/components/FrasesRotativas';
 import { OrientadorSiguientePaso } from '@/components/OrientadorSiguientePaso';
 import { Reveal } from '@/components/Reveal';
 import { StatsCounter } from '@/components/StatsCounter';
-import { textoCompleto, Typewriter } from '@/components/Typewriter';
-import { BookIcon, HandshakeIcon } from '@/components/Icons';
+import { HeroRotativo } from '@/components/HeroRotativo';
+import { BriefcaseIcon, HandshakeIcon } from '@/components/Icons';
 import { ServicioCard } from '@/components/ServicioCard';
-import { inicialesDe } from '@/lib/format';
+import { TituloSeccion } from '@/components/TituloSeccion';
+import { enTitulo, inicialesDe } from '@/lib/format';
 import { getCourses, getPosts, getProjects, getSettings, logoSrc } from '@/lib/api';
-import { presenciaPorRegion, resumenPresencia } from '@/lib/presencia';
-import { EN_UNA_FRASE, LEMA } from '@/lib/institucional';
+import { resumenPresencia } from '@/lib/presencia';
+import { LEMA, QUIENES_SOMOS_RESUMEN } from '@/lib/institucional';
 import { absoluteUrl, buildMetadata, truncate } from '@/lib/seo';
 import { SERVICIOS } from '@/lib/servicios';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
@@ -59,26 +59,43 @@ const HERO_SLIDES = [
     credito: 'O. R. Tarco Palomino, CC BY 4.0, Wikimedia Commons',
   },
   {
-    src: '/hero/paisaje-andino-laguna-quellacocha.webp',
-    alt: 'Paisaje andino con la laguna glaciar Quellacocha rodeada de montañas',
-    credito: 'Nina Reicer, CC BY-SA 4.0, Wikimedia Commons',
+    // Foto propia del ICGC
+    src: '/hero/entrega-de-maquinaria-a-la-comunidad-hd.webp',
+    alt: 'Ceremonia de entrega de volquetes y maquinaria pesada a una comunidad, con los asistentes sentados frente a los vehículos',
   },
 ] as const;
 
-/** El h1 del hero, en tramos: el segundo va resaltado con degradado. */
-const TITULO_HERO = [
-  { texto: 'Asesoría y capacitación para la ' },
-  {
-    texto: 'ejecución de proyectos comunales',
-    className: 'bg-gradient-to-r from-brand-300 to-white bg-clip-text text-transparent',
-  },
+const RESALTADO = 'bg-gradient-to-r from-brand-300 to-white bg-clip-text text-transparent';
+
+/**
+ * Los títulos del hero, en tramos (el resaltado va con degradado). Se alternan
+ * con la misma escritura; el primero es el que lee Google como h1.
+ */
+const TITULOS_HERO = [
+  [
+    { texto: 'Asesoría y Capacitación para la ' },
+    { texto: 'Ejecución de Proyectos Comunales', className: RESALTADO },
+  ],
+  // El lema oficial del instituto, con mayúscula inicial como todos los títulos
+  [
+    { texto: `${enTitulo(LEMA.inicio)} ` },
+    { texto: enTitulo(LEMA.destacado, true), className: RESALTADO },
+    { texto: ` ${enTitulo(LEMA.final, true)}` },
+  ],
 ] as const;
 
-/** Frases que siguen al lema en el subtítulo del hero: más cercanas, invitan a escribir. */
-const FRASES_CERCANAS = [
-  'Te acompañamos y guiamos en cada paso, desde la idea hasta la obra terminada.',
-  '¿Tienes un proyecto para tu comunidad? Conversemos y lo hacemos realidad juntos.',
-  'Capacitamos a tu equipo para que gestione con autonomía y sin trabas.',
+/** El texto que entra debajo de cada título del hero, en el mismo orden. */
+const TEXTOS_HERO = [
+  'Fortalecemos la gestión de las comunidades campesinas y sus empresas con conocimiento ' +
+    'técnico, asesoría especializada y comprensión de la realidad comunal.',
+  'Acompañamos a comunidades, empresas comunales y organizaciones desde la idea hasta la obra ' +
+    'terminada, con capacitación que deja capacidades instaladas.',
+] as const;
+
+/** Cifras de "Quiénes somos" que no salen del gestor (los años sí). */
+const CIFRAS_FIJAS = [
+  { valor: 90, prefijo: '+', sufijo: '%', etiqueta: 'de satisfacción de nuestros clientes en la industria minera' },
+  { valor: 50, prefijo: '+', etiqueta: 'proyectos implementados con éxito en territorios comunales' },
 ] as const;
 
 export default async function HomePage() {
@@ -100,7 +117,7 @@ export default async function HomePage() {
         cargo: settings.leaderRole,
         foto: settings.leaderPhoto,
         fotoAlt: settings.leaderPhotoAlt ?? `Retrato de ${settings.leaderName}`,
-        resumen: settings.leaderBio ? truncate(settings.leaderBio.split(/\n{2,}/)[0]!, 170) : null,
+        resumen: settings.leaderBio ? truncate(settings.leaderBio.split(/\n{2,}/)[0]!, 340) : null,
         iniciales: inicialesDe(settings.leaderName),
       }
     : null;
@@ -110,21 +127,19 @@ export default async function HomePage() {
 
   // Una sola fuente para el hero y el mapa: los proyectos publicados
   const totales = resumenPresencia(todosLosProyectos);
-  const presencia = presenciaPorRegion(todosLosProyectos);
 
   // Los dos botones del hero van al mismo WhatsApp pero con mensajes distintos,
   // así sabemos por qué llegó cada consulta.
   const urlAsesoria = whatsappUrl(settings, 'asesoria');
 
-  // Los años salen de los ajustes del gestor; proyectos y regiones se cuentan
-  // de los proyectos publicados, así coinciden con el mapa "Nuestra huella"
+  // Cifras de "Quiénes somos": los años salen de los ajustes del gestor y las
+  // regiones se cuentan de los proyectos publicados (coinciden con el mapa)
   const cifras = [
-    // "+10 años": más de diez años de experiencia
+    ...CIFRAS_FIJAS,
     { valor: settings.yearsExperience, etiqueta: 'años de experiencia', prefijo: '+' },
-    { valor: totales.proyectos, etiqueta: 'proyectos asesorados' },
     {
       valor: totales.regiones,
-      etiqueta: totales.regiones === 1 ? 'región atendida' : 'regiones atendidas',
+      etiqueta: totales.regiones === 1 ? 'región del Perú atendida' : 'regiones del Perú atendidas',
     },
   ];
 
@@ -171,33 +186,29 @@ export default async function HomePage() {
 
         {/* Padding superior corto: el título tiene que entrar casi pegado al menú */}
         <div className="container-icgc relative z-10 flex min-h-[34rem] items-center pb-28 pt-10 lg:min-h-[38rem] lg:pb-32 lg:pt-14">
-          <div className="max-w-3xl animate-fade-up">
+          <div className="max-w-3xl animate-fade-up lg:max-w-[60rem]">
             <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wider text-brand-100 backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-400" aria-hidden="true" />
+              {/* Punto que parpadea: un halo que se expande detrás del punto */}
+              <span aria-hidden="true" className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-dorado-claro opacity-75 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2 w-2 animate-pulse rounded-full bg-dorado-claro motion-reduce:animate-none" />
+              </span>
               Consultoría y capacitación
             </p>
 
-            {/* El único h1 de la página. Se escribe solo al cargar, pero el texto
-                completo ya está en el HTML (y en el aria-label para lectores de pantalla). */}
-            <h1
-              aria-label={textoCompleto(TITULO_HERO)}
-              className="text-balance text-[2.1rem] font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-[3.4rem]"
-            >
-              <Typewriter segmentos={TITULO_HERO} />
-            </h1>
-
-            {/* Se escribe a la par del título y luego va cambiando de frase */}
-            <FrasesRotativas
-              frases={[settings.tagline, ...FRASES_CERCANAS]}
-              // Arranca junto con el título (mismo retraso inicial que Typewriter)
-              inicioMs={300}
-              className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-brand-100 sm:text-lg"
+            {/* El único h1 de la página y su texto: se escriben solos al cargar y
+                alternan con el lema; el primer par completo ya está en el HTML. */}
+            <HeroRotativo
+              titulos={TITULOS_HERO}
+              textos={TEXTOS_HERO}
+              claseTitulo="text-pretty text-[2.1rem] font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-[3.4rem]"
+              claseTexto="mt-5 max-w-xl text-pretty text-base leading-relaxed text-brand-100 sm:text-lg"
             />
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/cursos" className="btn-light">
-                <BookIcon size={18} />
-                Ver cursos
+              <Link href="/servicios" className="btn-light">
+                <BriefcaseIcon size={18} />
+                Ver servicios
               </Link>
               <Link href={urlAsesoria} {...propsEnlace(urlAsesoria)} className="btn-whatsapp">
                 <HandshakeIcon size={18} />
@@ -205,153 +216,79 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <StatsCounter stats={cifras} />
           </div>
         </div>
 
-        {/* Fundido al azul marino: el hero se une con "Quiénes somos" sin corte */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent via-brand-950/70 to-brand-950"
-        />
       </section>
 
       {/* ──────────────────── Quiénes somos ──────────────────── */}
-      {/* Presentación grande y con poco texto: el lema en tipografía enorme y
-          el logo en el centro de unas órbitas. Fondo en degradado azul marino a
-          turquesa con figuras de línea; arranca en el azul en que termina el
-          hero, sin corte. */}
-      <section
-        aria-labelledby="quienes-titulo"
-        className="relative isolate overflow-hidden pb-20 pt-10 text-white lg:pb-28 lg:pt-14"
-      >
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,#06162b_0%,#0b2545_50%,#0e7490_100%)]"
-        />
-        <FondoLineas className="-z-10 opacity-60" />
-        <div
-          aria-hidden="true"
-          className="absolute -right-24 top-40 -z-10 h-[28rem] w-[28rem] rounded-full bg-cyan-400/25 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -left-32 bottom-0 -z-10 h-80 w-80 rounded-full bg-amber-300/15 blur-3xl"
-        />
-        {/* Arranca en el mismo azul marino en que termina el hero */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-brand-950 via-brand-950/70 to-transparent"
-        />
-
+      {/* Fondo blanco. A la izquierda el título, el logo (chico) y el lema; a la
+          derecha las cuatro cifras en tarjetas arena. Abajo, el gerente. */}
+      <section aria-labelledby="quienes-titulo" className="bg-white py-16 lg:py-20">
         <div className="container-icgc">
-          <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-            {/* ── Título grande, descripción corta y el lema debajo ── */}
-            <Reveal desde="izquierda">
-              <p className="eyebrow !text-cyan-300">Quiénes somos</p>
-              <h2
-                id="quienes-titulo"
-                className="mt-5 text-balance text-[2.3rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[4rem]"
-              >
-                Un instituto al servicio de las{' '}
-                <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-200 bg-clip-text text-transparent">
-                  comunidades
-                </span>
-              </h2>
-              <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-white/80">
-                Asesoría, consultoría y capacitación para comunidades campesinas, empresas
-                comunales, organizaciones y empresas, con especial atención a la construcción y la
-                minería.
-              </p>
-              <div
-                aria-hidden="true"
-                className="mt-7 h-1.5 w-24 rounded-full bg-gradient-to-r from-cyan-300 to-amber-200"
-              />
-              {/* El lema oficial del instituto */}
-              <p className="mt-6 max-w-xl text-balance text-base font-extrabold uppercase leading-snug tracking-wide text-cyan-200 sm:text-lg">
-                “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
-              </p>
-              <Link href="/nosotros" className="btn-light mt-8 font-bold">
-                Conoce al ICGC
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-16">
+            {/* Las piezas se juntan al aparecer: título desde la izquierda, logo
+                desde abajo, texto desde la izquierda y por último el botón */}
+            <div>
+              <Reveal desde="izquierda">
+                <p className="eyebrow">Quiénes Somos</p>
+                <h2
+                  id="quienes-titulo"
+                  className="mt-4 text-balance text-3xl font-extrabold leading-tight tracking-tight text-brand-900 sm:text-[2.6rem]"
                 >
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              </Link>
-            </Reveal>
-
-            {/* ── El logo, en el centro de unas órbitas que giran despacio ── */}
-            <Reveal desde="derecha" className="mx-auto w-full max-w-[30rem]">
-              <div className="relative aspect-square">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-[12%] rounded-full bg-cyan-300/30 blur-3xl"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-full border border-white/15"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-[7%] animate-[spin_60s_linear_infinite] rounded-full border-2 border-dashed border-cyan-200/35 motion-reduce:animate-none"
-                />
-                {/* Dos lunas: una turquesa y otra dorada, en sentidos opuestos */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 animate-[spin_18s_linear_infinite] motion-reduce:animate-none"
-                >
-                  <span className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_18px_4px_rgba(103,232,249,0.7)]" />
-                </div>
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-[7%] animate-[spin_26s_linear_infinite] [animation-direction:reverse] motion-reduce:animate-none"
-                >
-                  <span className="absolute bottom-0 left-1/2 h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full bg-amber-300 shadow-[0_0_16px_4px_rgba(252,211,77,0.65)]" />
-                </div>
-                <div className="absolute inset-[14%] flex items-center justify-center rounded-full bg-white/10 ring-1 ring-white/25 backdrop-blur-sm">
+                  Un Instituto al Servicio de las Comunidades
+                </h2>
+              </Reveal>
+              <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
+                {/* Logo lo bastante grande para que se lean las letras del aro */}
+                <Reveal desde="abajo" retrasoMs={200} className="shrink-0">
                   <Image
                     src={logoSrc(settings)}
                     alt={settings.logoAlt}
-                    width={320}
-                    height={320}
-                    sizes="(max-width: 640px) 60vw, 280px"
-                    className="h-[90%] w-[90%] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
+                    width={176}
+                    height={176}
+                    sizes="176px"
+                    className="h-36 w-36 shrink-0 object-contain sm:h-44 sm:w-44"
                   />
-                </div>
+                </Reveal>
+                <Reveal desde="izquierda" retrasoMs={350}>
+                  <p className="text-pretty leading-relaxed text-texto">{QUIENES_SOMOS_RESUMEN}</p>
+                  {/* El lema oficial del instituto, con la raya dorada al costado */}
+                  <p className="mt-4 border-l-4 border-dorado pl-4 text-pretty font-bold leading-snug text-brand-700">
+                    “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
+                  </p>
+                </Reveal>
               </div>
+              <Reveal desde="abajo" retrasoMs={500}>
+                <Link href="/nosotros" className="btn-primary mt-9 font-bold">
+                  Conoce al ICGC
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+              </Reveal>
+            </div>
+
+            {/* ── Cifras del instituto en tarjetas (el número final ya va en el HTML) ── */}
+            <Reveal desde="derecha">
+              <StatsCounter stats={cifras} variante="tarjetas" />
             </Reveal>
           </div>
-
-          {/* ── Misión, visión y equipo: una frase cada uno ── */}
-          <ul
-            data-revelar-hijos
-            className="mt-16 grid gap-8 border-t border-white/15 pt-10 md:grid-cols-3 lg:mt-20"
-          >
-            {EN_UNA_FRASE.map((idea) => (
-              <li key={idea.titulo}>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-                  {idea.titulo}
-                </p>
-                <p className="mt-2 text-pretty text-lg font-semibold leading-snug text-white">
-                  {idea.texto}
-                </p>
-              </li>
-            ))}
-          </ul>
 
           {/* ── El gerente, como respaldo ── */}
           {lider && (
             <Reveal className="mt-14">
-              <div className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 ring-1 ring-white/20 backdrop-blur-md sm:flex-row sm:items-center sm:p-8">
+              <div className="flex flex-col gap-6 rounded-2xl bg-brand-50 p-6 ring-1 ring-brand-100 sm:flex-row sm:items-center sm:p-8">
                 {lider.foto ? (
                   <Image
                     src={lider.foto.url}
@@ -359,49 +296,63 @@ export default async function HomePage() {
                     width={112}
                     height={112}
                     sizes="112px"
-                    className="h-24 w-24 shrink-0 rounded-full object-cover object-top ring-4 ring-amber-200/60"
+                    className="h-24 w-24 shrink-0 rounded-full object-cover object-top ring-4 ring-dorado/50"
                   />
                 ) : (
                   <span
                     aria-hidden="true"
-                    className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 text-3xl font-black text-white ring-4 ring-amber-200/60"
+                    className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-900 to-brand-700 text-3xl font-black text-white ring-4 ring-dorado/50"
                   >
                     {lider.iniciales}
                   </span>
                 )}
                 <div className="flex-1">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
-                    Respaldados por
-                  </p>
-                  <h3 className="mt-1 text-2xl text-white">{lider.nombre}</h3>
+                  <h3 className="text-2xl font-bold text-brand-900">{lider.nombre}</h3>
                   {lider.cargo && (
-                    <p className="text-sm font-semibold text-white/70">{lider.cargo}</p>
+                    <p className="text-sm font-bold uppercase tracking-wider text-dorado-oscuro">
+                      {lider.cargo}
+                    </p>
                   )}
-                  <p className="mt-3 text-pretty text-lg italic leading-snug text-white/90">
-                    “Experiencia probada en campo: de la asamblea comunal a la mesa de negociación.”
-                  </p>
+                  {/* El primer párrafo de la biografía (Ajustes del gestor) es el resumen */}
+                  {lider.resumen && (
+                    <p className="mt-3 max-w-3xl text-pretty leading-relaxed text-texto">
+                      {lider.resumen}
+                    </p>
+                  )}
                 </div>
-                <Link href="/nosotros#lider" className="btn-light shrink-0 font-bold">
-                  Conócelo
-                  <span className="sr-only"> ({lider.nombre})</span>
-                </Link>
+                <div className="flex shrink-0 flex-wrap gap-3 sm:flex-col">
+                  <Link href="/nosotros#lider" className="btn-primary font-bold">
+                    Conócelo
+                    <span className="sr-only"> ({lider.nombre})</span>
+                  </Link>
+                  <Link href="/nosotros#reconocimientos" className="btn-secondary font-bold">
+                    Ver reconocimientos
+                  </Link>
+                </div>
               </div>
             </Reveal>
           )}
         </div>
       </section>
 
-      {/* ──────────────────── Servicios (grilla 3 × 3) ──────────────────── */}
-      <section aria-labelledby="servicios-titulo" className="bg-brand-soft py-16 lg:py-20">
+      {/* ──────────────────── Servicios (grilla 3 × 2) ──────────────────── */}
+      {/* Fondo arena con todas las líneas y los bordes cortados en onda suave;
+          Quiénes somos (arriba) y Capacitación (abajo) van en blanco */}
+      <section
+        aria-labelledby="servicios-titulo"
+        className="relative isolate overflow-hidden bg-arena py-20 lg:py-24"
+      >
+        <FondoLineas className="-z-10" />
+        <BordeOndulado lado="arriba" />
+        <BordeOndulado lado="abajo" />
         {/* Más angosta que el resto: tarjetas más chicas, igual de 3 en 3 */}
         <div className="container-icgc max-w-6xl">
           <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div className="max-w-3xl">
-              <p className="eyebrow">Servicios</p>
-              <h2 id="servicios-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-                Todo lo que tu comunidad necesita, en un solo lugar
-              </h2>
-            </div>
+            <TituloSeccion
+              id="servicios-titulo"
+              titulo="Servicios"
+              subtitulo="Transformando capacidades en oportunidades"
+            />
             <Link
               href="/servicios"
               className="btn border-2 border-brand-600 bg-white font-extrabold text-brand-700 hover:bg-brand-600 hover:text-white"
@@ -435,15 +386,14 @@ export default async function HomePage() {
       {/* ──────────────────── Cursos (carrusel) ──────────────────── */}
       <section
         aria-labelledby="cursos-titulo"
-        className="container-icgc max-w-6xl overflow-x-clip pb-16 lg:pb-20"
+        className="container-icgc max-w-6xl overflow-x-clip py-16 lg:py-20"
       >
         <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-3xl">
-            <p className="eyebrow">Capacitación</p>
-            <h2 id="cursos-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Nuestros cursos
-            </h2>
-          </div>
+          <TituloSeccion
+            id="cursos-titulo"
+            titulo="Capacitación"
+            subtitulo="Nuestros cursos de gestión comunal y empresarial"
+          />
           <Link
             href="/cursos"
             className="btn border-2 border-brand-600 bg-white font-extrabold text-brand-700 hover:bg-brand-600 hover:text-white"
@@ -489,21 +439,20 @@ export default async function HomePage() {
       </section>
 
       {/* ──────────────────── Proyectos ──────────────────── */}
-      {/* Fondo en un celeste suave de la marca, con líneas finas en SVG */}
+      {/* Fondo arena (paleta: secciones de proyectos y comunidades), con líneas finas en SVG */}
       <section
         aria-labelledby="proyectos-titulo"
-        className="relative isolate overflow-hidden bg-gradient-to-br from-brand-300/70 via-brand-100 to-sky-200 py-16 lg:py-20"
+        className="relative isolate overflow-hidden bg-arena py-16 lg:py-20"
       >
         <FondoLineas className="-z-10" />
         <div className="container-icgc">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Proyectos</p>
-            <h2 id="proyectos-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Proyectos que acompañamos
-            </h2>
-            <p className="mt-4 text-pretty text-lg font-semibold text-slate-600">
-              Hacemos realidad el proyecto de tu comunidad: de la idea a la obra terminada.
-            </p>
+          <Reveal>
+            <TituloSeccion
+              id="proyectos-titulo"
+              titulo="Proyectos"
+              subtitulo="Hacemos realidad el proyecto de tu comunidad: de la idea a la obra terminada."
+              centrado
+            />
           </Reveal>
 
           {/* Mosaico 3 × 2: las tarjetas van pegadas y forman un solo rectángulo */}
@@ -538,53 +487,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ──────────────────── Mapa de presencia ──────────────────── */}
-      <section aria-labelledby="huella-titulo" className="py-16 lg:py-20">
-        <div className="container-icgc">
-          <Reveal retrasoMs={150}>
-            <PeruMap
-              presencia={presencia}
-              resumen={
-                <>
-                  {/* Título a la derecha del mapa, arriba de las cifras */}
-                  <div className="mb-7">
-                    <p className="eyebrow">Dónde trabajamos</p>
-                    <h2 id="huella-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-                      Nuestra huella en el Perú
-                    </h2>
-                    <p className="mt-4 text-pretty text-slate-600">
-                      Trabajamos de la mano con las comunidades en distintas regiones del país,
-                      llevando asesoría técnica y capacitación hasta donde se ejecutan los
-                      proyectos.
-                    </p>
-                  </div>
-                  <dl className="grid grid-cols-3 gap-4 text-center">
-                    {[
-                      {
-                        valor: totales.regiones,
-                        etiqueta: totales.regiones === 1 ? 'región' : 'regiones',
-                      },
-                      { valor: totales.proyectos, etiqueta: 'proyectos' },
-                      {
-                        valor: totales.comunidades,
-                        etiqueta: 'comunidades beneficiadas',
-                      },
-                    ].map((t) => (
-                      <div key={t.etiqueta} className="flex flex-col rounded-xl bg-brand-soft p-4">
-                        <dt className="text-xs text-slate-500 sm:text-sm">{t.etiqueta}</dt>
-                        <dd className="order-first text-3xl font-black text-brand-700 sm:text-4xl">
-                          {t.valor}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </>
-              }
-            />
-          </Reveal>
-        </div>
-      </section>
-
       {/* ──────────────── Empresas y comunidades ──────────────── */}
       <SeccionClientes />
 
@@ -594,11 +496,12 @@ export default async function HomePage() {
         className="bg-brand-soft pb-12 pt-16 lg:pb-14 lg:pt-20"
       >
         <div className="container-icgc max-w-6xl">
-          <Reveal className="mx-auto mb-10 max-w-2xl text-center">
-            <p className="eyebrow">Blog</p>
-            <h2 id="blog-titulo" className="mt-3 text-balance text-3xl sm:text-4xl">
-              Publicaciones destacadas
-            </h2>
+          <Reveal className="mb-10">
+            <TituloSeccion
+              id="blog-titulo"
+              titulo="Blog"
+              subtitulo="Publicaciones destacadas"
+            />
           </Reveal>
 
           <Reveal retrasoMs={150}>
@@ -633,7 +536,7 @@ export default async function HomePage() {
 
       {/* ─────────── Cierre: orientador "Encuentra tu siguiente paso" ─────────── */}
       {/* Franja de borde a borde que llega hasta el pie (el -mb compensa su margen) */}
-      <section aria-labelledby="cta-titulo" className="-mb-12">
+      <section aria-labelledby="cta-titulo">
         <OrientadorSiguientePaso whatsapp={settings.whatsapp} aPantallaCompleta />
       </section>
     </>
