@@ -201,11 +201,17 @@ export const FALLBACK_SETTINGS: SiteSettingsDTO = {
   updatedAt: new Date(0).toISOString(),
 };
 
-export function getSettings(): Promise<SiteSettingsDTO> {
-  return safeFetch<SiteSettingsDTO>('/public/settings', FALLBACK_SETTINGS, {
+export async function getSettings(): Promise<SiteSettingsDTO> {
+  const settings = await safeFetch<SiteSettingsDTO>('/public/settings', FALLBACK_SETTINGS, {
     revalidate: 60,
     tags: ['settings'],
   });
+  // Una API anterior no envía la formación del líder
+  return {
+    ...settings,
+    leaderCareer: settings.leaderCareer ?? [],
+    leaderEducation: settings.leaderEducation ?? [],
+  };
 }
 
 export function getSitemapData(): Promise<SitemapDataDTO> {
@@ -240,17 +246,30 @@ export async function getCourse(slug: string): Promise<CourseDTO | null> {
   }
 }
 
+/**
+ * Completa los campos nuevos de un proyecto: una API anterior (o un proyecto
+ * viejo) puede no enviarlos, y la página no debe romperse por eso.
+ */
+const normalizarProyecto = (p: ProjectDTO): ProjectDTO => ({
+  ...p,
+  company: p.company ?? '',
+  items: Array.isArray(p.items) ? p.items : [],
+  achievements: p.achievements ?? [],
+});
+
 /** Proyectos publicados: alimentan /proyectos, el mapa y las cifras del hero. */
-export function getProjects(): Promise<ProjectDTO[]> {
-  return safeFetch<ProjectDTO[]>('/public/projects', [], { tags: ['projects'] });
+export async function getProjects(): Promise<ProjectDTO[]> {
+  const proyectos = await safeFetch<ProjectDTO[]>('/public/projects', [], { tags: ['projects'] });
+  return proyectos.map(normalizarProyecto);
 }
 
 /** Igual que getPost: null solo con un 404 real; si el backend cae, se lanza el error. */
 export async function getProject(slug: string): Promise<ProjectDTO | null> {
   try {
-    return await apiFetch<ProjectDTO>(`/public/projects/${encodeURIComponent(slug)}`, {
+    const proyecto = await apiFetch<ProjectDTO>(`/public/projects/${encodeURIComponent(slug)}`, {
       tags: ['projects'],
     });
+    return normalizarProyecto(proyecto);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) return null;
     avisar(`/public/projects/${slug}`, error);
