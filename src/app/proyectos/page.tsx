@@ -105,13 +105,14 @@ export default async function ProyectosPage() {
         className="border-b border-silver-200 bg-brand-soft"
       >
         <div className="container-icgc py-14 lg:py-16">
-          <p className="eyebrow">Consultoría y asesoría</p>
+          <p className="eyebrow">Asesoría, consultoría y capacitación</p>
           <h2 id="consultoria-titulo" className="mt-3 max-w-3xl text-balance text-3xl sm:text-4xl">
-            Acompañamos tu Proyecto de Principio a Fin
+            Fortalezcamos la Gestión de tu Comunidad y su Empresa
           </h2>
-          <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-slate-600">
-            Desde la licitación hasta la liquidación de la obra. Trabajamos con comunidades
-            campesinas y nativas, municipalidades y organizaciones de todo el Perú.
+          <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-slate-600">
+            Te acompañamos en la organización comunal, el desarrollo empresarial, la gestión de
+            proyectos y las negociaciones. Conversemos sobre tus necesidades y cómo podemos apoyarte
+            con nuestro equipo multidisciplinario.
           </p>
 
           <Link href={urlAsesoria} {...propsEnlace(urlAsesoria)} className="btn-whatsapp mt-8">
@@ -126,7 +127,7 @@ export default async function ProyectosPage() {
         <div className="container-icgc">
           <p className="eyebrow">Cómo trabajamos</p>
           <h2 id="proceso" className="mt-3 text-balance text-3xl sm:text-4xl">
-            Cuatro Etapas, sin Sorpresas
+            Acompañamiento en Cada Etapa de la Gestión
           </h2>
 
           <ol data-revelar-hijos className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

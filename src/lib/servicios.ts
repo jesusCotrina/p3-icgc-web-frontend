@@ -184,23 +184,29 @@ export const SERVICIOS: readonly Servicio[] = [
 export const COMO_TRABAJAMOS = [
   {
     numero: '01',
-    titulo: 'Diagnóstico',
-    texto: 'Revisamos el estado real del proyecto y de la documentación de la comunidad.',
+    titulo: 'Conocemos sus necesidades',
+    texto:
+      'Analizamos la situación, la documentación y los objetivos de la comunidad o empresa para ' +
+      'identificar prioridades.',
   },
   {
     numero: '02',
-    titulo: 'Propuesta',
-    texto: 'Te entregamos un plan de trabajo con alcance, plazos y costos claros.',
+    titulo: 'Definimos un plan de trabajo',
+    texto: 'Acordamos el alcance del servicio, las actividades, los responsables, los plazos y los costos.',
   },
   {
     numero: '03',
-    titulo: 'Ejecución',
-    texto: 'Trabajamos junto al equipo de la comunidad, no por encima de él.',
+    titulo: 'Desarrollamos el servicio',
+    texto:
+      'Brindamos asesoría, capacitación y soporte especializado, en coordinación con los dirigentes ' +
+      'y equipos de trabajo.',
   },
   {
     numero: '04',
-    titulo: 'Cierre',
-    texto: 'Dejamos el expediente, la obra o el trámite documentado y transferido.',
+    titulo: 'Evaluamos y damos seguimiento',
+    texto:
+      'Revisamos los avances, entregamos los resultados acordados y proponemos acciones para ' +
+      'fortalecer la continuidad de la gestión.',
   },
 ] as const;
 
