@@ -106,26 +106,37 @@ export function CourseCard({
             </Link>
           </Titulo>
 
+          {/* En el carrusel del inicio no van horas, semanas ni inversión: solo la
+              modalidad y el material; esos datos están en la página del curso */}
           <ul className={`grid gap-1.5 text-texto ${t.datos}`}>
-            <Dato icono={<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}>
-              <span>
-                <strong className="font-semibold text-brand-900">{curso.lectiveHours}</strong> horas
-                lectivas · {curso.duration}
-              </span>
-            </Dato>
+            {!compacta && (
+              <Dato icono={<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}>
+                <span>
+                  <strong className="font-semibold text-brand-900">{curso.lectiveHours}</strong> horas
+                  lectivas · {curso.duration}
+                </span>
+              </Dato>
+            )}
             <Dato icono={<><rect x="3" y="6" width="13" height="12" rx="2" /><path d="m16 10 5-3v10l-5-3" /></>}>
               {curso.modality}
             </Dato>
+            {compacta && (
+              <Dato icono={<><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M4 19h16" /></>}>
+                Material descargable adicional
+              </Dato>
+            )}
           </ul>
 
-          <p className={`border-t border-silver-200 ${t.separador}`}>
-            <span className="block text-[0.7rem] font-bold uppercase tracking-wider text-slate-500">
-              Inversión
-            </span>
-            <span className={`font-extrabold text-brand-900 ${t.precio}`}>
-              {curso.price != null ? soles.format(curso.price) : 'Consultar'}
-            </span>
-          </p>
+          {!compacta && (
+            <p className={`border-t border-silver-200 ${t.separador}`}>
+              <span className="block text-[0.7rem] font-bold uppercase tracking-wider text-slate-500">
+                Inversión
+              </span>
+              <span className={`font-extrabold text-brand-900 ${t.precio}`}>
+                {curso.price != null ? soles.format(curso.price) : 'Consultar'}
+              </span>
+            </p>
+          )}
 
           <div className={`mt-auto flex items-center gap-2 ${t.pie}`}>
             <Link href={url} className={`btn-primary flex-1 px-3 ${t.boton}`}>

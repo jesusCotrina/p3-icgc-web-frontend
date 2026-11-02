@@ -396,8 +396,8 @@ export default async function HomePage() {
         <Reveal desde="izquierda" className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <TituloSeccion
             id="cursos-titulo"
-            titulo="Capacitación"
-            subtitulo="Nuestros cursos de gestión comunal y empresarial"
+            titulo="Cursos y Programa de Capacitación"
+            subtitulo="Fortalece tus capacidades en gestión comunal y empresarial con diplomados, cursos y talleres dirigidos a dirigentes, directivos y profesionales de comunidades campesinas y empresas comunales."
           />
           <Link
             href="/cursos"

@@ -16,10 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
 
   return buildMetadata({
-    title: 'Cursos de capacitación en gestión comunal | ICGC',
+    title: 'Capacitación y desarrollo de capacidades | ICGC',
     description:
-      'Cursos del ICGC en gestión comunal, marco legal, formulación de proyectos y liderazgo, ' +
-      'en vivo por Zoom, con material digital y certificado para todo el Perú.',
+      'Cursos, talleres y diplomados del ICGC en gestión comunal y empresarial, ingeniería, ' +
+      'derecho y relaciones comunitarias para dirigentes, comuneros, directivos y profesionales.',
     path: '/cursos',
     settings,
   });
@@ -67,15 +67,17 @@ export default async function CursosPage() {
       {/* ── Cabecera: arena con una sola línea dorada ── */}
       <section className="relative isolate overflow-hidden border-b border-dorado/25 bg-arena">
         <FondoLineas lineas="una" className="-z-10" />
-        <div className="container-icgc flex max-w-6xl flex-wrap items-end justify-between gap-6 py-10 lg:py-12">
+        {/* El contador va arriba, a la altura del título (no al pie del párrafo) */}
+        <div className="container-icgc flex max-w-6xl flex-wrap items-start justify-between gap-6 py-10 lg:py-12">
           <div className="max-w-3xl">
-            <p className="eyebrow">Capacitación</p>
-            <h1 className="mt-2 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-              Cursos de Capacitación en Gestión Comunal
+            <h1 className="text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
+              Capacitación y Desarrollo de Capacidades
             </h1>
-            <p className="mt-4 text-pretty text-lg leading-relaxed text-slate-600">
-              Programas en vivo, con material digital y certificado del ICGC, pensados para
-              dirigentes, comuneros y profesionales que trabajan con comunidades de todo el Perú.
+            <p className="mt-3 text-lg font-bold text-dorado-oscuro">Cursos, talleres y diplomados</p>
+            <p className="mt-3 text-pretty text-lg leading-relaxed text-slate-600">
+              Fortalece tus conocimientos en gestión comunal y empresarial, ingeniería, derecho y
+              relaciones comunitarias. Propuestas dirigidas a dirigentes, comuneros, directivos,
+              profesionales y trabajadores de las comunidades campesinas y sus empresas.
             </p>
           </div>
           {cursos.length > 0 && (
@@ -116,7 +118,7 @@ export default async function CursosPage() {
 
       {/* ── Programa a medida: se arma y se envía por WhatsApp ── */}
       <section aria-labelledby="medida-titulo">
-        <ProgramaAMedida temas={cursos.map((c) => c.name)} whatsapp={settings.whatsapp} />
+        <ProgramaAMedida whatsapp={settings.whatsapp} />
         <p className="container-icgc mt-5 text-center text-sm text-slate-600">
           ¿Prefieres escribirnos con calma?{' '}
           <Link href="/nosotros#contacto" className="font-semibold text-brand-700 underline underline-offset-2">

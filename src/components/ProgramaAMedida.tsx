@@ -4,27 +4,33 @@ import { useId, useState } from 'react';
 import { WhatsAppIcon } from '@/components/Icons';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
 
+/** Temas de capacitación que se pueden combinar en una propuesta */
+const TEMAS = [
+  'Gestión, normativa y liderazgo comunal',
+  'Constitución y formalización de empresas comunales',
+  'Administración de empresas comunales',
+  'Negociación y manejo de conflictos sociales',
+  'Gestión de proyectos con enfoque en normativa comunal',
+  'Licitaciones y administración de contratos',
+  'Planeamiento financiero y control de gestión',
+  'Seguridad, salud ocupacional y gestión ambiental',
+  'Otro tema',
+] as const;
 const MODALIDADES = ['Virtual', 'Presencial', 'Semipresencial'] as const;
-const GRUPOS = ['Hasta 20', '20 a 50', 'Más de 50'] as const;
+const GRUPOS = ['Hasta 20', 'De 21 a 50', 'Más de 50'] as const;
 
 /**
- * Cierre de /cursos: arma un programa a medida en tres toques (temas,
- * modalidad y tamaño del grupo) y lo envía por WhatsApp con el mensaje escrito.
+ * Cierre de /cursos: arma una capacitación a medida en tres toques (temas,
+ * modalidad y tamaño del grupo) y pide la propuesta por WhatsApp con el
+ * mensaje escrito.
  *
  * REGLA SEO: el texto, las preguntas y las opciones vienen en el HTML del
  * servidor; el cliente solo arma el mensaje. Las opciones son checkbox y radio
  * reales dentro de <fieldset>, así funciona con teclado y lector de pantalla.
  */
-export function ProgramaAMedida({
-  temas,
-  whatsapp,
-}: {
-  /** Nombres de los cursos publicados: los temas salen del gestor */
-  temas: string[];
-  whatsapp: string | null;
-}) {
+export function ProgramaAMedida({ whatsapp }: { whatsapp: string | null }) {
   const id = useId();
-  const opciones = [...temas, 'Otro tema'];
+  const opciones = TEMAS;
   const [elegidos, setElegidos] = useState<string[]>([]);
   const [modalidad, setModalidad] = useState<string>(MODALIDADES[0]);
   const [grupo, setGrupo] = useState<string>(GRUPOS[0]);
@@ -34,7 +40,7 @@ export function ProgramaAMedida({
 
   const url = whatsappUrl(
     { whatsapp },
-    `Hola, vengo de la página web. Quiero un programa de capacitación a medida.\n` +
+    `Hola, vengo de la página web. Quiero una propuesta de capacitación a medida.\n` +
       `• Temas: ${elegidos.length ? elegidos.join(', ') : 'por definir'}\n` +
       `• Modalidad: ${modalidad}\n• Participantes: ${grupo.toLowerCase()} personas`,
   );
@@ -79,20 +85,21 @@ export function ProgramaAMedida({
       <div className="container-icgc grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,8fr)] lg:items-center lg:gap-10">
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-dorado-oscuro">
-            Programa a medida
+            Capacitación a medida
           </p>
           <h2 id="medida-titulo" className="mt-2 text-balance text-2xl font-extrabold text-brand-900">
-            ¿Necesitas un Programa a Medida?
+            ¿Qué Necesita Aprender tu Equipo?
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-texto">
-            Adaptamos temas, fechas y modalidad a tu comunidad u organización, con certificado del
-            ICGC. Elige lo que necesitas y te respondemos por WhatsApp.
+            Diseñamos capacitaciones según las necesidades de tu comunidad, empresa u organización.
+            Selecciona los temas, la modalidad y el número de participantes para solicitar una
+            propuesta.
           </p>
         </div>
 
         <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
           <fieldset>
-            <legend className="text-sm font-bold text-brand-900">Temas</legend>
+            <legend className="text-sm font-bold text-brand-900">¿En qué temas necesitan capacitarse?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {opciones.map((tema) => {
                 const activo = elegidos.includes(tema);
@@ -114,20 +121,20 @@ export function ProgramaAMedida({
 
           <div className="flex flex-wrap items-end gap-x-8 gap-y-3">
             <fieldset>
-              <legend className="text-sm font-bold text-brand-900">Modalidad</legend>
+              <legend className="text-sm font-bold text-brand-900">¿Qué modalidad prefieren?</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {grupoDeRadios('modalidad', MODALIDADES, modalidad, setModalidad)}
               </div>
             </fieldset>
             <fieldset>
-              <legend className="text-sm font-bold text-brand-900">Participantes</legend>
+              <legend className="text-sm font-bold text-brand-900">¿Cuántas personas participarán?</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {grupoDeRadios('grupo', GRUPOS, grupo, setGrupo)}
               </div>
             </fieldset>
             <a href={url} {...propsEnlace(url)} className="btn-primary py-2.5">
               <WhatsAppIcon size={18} />
-              Enviar por WhatsApp
+              Solicitar propuesta por WhatsApp
             </a>
           </div>
         </form>
