@@ -60,6 +60,8 @@ export default async function ProyectoPage({ params }: { params: Params }) {
   if (!proyecto) notFound();
 
   const region = nombreRegion(proyecto.region);
+  // Encabezado de la lista de trabajos: viene del gestor; sin él, el genérico
+  const tituloLista = proyecto.itemsTitle || 'Servicios brindados';
   const urlWhatsapp = whatsappUrl(
     settings,
     `Hola, vengo de la página web. Quiero más información sobre el proyecto "${proyecto.title}".`,
@@ -87,7 +89,7 @@ export default async function ProyectoPage({ params }: { params: Params }) {
               ? {
                   subjectOf: {
                     '@type': 'ItemList',
-                    name: `Servicios brindados: ${proyecto.title}`,
+                    name: `${tituloLista}: ${proyecto.title}`,
                     itemListElement: proyecto.items.map((item, i) => ({
                       '@type': 'ListItem',
                       position: i + 1,
@@ -174,7 +176,7 @@ export default async function ProyectoPage({ params }: { params: Params }) {
       {proyecto.items.length > 0 && (
         <section aria-labelledby="trabajos" className="container-icgc max-w-6xl py-12 lg:py-14">
           <h2 id="trabajos" className="text-2xl sm:text-3xl">
-            Servicios Brindados
+            {enTitulo(tituloLista)}
           </h2>
           <ul data-revelar-hijos className="mt-7 grid gap-4 sm:grid-cols-2">
             {proyecto.items.map((item) => (
