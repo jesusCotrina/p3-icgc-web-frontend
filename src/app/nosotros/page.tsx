@@ -244,19 +244,15 @@ export default async function NosotrosPage() {
               </div>
 
               <div>
-                <p className="eyebrow">Sobre el líder</p>
+                {/* La etiqueta ya dice el cargo: junto al nombre no se repite */}
+                <p className="eyebrow">Gerente General</p>
                 <h2
                   id="lider-titulo"
                   className="mt-3 text-balance text-3xl font-extrabold leading-tight text-brand-900 sm:text-4xl"
                 >
                   {enTitulo(lider.titulo ?? lider.nombre)}
                 </h2>
-                <p className="mt-4 text-lg font-bold text-brand-700">
-                  {lider.nombre}
-                  {lider.cargo && (
-                    <span className="font-semibold text-dorado-oscuro"> · {lider.cargo}</span>
-                  )}
-                </p>
+                <p className="mt-4 text-lg font-bold text-brand-700">{lider.nombre}</p>
                 {lider.bio && (
                   <div className="mt-4 max-w-2xl space-y-3 text-pretty leading-relaxed text-texto">
                     {lider.bio.split(/\n{2,}/).map((parrafo) => (
@@ -323,9 +319,9 @@ export default async function NosotrosPage() {
         className="scroll-mt-20 bg-arena py-16 lg:py-20"
       >
         <div className="container-icgc">
-          <p className="eyebrow">Trayectoria del gerente general</p>
+          <p className="eyebrow">Nuestra Experiencia</p>
           <h2 id="reconocimientos-titulo" className="mt-3 text-3xl font-extrabold text-brand-900 sm:text-4xl">
-            Reconocimientos
+            Reconocimientos y Trayectoria
           </h2>
           <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-texto">
             {RECONOCIMIENTOS_INTRO}

@@ -20,7 +20,7 @@ import { TituloSeccion } from '@/components/TituloSeccion';
 import { enTitulo, inicialesDe } from '@/lib/format';
 import { getCourses, getPosts, getProjects, getSettings, logoSrc } from '@/lib/api';
 import { resumenPresencia } from '@/lib/presencia';
-import { LEMA, QUIENES_SOMOS_RESUMEN } from '@/lib/institucional';
+import { CIFRAS_NOTA, LEMA, QUIENES_SOMOS, QUIENES_SOMOS_TITULO } from '@/lib/institucional';
 import { absoluteUrl, buildMetadata, truncate } from '@/lib/seo';
 import { SERVICIOS } from '@/lib/servicios';
 import { propsEnlace, whatsappUrl } from '@/lib/whatsapp';
@@ -236,7 +236,7 @@ export default async function HomePage() {
                   id="quienes-titulo"
                   className="mt-4 text-balance text-3xl font-extrabold leading-tight tracking-tight text-brand-900 sm:text-[2.6rem]"
                 >
-                  Un Instituto al Servicio de las Comunidades
+                  {QUIENES_SOMOS_TITULO}
                 </h2>
               </Reveal>
               <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
@@ -252,7 +252,11 @@ export default async function HomePage() {
                   />
                 </Reveal>
                 <Reveal desde="izquierda" retrasoMs={350}>
-                  <p className="text-pretty leading-relaxed text-texto">{QUIENES_SOMOS_RESUMEN}</p>
+                  <div className="space-y-4 text-pretty leading-relaxed text-texto">
+                    {QUIENES_SOMOS.map((parrafo) => (
+                      <p key={parrafo}>{parrafo}</p>
+                    ))}
+                  </div>
                   {/* El lema oficial del instituto, con la raya dorada al costado */}
                   <p className="mt-4 border-l-4 border-dorado pl-4 text-pretty font-bold leading-snug text-brand-700">
                     “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
@@ -282,6 +286,8 @@ export default async function HomePage() {
             {/* ── Cifras del instituto en tarjetas (el número final ya va en el HTML) ── */}
             <Reveal desde="derecha">
               <StatsCounter stats={cifras} variante="tarjetas" />
+              {/* Letra chica: la experiencia es del equipo, no solo del instituto */}
+              <p className="mt-4 text-xs leading-relaxed text-dorado-oscuro">{CIFRAS_NOTA}</p>
             </Reveal>
           </div>
 

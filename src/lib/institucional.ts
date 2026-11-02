@@ -22,24 +22,27 @@ export const VISION =
   'transparentes y sostenibles, capaces de ejercer una gobernanza eficaz, inclusiva y orientada ' +
   'al desarrollo integral de sus territorios.';
 
-/** Quiénes somos, texto oficial completo (página /nosotros). */
+/** Título de la sección "Quiénes somos" del inicio. */
+export const QUIENES_SOMOS_TITULO = 'Fortalecemos la Gestión Comunal y Empresarial';
+
+/**
+ * Quiénes somos, texto oficial (sección del inicio y hero de /nosotros, que usa
+ * el primer párrafo). Dos párrafos: qué hacemos y cómo trabaja el equipo.
+ */
 export const QUIENES_SOMOS = [
-  'El Instituto de Capacitación en Gestión Comunal (ICGC) brinda servicios de asesoría, ' +
+  'Somos el Instituto de Capacitación en Gestión Comunal (ICGC). Brindamos asesoría, ' +
     'consultoría y capacitación a comunidades campesinas, empresas comunales, organizaciones ' +
-    'sociales, empresas privadas y entidades públicas, con especial atención a los sectores ' +
+    'sociales, empresas privadas y entidades públicas, especialmente en los sectores ' +
     'construcción y minería.',
-  'Integramos profesionales en ingeniería, derecho, gestión empresarial y relaciones comunitarias ' +
-    'para fortalecer la organización institucional, mejorar la administración de recursos y ' +
-    'acompañar el desarrollo de proyectos. Promovemos el diálogo, la prevención de conflictos y la ' +
-    'construcción de acuerdos sostenibles.',
+  'Nuestro equipo multidisciplinario integra ingeniería, derecho, gestión empresarial y ' +
+    'relaciones comunitarias para fortalecer la organización, optimizar recursos y desarrollar ' +
+    'proyectos. Acompañamos procesos de diálogo y negociación, promoviendo la prevención de ' +
+    'conflictos y acuerdos sostenibles.',
 ] as const;
 
-/** Resumen de "Quiénes somos" para el inicio (junto al logo). */
-export const QUIENES_SOMOS_RESUMEN =
-  'Brindamos asesoría, consultoría y capacitación a comunidades campesinas, empresas comunales, ' +
-  'organizaciones sociales, empresas privadas y entidades públicas, con especial atención a la ' +
-  'construcción y la minería. Promovemos el diálogo, la prevención de conflictos y los acuerdos ' +
-  'sostenibles.';
+/** Letra chica bajo las cifras del inicio: aclara de dónde sale la experiencia. */
+export const CIFRAS_NOTA =
+  'La experiencia profesional corresponde a la trayectoria del equipo del ICGC.';
 
 /** "Un equipo multidisciplinario" de /nosotros: la presentación y sus cuatro áreas. */
 export const EQUIPO_INTRO =
@@ -97,7 +100,9 @@ export type Reconocimiento = {
 };
 
 export const RECONOCIMIENTOS_INTRO =
-  'Reconocimientos recibidos por el gerente general durante su trayectoria en la gestión empresarial y comunal.';
+  'Nuestra experiencia se respalda en reconocimientos recibidos por nuestro gerente general y por ' +
+  'las empresas comunales de las que formó parte, por su desempeño en gestión empresarial, ' +
+  'seguridad y fortalecimiento de capacidades.';
 
 const R = '/reconocimientos';
 
