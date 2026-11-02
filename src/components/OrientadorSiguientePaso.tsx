@@ -13,61 +13,81 @@ type Necesidad = {
   destino: { href: string; etiqueta: string };
 };
 
+/** Cada necesidad enlaza al servicio o curso que la atiende (slugs de servicios.ts). */
 const NECESIDADES: readonly Necesidad[] = [
   {
-    id: 'proyecto',
-    texto: 'Formular o impulsar un proyecto',
-    paso: 'una asesoría para sacar adelante tu proyecto',
-    destino: { href: '/servicios/gestion-de-proyectos-y-obras', etiqueta: 'Ver el servicio de gestión de proyectos y obras' },
+    id: 'empresa-comunal',
+    texto: 'Constituir o fortalecer una empresa comunal',
+    paso: 'una asesoría para constituir o fortalecer tu empresa comunal',
+    destino: {
+      href: '/servicios/empresas-comunales',
+      etiqueta: 'Ver el servicio de constitución de empresas comunales',
+    },
   },
   {
-    id: 'gestion',
-    texto: 'Orientación en gestión comunal o marco legal',
-    paso: 'una orientación en gestión comunal y marco legal',
+    id: 'estatutos',
+    texto: 'Revisar estatutos, reglamentos o contratos',
+    paso: 'una revisión legal de tus estatutos, reglamentos o contratos',
     destino: {
-      href: '/cursos/gestion-normativa-y-liderazgo-comunal',
-      etiqueta: 'Ver el curso de gestión, normativa y liderazgo comunal',
+      href: '/servicios/asesoria-legal-y-ambiental',
+      etiqueta: 'Ver el servicio de asesoría legal y ambiental',
     },
   },
   {
     id: 'capacitar',
-    texto: 'Capacitar a dirigentes y comuneros',
+    texto: 'Capacitar a dirigentes, comuneros o trabajadores',
     paso: 'un programa de capacitación para tu equipo',
     destino: { href: '/cursos', etiqueta: 'Ver los cursos de capacitación' },
   },
   {
+    id: 'negociacion',
+    texto: 'Recibir apoyo en negociaciones y mesas de diálogo',
+    paso: 'un acompañamiento en tus negociaciones y mesas de diálogo',
+    destino: {
+      href: '/servicios/gestion-social-y-conflictos',
+      etiqueta: 'Ver el servicio de gestión social y manejo de conflictos',
+    },
+  },
+  {
+    id: 'expedientes',
+    texto: 'Elaborar expedientes o gestionar proyectos y obras',
+    paso: 'una asesoría para elaborar tus expedientes y gestionar tus proyectos y obras',
+    destino: {
+      href: '/servicios/expedientes-tecnicos-y-proyectos-sociales',
+      etiqueta: 'Ver el servicio de elaboración de expedientes técnicos',
+    },
+  },
+  {
     id: 'licitacion',
-    texto: 'Prepararse para una licitación',
-    paso: 'preparar a tu comunidad para competir en una licitación',
-    destino: { href: '/servicios/gestion-de-proyectos-y-operaciones', etiqueta: 'Ver el servicio de gestión de proyectos y licitaciones' },
+    texto: 'Preparar licitaciones y propuestas',
+    paso: 'preparar a tu organización para competir en una licitación',
+    destino: {
+      href: '/servicios/gestion-de-proyectos-y-operaciones',
+      etiqueta: 'Ver el servicio de gestión de proyectos y operaciones',
+    },
+  },
+  {
+    id: 'legal-ambiental',
+    texto: 'Recibir asesoría legal o ambiental',
+    paso: 'una asesoría legal o ambiental',
+    destino: {
+      href: '/servicios/asesoria-legal-y-ambiental',
+      etiqueta: 'Ver el servicio de asesoría legal y ambiental',
+    },
   },
 ];
 
-const ETAPAS = [
-  {
-    id: 'idea',
-    texto: 'Tenemos una idea o necesidad',
-    consejo:
-      'Empezamos con un diagnóstico: revisamos la necesidad y la documentación de la comunidad, y te proponemos la ruta más corta para avanzar.',
-  },
-  {
-    id: 'gestion',
-    texto: 'Ya estamos gestionando el proyecto',
-    consejo:
-      'Revisamos en qué punto está el trámite o el expediente, qué falta y qué está frenando el avance, para destrabarlo cuanto antes.',
-  },
-  {
-    id: 'ejecucion',
-    texto: 'Necesitamos apoyo durante la ejecución',
-    consejo:
-      'Te acompañamos mientras se ejecuta: control de avance, valorizaciones y la documentación que después pide la liquidación.',
-  },
+/** Tipo de apoyo que buscan: va en el mensaje de WhatsApp. */
+const TIPOS_APOYO = [
+  { id: 'orientacion', texto: 'Orientación inicial' },
+  { id: 'puntual', texto: 'Atención de una necesidad específica' },
+  { id: 'continuo', texto: 'Asesoría y acompañamiento continuo' },
 ] as const;
 
 /**
  * Cierre del inicio: en vez de un CTA genérico, un pequeño orientador. El
- * visitante elige qué necesita y en qué etapa está, y "Ver mi siguiente paso"
- * abre WhatsApp directamente con su consulta ya escrita.
+ * visitante elige qué necesita y qué tipo de apoyo busca, y "Enviar por
+ * WhatsApp" abre WhatsApp directamente con su consulta ya escrita.
  *
  * REGLA SEO: las preguntas y opciones vienen en el HTML del servidor; solo la
  * respuesta se arma en el cliente. Las opciones son radios reales dentro de
@@ -83,19 +103,19 @@ export function OrientadorSiguientePaso({
 }) {
   const id = useId();
   const [necesidad, setNecesidad] = useState<string | null>(null);
-  const [etapa, setEtapa] = useState<string | null>(null);
+  const [tipo, setTipo] = useState<string | null>(null);
   const [mostrar, setMostrar] = useState(false);
 
   const elegidaNecesidad = NECESIDADES.find((n) => n.id === necesidad);
-  const elegidaEtapa = ETAPAS.find((e) => e.id === etapa);
-  const listo = Boolean(elegidaNecesidad && elegidaEtapa);
+  const elegidoTipo = TIPOS_APOYO.find((t) => t.id === tipo);
+  const listo = Boolean(elegidaNecesidad && elegidoTipo);
 
   const urlWhatsapp =
-    elegidaNecesidad && elegidaEtapa
+    elegidaNecesidad && elegidoTipo
       ? whatsappUrl(
           { whatsapp },
           `Hola, vengo de la página web. Necesitamos: ${elegidaNecesidad.texto.toLowerCase()}. ` +
-            `Etapa: ${elegidaEtapa.texto.toLowerCase()}. ¿Nos pueden orientar sobre el siguiente paso?`,
+            `Tipo de apoyo: ${elegidoTipo.texto.toLowerCase()}. ¿Nos pueden orientar?`,
         )
       : '';
 
@@ -127,13 +147,13 @@ export function OrientadorSiguientePaso({
       >
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-dorado-oscuro">
-            Encuentra tu siguiente paso
+            Conversemos sobre sus necesidades
           </p>
           <h2 id="cta-titulo" className="mt-2 text-balance text-2xl font-extrabold text-brand-900">
-            ¿En Qué Etapa Está tu Comunidad?
+            ¿Cómo Podemos Apoyar a tu Comunidad o Empresa?
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-texto">
-            Elige qué necesitan y en qué punto están: te escribimos la consulta por WhatsApp.
+            Selecciona el servicio que necesitas y cuéntanos tu situación por WhatsApp.
           </p>
         </div>
 
@@ -177,22 +197,22 @@ export function OrientadorSiguientePaso({
           </fieldset>
 
           <fieldset>
-            <legend className="text-sm font-bold text-brand-900">¿En qué etapa están?</legend>
+            <legend className="text-sm font-bold text-brand-900">¿Qué tipo de apoyo buscan?</legend>
             <div className="mt-2 flex flex-wrap gap-2">
-              {ETAPAS.map((e) => (
-                <label key={e.id} className={pastilla(etapa === e.id)}>
+              {TIPOS_APOYO.map((t) => (
+                <label key={t.id} className={pastilla(tipo === t.id)}>
                   <input
                     type="radio"
-                    name={`${id}-etapa`}
-                    value={e.id}
-                    checked={etapa === e.id}
+                    name={`${id}-tipo`}
+                    value={t.id}
+                    checked={tipo === t.id}
                     onChange={() => {
-                      setEtapa(e.id);
+                      setTipo(t.id);
                       setMostrar(false);
                     }}
                     className="sr-only"
                   />
-                  {e.texto}
+                  {t.texto}
                 </label>
               ))}
             </div>
@@ -209,7 +229,7 @@ export function OrientadorSiguientePaso({
 
           {/* aria-live: el lector de pantalla anuncia que se abrió WhatsApp */}
           <div aria-live="polite">
-            {mostrar && elegidaNecesidad && elegidaEtapa && (
+            {mostrar && elegidaNecesidad && elegidoTipo && (
               <p className="animate-fade-up text-sm leading-relaxed text-texto">
                 Te recomendamos {elegidaNecesidad.paso}.{' '}
                 <a

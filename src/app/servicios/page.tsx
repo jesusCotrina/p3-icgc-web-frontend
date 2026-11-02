@@ -15,10 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
 
   return buildMetadata({
-    title: 'Servicios de consultoría para comunidades | ICGC',
+    title: 'Capacitación y asesoría en gestión comunal | ICGC',
     description:
-      'Empresas comunales, organización comunal, negociación de tierras y convenios, gestión de ' +
-      'conflictos, obras, licitaciones y capacitación para las comunidades.',
+      'Diplomados, cursos, talleres y asesoría en gestión comunal y empresarial, ingeniería, ' +
+      'derecho y relaciones comunitarias: proyectos, contratos, negociaciones y cumplimiento.',
     path: '/servicios',
     settings,
   });
@@ -71,14 +71,14 @@ export default async function ServiciosPage() {
       <section className="relative isolate overflow-hidden border-b border-dorado/25 bg-arena">
         <FondoLineas lineas="una" className="-z-10" />
         <div className="container-icgc max-w-6xl py-10 lg:py-12">
-          <p className="eyebrow">Servicios</p>
-          <h1 className="mt-2 max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-            Servicios de Consultoría para Comunidades
+          <h1 className="max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
+            Capacitación y Asesoría para la Gestión Comunal y Empresarial
           </h1>
           <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-texto">
-            Acompañamos a comunidades campesinas y a sus empresas en todo el camino: desde ordenar
-            la organización y negociar con empresas mineras y privadas hasta ejecutar sus obras y
-            capacitar a sus dirigentes.
+            Brindamos diplomados, cursos, talleres y asesoría especializada en gestión comunal y
+            empresarial, ingeniería, derecho y relaciones comunitarias. Fortalecemos capacidades y
+            acompañamos proyectos, contratos y negociaciones, con enfoque en seguridad, gestión
+            ambiental y cumplimiento normativo.
           </p>
         </div>
       </section>
@@ -97,7 +97,7 @@ export default async function ServiciosPage() {
         </ul>
       </section>
 
-      {/* ── Confían en nosotros: la misma cinta de logos del inicio ── */}
+      {/* ── Experiencia y relacionamiento: la misma cinta de logos del inicio ── */}
       <SeccionClientes />
 
       {/* ── Siguiente paso: franja de borde a borde que empalma con el pie ── */}

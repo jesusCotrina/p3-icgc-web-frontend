@@ -4,22 +4,22 @@ import { TituloSeccion } from '@/components/TituloSeccion';
 import { CLIENTES, MINERAS } from '@/lib/clientes';
 
 /**
- * "Confían en nosotros": dos cintas de logos, cada una con su título
- * (empresas y comunidades / empresas mineras). La misma sección en el inicio
- * y en /servicios.
+ * "Nuestra experiencia y relacionamiento institucional": dos cintas de logos,
+ * cada una con su título (comunidades y empresas comunales / empresas con las
+ * que se dialogó y negoció). La misma sección en el inicio y en /servicios.
  */
 export function SeccionClientes() {
   const cintas = [
     {
       id: 'clientes-comunidades',
-      titulo: 'Comunidades',
-      etiqueta: 'logos de empresas y comunidades',
+      titulo: 'Comunidades y Empresas Comunales',
+      etiqueta: 'logos de comunidades y empresas comunales',
       clientes: CLIENTES,
     },
     {
       id: 'clientes-mineras',
-      titulo: 'Negociación con Empresas Mineras',
-      etiqueta: 'logos de empresas mineras',
+      titulo: 'Diálogo y Negociación con Empresas',
+      etiqueta: 'logos de empresas con las que se dialogó y negoció',
       clientes: MINERAS,
     },
   ];
@@ -30,7 +30,7 @@ export function SeccionClientes() {
         <Reveal>
           <TituloSeccion
             id="clientes-titulo"
-            titulo="Confían en Nosotros"
+            titulo="Nuestra Experiencia y Relacionamiento Institucional"
             centrado
           />
         </Reveal>
