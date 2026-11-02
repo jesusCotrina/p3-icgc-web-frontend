@@ -82,12 +82,12 @@ export default async function ProyectoPage({ params }: { params: Params }) {
             description: proyecto.objective,
             url: absoluteUrl(`/proyectos/${proyecto.slug}`),
             ...(proyecto.company ? { funder: { '@type': 'Organization', name: proyecto.company } } : {}),
-            // Los trabajos realizados, como partes del proyecto
+            // Los servicios brindados, como partes del proyecto
             ...(proyecto.items.length > 0
               ? {
                   subjectOf: {
                     '@type': 'ItemList',
-                    name: `Trabajos realizados: ${proyecto.title}`,
+                    name: `Servicios brindados: ${proyecto.title}`,
                     itemListElement: proyecto.items.map((item, i) => ({
                       '@type': 'ListItem',
                       position: i + 1,
@@ -125,22 +125,9 @@ export default async function ProyectoPage({ params }: { params: Params }) {
       <section className="border-b border-silver-200 bg-brand-soft">
         <div className="container-icgc grid max-w-6xl items-center gap-8 py-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12 lg:py-12">
           <div>
-            <nav aria-label="Ruta de navegación" className="text-sm text-slate-500">
-              <ol className="flex flex-wrap items-center gap-1.5">
-                <li>
-                  <Link href="/" className="font-medium text-brand-700 hover:text-brand-900">
-                    Inicio
-                  </Link>
-                </li>
-                <li aria-hidden="true">/</li>
-                <li>
-                  <Link href="/proyectos" className="font-medium text-brand-700 hover:text-brand-900">
-                    Proyectos
-                  </Link>
-                </li>
-              </ol>
-            </nav>
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+            {/* Sin ruta "Inicio / Proyectos" visible: la BreadcrumbList del JSON-LD
+                sigue dándole la jerarquía a Google */}
+            <div className="flex flex-wrap items-center gap-2">
               {proyecto.company && (
                 <span className="rounded-full bg-brand-900 px-3 py-1 text-xs font-bold uppercase tracking-wider text-dorado-claro">
                   {proyecto.company}
@@ -155,7 +142,10 @@ export default async function ProyectoPage({ params }: { params: Params }) {
             <h1 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
               {enTitulo(proyecto.title)}
             </h1>
-            <p className="mt-3 text-lg font-bold text-brand-800">{proyecto.community}</p>
+            {/* Subtítulo del gestor; si falta, el nombre de la comunidad */}
+            <p className="mt-3 text-lg font-bold text-brand-800">
+              {proyecto.headline || proyecto.community}
+            </p>
             <p className="mt-3 text-pretty text-lg leading-relaxed text-slate-600">
               {proyecto.objective}
             </p>
@@ -180,11 +170,11 @@ export default async function ProyectoPage({ params }: { params: Params }) {
         </div>
       </section>
 
-      {/* ── Trabajos realizados: uno por tarjeta, cada uno con su ícono ── */}
+      {/* ── Servicios brindados: uno por tarjeta, cada uno con su ícono ── */}
       {proyecto.items.length > 0 && (
         <section aria-labelledby="trabajos" className="container-icgc max-w-6xl py-12 lg:py-14">
           <h2 id="trabajos" className="text-2xl sm:text-3xl">
-            Trabajos Realizados
+            Servicios Brindados
           </h2>
           <ul data-revelar-hijos className="mt-7 grid gap-4 sm:grid-cols-2">
             {proyecto.items.map((item) => (
