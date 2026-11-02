@@ -18,10 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
 
   return buildMetadata({
-    title: 'Proyectos: asesoría en licitaciones y obras comunales | ICGC',
+    title: 'Experiencia y proyectos con comunidades | ICGC',
     description:
-      'Consultoría del ICGC en licitaciones, expedientes técnicos y ejecución de proyectos de ' +
-      'infraestructura para comunidades campesinas, nativas y organizaciones del Perú.',
+      'Asesorías, capacitaciones y negociaciones que el ICGC ha acompañado, y la experiencia de ' +
+      'su equipo en gestión de proyectos y operaciones para empresas comunales del Perú.',
     path: '/proyectos',
     settings,
   });
@@ -69,13 +69,14 @@ export default async function ProyectosPage() {
       <section className="border-b border-silver-200">
         <div className="container-icgc grid gap-8 pb-14 pt-8 lg:pt-10 xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10">
           <div className="xl:sticky xl:top-28 xl:self-start">
-            <p className="eyebrow">Proyectos</p>
+            <p className="eyebrow">Experiencia y Proyectos</p>
             <h1 className="mt-3 text-balance text-3xl font-extrabold leading-tight">
-              Proyectos que Acompañamos en el Perú
+              Experiencia al Servicio de las Comunidades y sus Empresas
             </h1>
             <p className="mt-3 text-pretty text-sm leading-relaxed text-slate-600">
-              Obras y procesos que acompañamos junto a comunidades campesinas, nativas y entidades
-              públicas: riego, infraestructura comunal y saneamiento del territorio.
+              Conoce las asesorías, capacitaciones y procesos de negociación que hemos acompañado,
+              junto con la experiencia profesional de nuestro equipo en gestión de proyectos y
+              operaciones para empresas comunales.
             </p>
           </div>
 
