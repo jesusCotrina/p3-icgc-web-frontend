@@ -226,49 +226,37 @@ export default async function HomePage() {
           derecha las cuatro cifras en tarjetas arena. Abajo, el gerente. */}
       <section aria-labelledby="quienes-titulo" className="bg-white py-16 lg:py-20">
         <div className="container-icgc">
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-16">
-            {/* Las piezas se juntan al aparecer: título desde la izquierda, logo
-                desde abajo, texto desde la izquierda y por último el botón */}
-            <div>
-              <Reveal desde="izquierda">
-                <p className="eyebrow">Quiénes Somos</p>
-                <h2
-                  id="quienes-titulo"
-                  className="mt-4 text-balance text-3xl font-extrabold leading-tight tracking-tight text-brand-900 sm:text-[2.6rem]"
-                >
-                  {QUIENES_SOMOS_TITULO}
-                </h2>
-              </Reveal>
-              <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
-                {/* Logo lo bastante grande para que se lean las letras del aro */}
-                <Reveal desde="abajo" retrasoMs={200} className="shrink-0">
-                  <Image
-                    src={logoSrc(settings)}
-                    alt={settings.logoAlt}
-                    width={176}
-                    height={176}
-                    sizes="176px"
-                    className="h-36 w-36 shrink-0 object-contain sm:h-44 sm:w-44"
-                  />
-                </Reveal>
-                <Reveal desde="izquierda" retrasoMs={350}>
-                  <div className="space-y-4 text-pretty leading-relaxed text-texto">
-                    {QUIENES_SOMOS.map((parrafo) => (
-                      <p key={parrafo}>{parrafo}</p>
-                    ))}
-                  </div>
-                  {/* El lema oficial del instituto, con la raya dorada al costado */}
-                  <p className="mt-4 border-l-4 border-dorado pl-4 text-pretty font-bold leading-snug text-brand-700">
-                    “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
-                  </p>
-                </Reveal>
-              </div>
-              <Reveal desde="abajo" retrasoMs={500}>
-                <Link href="/nosotros" className="btn-primary mt-9 font-bold">
+          {/* Título a todo el ancho: en escritorio va en una sola línea, sin cortes */}
+          <Reveal desde="izquierda">
+            <p className="eyebrow">Quiénes Somos</p>
+            <h2
+              id="quienes-titulo"
+              className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-brand-900 sm:text-4xl"
+            >
+              {QUIENES_SOMOS_TITULO}
+            </h2>
+          </Reveal>
+
+          <div className="mt-10 grid items-center gap-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-16">
+            {/* Las piezas se juntan al aparecer: logo y botón desde abajo, texto
+                desde la izquierda */}
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+              {/* Logo lo bastante grande para que se lean las letras del aro, con
+                  el botón pegado debajo para no dejar aire de más */}
+              <Reveal desde="abajo" retrasoMs={200} className="flex shrink-0 flex-col items-center gap-3">
+                <Image
+                  src={logoSrc(settings)}
+                  alt={settings.logoAlt}
+                  width={176}
+                  height={176}
+                  sizes="176px"
+                  className="h-36 w-36 shrink-0 object-contain sm:h-44 sm:w-44"
+                />
+                <Link href="/nosotros" className="btn-primary px-3.5 py-2 text-xs font-bold">
                   Conoce al ICGC
                   <svg
-                    width="16"
-                    height="16"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -280,6 +268,17 @@ export default async function HomePage() {
                     <path d="M5 12h14M13 6l6 6-6 6" />
                   </svg>
                 </Link>
+              </Reveal>
+              <Reveal desde="izquierda" retrasoMs={350}>
+                <div className="space-y-4 text-pretty leading-relaxed text-texto">
+                  {QUIENES_SOMOS.map((parrafo) => (
+                    <p key={parrafo}>{parrafo}</p>
+                  ))}
+                </div>
+                {/* El lema oficial del instituto, con la raya dorada al costado */}
+                <p className="mt-4 border-l-4 border-dorado pl-4 text-pretty font-bold leading-snug text-brand-700">
+                  “{LEMA.inicio} {LEMA.destacado} {LEMA.final}”
+                </p>
               </Reveal>
             </div>
 

@@ -323,9 +323,8 @@ export default async function NosotrosPage() {
           <h2 id="reconocimientos-titulo" className="mt-3 text-3xl font-extrabold text-brand-900 sm:text-4xl">
             Reconocimientos y Trayectoria
           </h2>
-          <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-texto">
-            {RECONOCIMIENTOS_INTRO}
-          </p>
+          {/* A todo el ancho: en escritorio el texto corre de lado a lado sin cortes */}
+          <p className="mt-4 text-lg leading-relaxed text-texto">{RECONOCIMIENTOS_INTRO}</p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {RECONOCIMIENTOS.map((r) => (
               <li key={r.imagen ?? `${r.titulo}-${r.año}-${r.empresa ?? ''}`} className={`${TARJETA_RESALTA} !p-0`}>
