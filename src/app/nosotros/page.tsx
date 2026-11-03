@@ -211,27 +211,28 @@ export default async function NosotrosPage() {
             <p className="mt-4 max-w-4xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
           </div>
   
-          {/* Cinco tarjetas: tres arriba y dos centradas abajo */}
-          <ul className="mt-8 flex flex-wrap justify-center gap-6">
+          {/* Cinco tarjetas más chicas (foto baja, letra menor), tres arriba y dos
+              centradas abajo, en un ancho menor que el de la página */}
+          <ul className="mx-auto mt-8 flex max-w-5xl flex-wrap justify-center gap-5">
             {AREAS_EQUIPO.map((area) => (
               <li
                 key={area.titulo}
-                className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.75rem)] lg:basis-[calc(33.333%-1rem)]`}
+                className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.625rem)] lg:basis-[calc(33.333%-0.875rem)]`}
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="relative aspect-[16/9] overflow-hidden">
                   <Image
                     src={area.imagen}
                     alt={area.alt}
                     fill
                     quality={90}
-                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 440px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 340px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
                 </div>
-                <div className="p-6">
+                <div className="p-5">
                   <span aria-hidden="true" className={RAYA_RESALTA} />
-                  <h3 className="text-xl font-bold text-brand-900">{area.titulo}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-texto">{area.texto}</p>
+                  <h3 className="text-lg font-bold text-brand-900">{area.titulo}</h3>
+                  <p className="mt-1.5 text-[0.85rem] leading-relaxed text-texto">{area.texto}</p>
                 </div>
               </li>
             ))}
