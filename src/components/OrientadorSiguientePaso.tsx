@@ -108,16 +108,13 @@ export function OrientadorSiguientePaso({
 
   const elegidaNecesidad = NECESIDADES.find((n) => n.id === necesidad);
   const elegidoTipo = TIPOS_APOYO.find((t) => t.id === tipo);
-  const listo = Boolean(elegidaNecesidad && elegidoTipo);
-
-  const urlWhatsapp =
-    elegidaNecesidad && elegidoTipo
-      ? whatsappUrl(
-          { whatsapp },
-          `Hola, vengo de la página web. Necesitamos: ${elegidaNecesidad.texto.toLowerCase()}. ` +
-            `Tipo de apoyo: ${elegidoTipo.texto.toLowerCase()}. ¿Nos pueden orientar?`,
-        )
-      : '';
+  // El botón siempre está activo: lo que no se eligió va "por definir", como en
+  // "Consulta de proyecto" y "Capacitación a medida"
+  const urlWhatsapp = whatsappUrl(
+    { whatsapp },
+    `Hola, vengo de la página web. Necesitamos: ${elegidaNecesidad ? elegidaNecesidad.texto.toLowerCase() : 'por definir'}. ` +
+      `Tipo de apoyo: ${elegidoTipo ? elegidoTipo.texto.toLowerCase() : 'por definir'}. ¿Nos pueden orientar?`,
+  );
 
   /** Pastilla seleccionable, igual que en "Programa a medida" de /cursos */
   const pastilla = (activa: boolean) =>
@@ -161,7 +158,6 @@ export function OrientadorSiguientePaso({
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!listo) return;
             setMostrar(true);
             // Directo a WhatsApp con la consulta escrita. Si no hay número
             // cargado, whatsappUrl() lleva al formulario de /nosotros.
@@ -218,18 +214,14 @@ export function OrientadorSiguientePaso({
             </div>
           </fieldset>
 
-          <button
-            type="submit"
-            disabled={!listo}
-            className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
+          <button type="submit" className="btn-primary">
             <WhatsAppIcon size={18} />
             Enviar por WhatsApp
           </button>
 
           {/* aria-live: el lector de pantalla anuncia que se abrió WhatsApp */}
           <div aria-live="polite">
-            {mostrar && elegidaNecesidad && elegidoTipo && (
+            {mostrar && elegidaNecesidad && (
               <p className="animate-fade-up text-sm leading-relaxed text-texto">
                 Te recomendamos {elegidaNecesidad.paso}.{' '}
                 <a

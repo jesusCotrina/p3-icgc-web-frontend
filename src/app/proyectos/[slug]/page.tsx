@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AutoReveal } from '@/components/AutoReveal';
 import { ConsultaProyecto } from '@/components/ConsultaProyecto';
-import { BlueprintIcon, WhatsAppIcon } from '@/components/Icons';
+import { BlueprintIcon, BuildingIcon, MapPinIcon, WhatsAppIcon } from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
 import { ProjectFlipCard } from '@/components/ProjectFlipCard';
 import { esProyectoDeEjemplo, getProject, getProjects, getSettings } from '@/lib/api';
@@ -129,25 +129,25 @@ export default async function ProyectoPage({ params }: { params: Params }) {
           <div>
             {/* Sin ruta "Inicio / Proyectos" visible: la BreadcrumbList del JSON-LD
                 sigue dándole la jerarquía a Google */}
+            {/* Empresa y ubicación, cada una con su ícono (decorativo: el texto ya lo dice) */}
             <div className="flex flex-wrap items-center gap-2">
               {proyecto.company && (
-                <span className="rounded-full bg-brand-900 px-3 py-1 text-xs font-bold uppercase tracking-wider text-dorado-claro">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-900 px-3 py-1 text-xs font-bold uppercase tracking-wider text-dorado-claro">
+                  <BuildingIcon size={14} />
                   {proyecto.company}
                 </span>
               )}
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700 ring-1 ring-brand-100">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700 ring-1 ring-brand-100">
+                <MapPinIcon size={14} />
                 {proyecto.location}
                 {proyecto.location.includes(region) ? '' : ` · ${region}`}
               </span>
             </div>
-            {/* El h1 de la página es el nombre del proyecto. Uno solo. */}
+            {/* El h1 es el subtítulo del gestor (describe el trabajo); el nombre del
+                proyecto queda en <title>, Open Graph y JSON-LD. Sin subtítulo, el nombre. */}
             <h1 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
-              {enTitulo(proyecto.title)}
+              {enTitulo(proyecto.headline || proyecto.title)}
             </h1>
-            {/* Subtítulo del gestor; si falta, el nombre de la comunidad */}
-            <p className="mt-3 text-lg font-bold text-brand-800">
-              {proyecto.headline || proyecto.community}
-            </p>
             <p className="mt-3 text-pretty text-lg leading-relaxed text-slate-600">
               {proyecto.objective}
             </p>

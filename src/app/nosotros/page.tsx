@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { AutoReveal } from '@/components/AutoReveal';
 import { ContactForm } from '@/components/ContactForm';
 import { AwardIcon } from '@/components/Icons';
@@ -11,9 +10,8 @@ import { enTitulo, inicialesDe } from '@/lib/format';
 import {
   AREAS_EQUIPO,
   EQUIPO_INTRO,
-  LEMA,
   MISION,
-  QUIENES_SOMOS,
+  NOSOTROS_HERO,
   RECONOCIMIENTOS,
   RECONOCIMIENTOS_INTRO,
   VISION,
@@ -37,13 +35,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Tarjeta que sobresale al pasar el mouse (o al enfocarla con el teclado):
- * sube, se agranda la sombra y aparece la raya dorada de arriba.
- * La usan misión, visión, las áreas del equipo, la trayectoria y los reconocimientos.
+ * sube bien, el borde se vuelve dorado entero con un halo, la sombra crece y
+ * la raya dorada de arriba se alarga. La usan misión, visión, las
+ * especialidades del equipo y los reconocimientos.
  */
 const TARJETA_RESALTA =
-  'group relative overflow-hidden rounded-2xl border border-brand-100 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-2 hover:border-dorado/50 hover:shadow-card-hover focus-within:-translate-y-2 motion-reduce:transform-none';
+  'group relative overflow-hidden rounded-2xl border-2 border-brand-100 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-3 hover:border-dorado hover:shadow-card-hover hover:ring-4 hover:ring-dorado/25 focus-within:-translate-y-3 focus-within:border-dorado motion-reduce:transform-none';
 const RAYA_RESALTA =
-  'mb-4 block h-1 w-10 rounded-full bg-dorado transition-all duration-300 group-hover:w-20';
+  'mb-4 block h-1 w-10 rounded-full bg-dorado transition-all duration-300 group-hover:w-24';
+/** Caja numerada de la franja del gerente (formación y trayectoria) */
+const CAJA_LISTA = 'mt-6 divide-y divide-brand-100 rounded-2xl border border-brand-100 bg-white p-2 shadow-card';
+const NUMERO_LISTA =
+  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white';
 
 export default async function NosotrosPage() {
   const settings = await getSettings();
@@ -145,13 +148,13 @@ export default async function NosotrosPage() {
               Sobre el instituto
             </p>
             <h1 className="mt-4 animate-fade-up-lento text-balance text-4xl font-extrabold leading-tight text-white [animation-delay:120ms] motion-reduce:animate-none sm:text-5xl">
-              Fortalecemos la Gestión Comunal Desde Adentro
+              {NOSOTROS_HERO.titulo}
             </h1>
-            <p className="mt-5 animate-fade-up-lento text-balance text-lg font-bold uppercase tracking-wide text-dorado-claro [animation-delay:260ms] motion-reduce:animate-none">
-              {LEMA.inicio} {LEMA.destacado} {LEMA.final}
+            <p className="mt-5 animate-fade-up-lento text-balance text-xl font-bold leading-snug text-dorado-claro [animation-delay:260ms] motion-reduce:animate-none">
+              {NOSOTROS_HERO.subtitulo}
             </p>
             <p className="mt-6 max-w-2xl animate-fade-up-lento text-pretty text-lg leading-relaxed text-brand-100 [animation-delay:400ms] motion-reduce:animate-none">
-              {QUIENES_SOMOS[0]}
+              {NOSOTROS_HERO.texto}
             </p>
           </div>
 
@@ -174,8 +177,8 @@ export default async function NosotrosPage() {
       <section aria-labelledby="mision" className="container-icgc py-20">
         <div className="grid gap-6 lg:grid-cols-2">
           {[
-            { id: 'mision', titulo: 'Nuestra Misión', texto: MISION },
-            { id: 'vision', titulo: 'Nuestra Visión', texto: VISION },
+            { id: 'mision', titulo: 'Misión', texto: MISION },
+            { id: 'vision', titulo: 'Visión', texto: VISION },
           ].map((bloque) => (
             <article key={bloque.id} className={TARJETA_RESALTA}>
               <span aria-hidden="true" className={RAYA_RESALTA} />
@@ -187,23 +190,27 @@ export default async function NosotrosPage() {
           ))}
         </div>
 
-        {/* ── Un equipo multidisciplinario y sus cuatro áreas ── */}
+        {/* ── Un equipo multidisciplinario y sus cinco especialidades ── */}
         <div className="mt-14 rounded-2xl border border-brand-100 bg-brand-50 p-7 sm:p-9">
           <h2 id="equipo" className="text-2xl font-extrabold text-brand-900">
             Un Equipo Multidisciplinario
           </h2>
-          <p className="mt-4 max-w-3xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
+          <p className="mt-4 max-w-4xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
         </div>
 
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Cinco tarjetas: tres arriba y dos centradas abajo */}
+        <ul className="mt-8 flex flex-wrap justify-center gap-6">
           {AREAS_EQUIPO.map((area) => (
-            <li key={area.titulo} className={`${TARJETA_RESALTA} !p-0`}>
+            <li
+              key={area.titulo}
+              className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.75rem)] lg:basis-[calc(33.333%-1rem)]`}
+            >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src={area.imagen}
                   alt={area.alt}
                   fill
-                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 300px"
+                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 440px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
                 />
               </div>
@@ -217,7 +224,7 @@ export default async function NosotrosPage() {
         </ul>
       </section>
 
-      {/* ── Sobre el líder: resumen corto + logros por trayectoria + formación numerada ── */}
+      {/* ── Sobre el líder: resumen corto + formación y trayectoria numeradas ── */}
       {lider && (
         <section id="lider" aria-labelledby="lider-titulo" className="scroll-mt-20 bg-brand-50 py-16 lg:py-20">
           <div className="container-icgc">
@@ -264,35 +271,15 @@ export default async function NosotrosPage() {
             </div>
 
             {(lider.trayectoria.length > 0 || lider.formacion.length > 0) && (
-              <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-                {lider.trayectoria.length > 0 && (
-                  <div>
-                    <h3 className="text-2xl font-extrabold text-brand-900">Logros por Trayectoria</h3>
-                    <ol className="mt-6 grid gap-4 sm:grid-cols-2">
-                      {lider.trayectoria.map((paso, i) => (
-                        <li key={`${paso.titulo}-${i}`} className={`${TARJETA_RESALTA} !p-5`}>
-                          <span className="text-3xl font-black text-dorado">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          <h4 className="mt-2 font-bold leading-snug text-brand-900">
-                            {enTitulo(paso.titulo)}
-                          </h4>
-                          <p className="mt-1.5 text-sm leading-relaxed text-texto">{paso.texto}</p>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
-
+              // Formación a la izquierda y trayectoria a la derecha, en cajas iguales
+              <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
                 {lider.formacion.length > 0 && (
                   <div>
                     <h3 className="text-2xl font-extrabold text-brand-900">Formación Especializada</h3>
-                    <ol className="mt-6 divide-y divide-brand-100 rounded-2xl border border-brand-100 bg-white p-2 shadow-card">
+                    <ol className={CAJA_LISTA}>
                       {lider.formacion.map((estudio, i) => (
                         <li key={estudio.curso} className="flex gap-4 p-4">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white">
-                            {i + 1}
-                          </span>
+                          <span className={NUMERO_LISTA}>{i + 1}</span>
                           <div>
                             <p className="font-bold leading-snug text-brand-900">{estudio.curso}</p>
                             {estudio.institucion && (
@@ -300,6 +287,25 @@ export default async function NosotrosPage() {
                                 {estudio.institucion}
                               </p>
                             )}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {lider.trayectoria.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-brand-900">Trayectoria</h3>
+                    <ol className={CAJA_LISTA}>
+                      {lider.trayectoria.map((paso, i) => (
+                        <li key={`${paso.titulo}-${i}`} className="flex gap-4 p-4">
+                          <span className={NUMERO_LISTA}>{i + 1}</span>
+                          <div>
+                            <h4 className="font-bold leading-snug text-brand-900">
+                              {enTitulo(paso.titulo)}
+                            </h4>
+                            <p className="mt-1 text-sm leading-relaxed text-texto">{paso.texto}</p>
                           </div>
                         </li>
                       ))}

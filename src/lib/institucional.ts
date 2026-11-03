@@ -44,41 +44,63 @@ export const QUIENES_SOMOS = [
 export const CIFRAS_NOTA =
   'La experiencia profesional corresponde a la trayectoria del equipo del ICGC.';
 
-/** "Un equipo multidisciplinario" de /nosotros: la presentación y sus cuatro áreas. */
+/** Hero de /nosotros: título, subtítulo y presentación del instituto. */
+export const NOSOTROS_HERO = {
+  titulo: 'Impulsamos la Gestión Comunal y el Desarrollo Empresarial',
+  subtitulo:
+    'Asesoría, consultoría y capacitación para fortalecer capacidades, generar oportunidades y ' +
+    'promover el desarrollo sostenible.',
+  texto:
+    'El Instituto de Capacitación en Gestión Comunal (ICGC) acompaña a comunidades campesinas, ' +
+    'empresas comunales, organizaciones sociales, empresas privadas y entidades públicas en el ' +
+    'fortalecimiento de su gestión, el desarrollo de proyectos y la prevención y manejo de ' +
+    'conflictos, con especial atención a los sectores de construcción y minería.',
+} as const;
+
+/** "Un equipo multidisciplinario" de /nosotros: la presentación y sus cinco especialidades. */
 export const EQUIPO_INTRO =
-  'Contamos con un equipo multidisciplinario especializado en ingeniería, derecho, gestión ' +
-  'empresarial y relaciones comunitarias, con experiencia en los sectores construcción y minería.';
+  'Integramos profesionales de ingeniería, derecho, gestión empresarial y relaciones ' +
+  'comunitarias, con experiencia en gestión comunal, construcción y minería. Brindamos asesoría, ' +
+  'consultoría y capacitación para fortalecer a las comunidades campesinas y sus empresas.';
 
 export type AreaEquipo = { titulo: string; texto: string; imagen: string; alt: string };
 
+// Fotos propias del ICGC (public/nosotros). Al reemplazar una, cambiarle el nombre.
 export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   {
     titulo: 'Ingeniería',
     texto:
-      'Gestión de proyectos, oficina técnica, residencia y supervisión de obras, costos, calidad (QA/QC), seguridad y gestión ambiental.',
-    imagen: '/nosotros/area-ingenieria-grua.webp',
-    alt: 'Grúa torre trabajando sobre un edificio en construcción',
+      'Gestión de proyectos, oficina técnica, residencia y supervisión de obras. Elaboración y revisión de expedientes técnicos, términos de referencia y alcances de trabajo; costos, presupuestos, calidad, seguridad y gestión ambiental.',
+    imagen: '/nosotros/area-ingenieria-planos-andes.webp',
+    alt: 'Ingeniera e ingeniero con casco revisan planos en una obra en los Andes',
   },
   {
     titulo: 'Derecho',
     texto:
-      'Asesoría legal en asuntos comunales, empresariales y contractuales, para que cada acuerdo y cada contrato estén bien sustentados.',
-    imagen: '/nosotros/area-derecho-mazo.webp',
-    alt: 'Mazo de juez de madera junto a libros de leyes',
+      'Asesoría legal comunal y empresarial: constitución de empresas, estatutos, reglamentos, contratos y negociaciones. Soporte jurídico a la administración y gestión de personal, conforme a la normativa aplicable.',
+    imagen: '/nosotros/area-derecho-asesora-legal-contrato.webp',
+    alt: 'Asesora legal explica un contrato a un comunero y una comunera en una oficina',
   },
   {
     titulo: 'Gestión Empresarial',
     texto:
-      'Administración, costos y control de gestión con buenas prácticas del PMI y Lean Construction, según las necesidades de cada servicio.',
-    imagen: '/nosotros/area-gestion-empresarial-oficina.webp',
-    alt: 'Profesional tomando notas frente a una laptop en un escritorio de oficina',
+      'Planificación estratégica, organización administrativa, gestión financiera, costos y control de gestión para fortalecer la competitividad y sostenibilidad de las empresas comunales, respetando su marco normativo.',
+    imagen: '/nosotros/area-gestion-empresarial-planificacion-financiera.webp',
+    alt: 'Equipo revisa gráficos financieros y una laptop en una reunión de planificación',
   },
   {
     titulo: 'Relaciones Comunitarias',
     texto:
-      'Conocimiento directo de la realidad comunal para acompañar la organización, la negociación y el diálogo, y fortalecer a dirigentes, comuneros y equipos.',
-    imagen: '/nosotros/area-relaciones-comunitarias.webp',
-    alt: 'Comuneros y comuneras con sombrero junto a un asesor del ICGC',
+      'Gestión social, prevención de conflictos y acompañamiento en negociaciones y mesas de diálogo entre comunidades, empresas y Estado. Promovemos acuerdos sostenibles, participación comunal y respeto a los derechos colectivos y al ambiente.',
+    imagen: '/nosotros/area-relaciones-comunitarias-dialogo-andes.webp',
+    alt: 'Mesa de diálogo con comuneros y comuneras y asesores del ICGC frente a un mapa',
+  },
+  {
+    titulo: 'Docencia y Capacitación',
+    texto:
+      'Cursos, talleres y diplomados para dirigentes, comuneros, directivos, profesionales y trabajadores. Capacitación en gestión y normativa comunal, administración empresarial, proyectos, negociación, seguridad y gestión ambiental.',
+    imagen: '/nosotros/area-docencia-taller-planificacion-comunitaria.webp',
+    alt: 'Capacitador explica un diagrama en una pizarra a participantes de un taller comunitario',
   },
 ];
 

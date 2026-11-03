@@ -45,6 +45,27 @@ export function BookIcon({ className = '', size = 18 }: IconProps) {
   );
 }
 
+/** Edificio: la empresa con la que se trabajó en un proyecto. */
+export function BuildingIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <rect x="4" y="3" width="16" height="18" rx="1.5" />
+      <path d="M9 21v-4h6v4" />
+      <path d="M8 7h2M14 7h2M8 11h2M14 11h2" />
+    </svg>
+  );
+}
+
+/** Marcador de mapa: la ubicación de un proyecto. */
+export function MapPinIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11z" />
+      <circle cx="12" cy="10" r="2.3" />
+    </svg>
+  );
+}
+
 /** Maletín: para "Ver servicios". */
 export function BriefcaseIcon({ className = '', size = 18 }: IconProps) {
   return (
