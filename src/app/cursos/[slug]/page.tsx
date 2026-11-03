@@ -7,6 +7,7 @@ import { AvisoProximamente, CourseCard, soles } from '@/components/CourseCard';
 import {
   AwardIcon,
   CalendarIcon,
+  CheckIcon,
   ClockIcon,
   FileIcon,
   UserIcon,
@@ -82,6 +83,16 @@ export default async function CursoPage({ params }: { params: Params }) {
   // 404 real: Google necesita el código, no una página vacía con 200
   if (!curso) notFound();
 
+  // "Qué aprenderás" y "A quién va dirigido" se escriben en el gestor una
+  // línea por punto; aquí se vuelven listas
+  const lineas = (texto: string | null | undefined) =>
+    (texto ?? '')
+      .split(/\r?\n/)
+      .map((l) => l.replace(/^[-•*]\s*/, '').trim())
+      .filter(Boolean);
+  const aprendizajes = lineas(curso.objective);
+  const publicos = lineas(curso.audience);
+
   const urlWhatsapp = (c: CourseDTO) =>
     whatsappUrl(
       settings,
@@ -108,7 +119,7 @@ export default async function CursoPage({ params }: { params: Params }) {
               slug: curso.slug,
               name: curso.name,
               description: curso.summary,
-              audience: curso.audience,
+              audience: publicos.join(', '),
               topics: curso.topics,
               mode: MODO_SCHEMA[curso.mode],
               hours: curso.lectiveHours,
@@ -129,23 +140,9 @@ export default async function CursoPage({ params }: { params: Params }) {
       <div className="container-icgc grid gap-10 pb-16 pt-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:pt-8">
         <article className="min-w-0">
           <header>
-            <nav aria-label="Ruta de navegación" className="text-sm text-slate-500">
-              <ol className="flex flex-wrap items-center gap-1.5">
-                <li>
-                  <Link href="/" className="font-medium text-brand-700 hover:text-brand-900">
-                    Inicio
-                  </Link>
-                </li>
-                <li aria-hidden="true">/</li>
-                <li>
-                  <Link href="/cursos" className="font-medium text-brand-700 hover:text-brand-900">
-                    Cursos
-                  </Link>
-                </li>
-              </ol>
-            </nav>
-
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            {/* Sin ruta "Inicio / Cursos" visible: la BreadcrumbList del JSON-LD
+                sigue dándole la jerarquía a Google */}
+            <div className="flex flex-wrap items-center gap-3">
               <p className="eyebrow">Curso de capacitación</p>
               {curso.comingSoon && <AvisoProximamente />}
             </div>
@@ -173,12 +170,21 @@ export default async function CursoPage({ params }: { params: Params }) {
             </ul>
           </header>
 
-          {curso.objective && (
-            <section aria-labelledby="para-que" className="mt-10 rounded-xl border-l-4 border-dorado bg-arena p-6">
-              <h2 id="para-que" className="text-xl">
-                ¿Para Qué te Sirve?
+          {aprendizajes.length > 0 && (
+            <section aria-labelledby="aprenderas" className="mt-10 rounded-xl border-l-4 border-dorado bg-arena p-6">
+              <h2 id="aprenderas" className="text-xl">
+                ¿Qué Aprenderás?
               </h2>
-              <p className="mt-2 text-pretty leading-relaxed text-texto">{curso.objective}</p>
+              <ul className="mt-3 grid gap-2.5 text-texto">
+                {aprendizajes.map((item) => (
+                  <li key={item} className="flex gap-3 leading-relaxed">
+                    <span className="mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-900 text-white">
+                      <CheckIcon size={12} />
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 
@@ -205,7 +211,19 @@ export default async function CursoPage({ params }: { params: Params }) {
             <h2 id="dirigido" className="text-2xl">
               ¿A Quién Va Dirigido?
             </h2>
-            <p className="mt-3 text-pretty leading-relaxed text-texto">{curso.audience}</p>
+            <ul className="mt-5 grid gap-3 md:grid-cols-2">
+              {publicos.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 rounded-xl border border-silver-200 bg-white p-4 leading-relaxed text-texto shadow-card"
+                >
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-900">
+                    <UserIcon size={15} />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </section>
         </article>
 
