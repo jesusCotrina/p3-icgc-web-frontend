@@ -95,6 +95,7 @@ function Block({ block }: { block: PostBlockDTO }) {
             height={height ?? 720}
             // width/height reales evitan el salto de layout (CLS)
             className="h-auto w-full rounded-xl border border-silver-200 object-cover shadow-card"
+            quality={90}
             sizes="(max-width: 768px) 100vw, 768px"
           />
           {block.caption && (

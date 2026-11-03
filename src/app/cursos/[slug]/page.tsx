@@ -219,6 +219,7 @@ export default async function CursoPage({ params }: { params: Params }) {
                   alt={curso.coverAlt ?? curso.coverImage.alt ?? ''}
                   fill
                   // Foto pequeña: no se estira más allá de su tamaño real
+                  quality={90}
                   sizes="(max-width: 1024px) 100vw, 352px"
                   priority
                   className="object-cover"

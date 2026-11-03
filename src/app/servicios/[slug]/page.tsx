@@ -129,6 +129,7 @@ export default async function ServicioPage({ params }: { params: Params }) {
               alt={servicio.alt}
               fill
               priority
+              quality={90}
               sizes="(max-width: 1024px) 100vw, 460px"
               className="object-cover"
             />

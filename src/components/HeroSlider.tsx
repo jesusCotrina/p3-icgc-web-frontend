@@ -58,6 +58,7 @@ export function HeroSlider({
                     alt={slide.alt}
                     width={320}
                     height={320}
+                    quality={90}
                     sizes="(max-width: 640px) 12rem, (max-width: 1024px) 16rem, 20rem"
                     className="h-full w-full object-contain"
                   />
@@ -71,6 +72,7 @@ export function HeroSlider({
               alt={slide.alt}
               fill
               priority={i === 0}
+              quality={90}
               sizes="100vw"
               className={`object-cover transition-opacity duration-1000 ease-in-out ${
                 i === actual ? 'opacity-100' : 'opacity-0'

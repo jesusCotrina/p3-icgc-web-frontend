@@ -43,8 +43,10 @@ const nextConfig = {
   trailingSlash: false,
 
   images: {
-    // AVIF/WebP pesan menos -> mejor LCP -> mejor posicionamiento
-    formats: ['image/avif', 'image/webp'],
+    // Solo WebP: el AVIF que genera Vercel a calidad 75 deja las fotos borrosas.
+    // Las fotos piden quality={90}; 75 queda para logos e íconos.
+    formats: ['image/webp'],
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: protocol.replace(':', ''),

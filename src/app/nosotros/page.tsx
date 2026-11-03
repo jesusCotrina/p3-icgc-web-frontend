@@ -210,6 +210,7 @@ export default async function NosotrosPage() {
                   src={area.imagen}
                   alt={area.alt}
                   fill
+                  quality={90}
                   sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 440px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
                 />
@@ -236,6 +237,7 @@ export default async function NosotrosPage() {
                     alt={lider.fotoAlt}
                     width={lider.foto.width ?? 480}
                     height={lider.foto.height ?? 600}
+                    quality={90}
                     sizes="(max-width: 1024px) 15rem, 20rem"
                     className="aspect-[4/5] h-auto w-full rounded-2xl object-cover object-top shadow-card-hover ring-4 ring-dorado/40"
                   />
@@ -297,18 +299,29 @@ export default async function NosotrosPage() {
                 {lider.trayectoria.length > 0 && (
                   <div>
                     <h3 className="text-2xl font-extrabold text-brand-900">Trayectoria</h3>
-                    <ol className={CAJA_LISTA}>
-                      {lider.trayectoria.map((paso, i) => (
-                        <li key={`${paso.titulo}-${i}`} className="flex gap-4 p-4">
-                          <span className={NUMERO_LISTA}>{i + 1}</span>
-                          <div>
-                            <h4 className="font-bold leading-snug text-brand-900">
-                              {enTitulo(paso.titulo)}
-                            </h4>
-                            <p className="mt-1 text-sm leading-relaxed text-texto">{paso.texto}</p>
-                          </div>
-                        </li>
-                      ))}
+                    {/* Diagrama vertical: cada paso lleva una flecha al siguiente */}
+                    <ol className="mt-6 rounded-2xl border border-brand-100 bg-white p-5 shadow-card sm:p-6">
+                      {lider.trayectoria.map((paso, i, pasos) => {
+                        const ultimo = i === pasos.length - 1;
+                        return (
+                          <li key={`${paso.titulo}-${i}`} className={`relative flex gap-4 ${ultimo ? '' : 'pb-7'}`}>
+                            {!ultimo && (
+                              // Línea dorada que baja del número y termina en punta de flecha
+                              <span
+                                aria-hidden="true"
+                                className="absolute bottom-1 left-4 top-9 w-0.5 -translate-x-1/2 bg-dorado/60 after:absolute after:-bottom-0.5 after:left-1/2 after:h-2.5 after:w-2.5 after:-translate-x-1/2 after:rotate-45 after:border-b-2 after:border-r-2 after:border-dorado"
+                              />
+                            )}
+                            <span className={NUMERO_LISTA}>{i + 1}</span>
+                            <div>
+                              <h4 className="font-bold leading-snug text-brand-900">
+                                {enTitulo(paso.titulo)}
+                              </h4>
+                              <p className="mt-1 text-sm leading-relaxed text-texto">{paso.texto}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ol>
                   </div>
                 )}
@@ -340,6 +353,7 @@ export default async function NosotrosPage() {
                       src={r.imagen}
                       alt={r.alt ?? r.titulo}
                       fill
+                      quality={90}
                       sizes="(max-width: 640px) 92vw, (max-width: 1024px) 31vw, 290px"
                       // Los trofeos (fotos verticales) se ven enteros sobre gris azulado
                       className={`transition-transform duration-500 group-hover:scale-105 ${r.trofeo ? 'bg-brand-50 object-contain p-2' : 'object-cover'}`}

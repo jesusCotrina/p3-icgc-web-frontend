@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 /**
- * Envuelve una cinta animada: un clic la detiene y otro la reanuda.
+ * Envuelve una cinta animada: se detiene mientras el mouse está encima (CSS,
+ * sin JS) y un clic la deja detenida para mirar con calma; otro clic la reanuda.
  * El contenido llega ya renderizado desde el servidor (children), así que los
  * logos siguen en el HTML; aquí solo se agrega el estado de pausa.
  * El botón (visible al enfocarlo con el teclado) da la misma pausa sin mouse.
@@ -25,7 +26,7 @@ export function CintaPausable({
       <div
         onClick={() => setPausada((p) => !p)}
         data-pausada={pausada || undefined}
-        className={`cursor-pointer [&[data-pausada]_ul]:[animation-play-state:paused] ${className}`}
+        className={`cursor-pointer [&[data-pausada]_ul]:[animation-play-state:paused] [&:hover_ul]:[animation-play-state:paused] ${className}`}
       >
         {children}
       </div>

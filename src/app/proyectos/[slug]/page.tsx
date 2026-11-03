@@ -164,6 +164,7 @@ export default async function ProyectoPage({ params }: { params: Params }) {
                 alt={proyecto.coverAlt ?? proyecto.coverImage.alt ?? proyecto.title}
                 fill
                 priority
+                quality={90}
                 sizes="(max-width: 1024px) 100vw, 460px"
                 className="object-cover"
               />

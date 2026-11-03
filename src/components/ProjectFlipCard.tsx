@@ -78,6 +78,7 @@ export function ProjectFlipCard({
             src={proyecto.coverImage.url}
             alt={proyecto.coverAlt ?? proyecto.coverImage.alt ?? ''}
             fill
+            quality={90}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             // Apagada y algo gris en reposo; al pasar el mouse, todo su color
             className="object-cover brightness-[0.85] saturate-[0.55] transition duration-500 group-hover:scale-105 group-hover:brightness-100 group-hover:saturate-100 group-focus-within:brightness-100 group-focus-within:saturate-100 motion-reduce:transition-none"
@@ -142,6 +143,7 @@ export function ProjectFlipCard({
               src={proyecto.coverImage.url}
               alt={proyecto.coverAlt ?? proyecto.coverImage.alt ?? ''}
               fill
+              quality={90}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover"
             />

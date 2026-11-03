@@ -32,6 +32,7 @@ export function PostCard({
               fill
               priority={priority}
               loading={priority ? undefined : 'lazy'}
+              quality={90}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />

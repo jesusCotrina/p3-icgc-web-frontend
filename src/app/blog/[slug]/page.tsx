@@ -154,6 +154,7 @@ export default async function PostPage({ params }: { params: Params }) {
                 height={post.coverImage.height ?? 720}
                 // Imagen principal del artículo: es el LCP, se precarga
                 priority
+                quality={90}
                 sizes="(max-width: 1024px) 100vw, 1000px"
                 // Recortada a un alto razonable: acompaña al texto sin tapar la pantalla
                 className="mt-7 aspect-[2/1] max-h-[24rem] w-full rounded-xl border border-silver-200 object-cover shadow-card"

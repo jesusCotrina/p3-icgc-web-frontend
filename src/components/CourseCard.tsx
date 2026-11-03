@@ -89,6 +89,7 @@ export function CourseCard({
               src={curso.coverImage.url}
               alt=""
               fill
+              quality={90}
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 340px"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />

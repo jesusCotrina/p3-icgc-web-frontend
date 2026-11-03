@@ -34,6 +34,7 @@ export function ServicioCard({
           src={servicio.imagen}
           alt=""
           fill
+          quality={90}
           sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 380px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
