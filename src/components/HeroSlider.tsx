@@ -83,7 +83,8 @@ export function HeroSlider({
       </div>
 
       {slides.length > 1 && (
-        <div className="absolute inset-x-0 bottom-14 z-20 flex items-center justify-center gap-2.5 lg:bottom-16">
+        // Puntitos y pausa en la esquina inferior derecha, fuera del texto
+        <div className="absolute bottom-5 right-4 z-20 flex items-center gap-2.5 sm:right-6 lg:bottom-8 lg:right-8">
           {slides.map((slide, i) => (
             <button
               key={slide.src}

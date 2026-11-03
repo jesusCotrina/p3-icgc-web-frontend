@@ -43,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Fotos del hero: paisajes y comunidades campesinas del Perú (Wikimedia Commons,
- * licencias CC BY / CC BY-SA, créditos en public/hero/CREDITOS.md).
+ * Fotos del hero: comunidades campesinas y equipos en el campo. La primera es de
+ * Wikimedia Commons (crédito en public/hero/CREDITOS.md); las otras son del ICGC.
  * El alt describe la escena real, no repite palabras clave.
  */
 const HERO_SLIDES = [
@@ -54,9 +54,9 @@ const HERO_SLIDES = [
     credito: 'AleliPao, CC BY-SA 4.0, Wikimedia Commons',
   },
   {
-    src: '/hero/comunidad-campesina-santa-cruz-de-cumi.webp',
-    alt: 'Capilla de la comunidad campesina Santa Cruz de Cumi entre cerros del altiplano peruano',
-    credito: 'O. R. Tarco Palomino, CC BY 4.0, Wikimedia Commons',
+    // Foto propia del ICGC
+    src: '/hero/charla-de-seguridad-equipo-en-los-andes.webp',
+    alt: 'Equipo de trabajadores con casco y uniforme naranja reunidos en una charla de seguridad al pie de una montaña nevada',
   },
   {
     // Foto propia del ICGC

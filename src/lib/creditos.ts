@@ -22,12 +22,4 @@ export const CREDITOS_FIJOS: readonly CreditoFijo[] = [
     licencia: 'CC BY-SA 4.0',
     original: 'https://commons.wikimedia.org/wiki/File:Linderaje_comunidad_campesina_Yanacona.jpg',
   },
-  {
-    imagen: '/hero/comunidad-campesina-santa-cruz-de-cumi.webp',
-    dondeSeUsa: 'Portada del inicio',
-    autor: 'Ordzonhyd Rudyard Tarco Palomino',
-    licencia: 'CC BY 4.0',
-    original:
-      'https://commons.wikimedia.org/wiki/File:Comunidad_Campesina_Santa_Cruz_de_Cumi_04.jpg',
-  },
 ];

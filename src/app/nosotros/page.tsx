@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { AutoReveal } from '@/components/AutoReveal';
+import { BordeOndulado } from '@/components/BordeOndulado';
 import { ContactForm } from '@/components/ContactForm';
+import { FondoLineas } from '@/components/FondoLineas';
 import { AwardIcon } from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
 import { getSettings, logoSrc } from '@/lib/api';
@@ -43,8 +45,9 @@ const TARJETA_RESALTA =
   'group relative overflow-hidden rounded-2xl border-2 border-brand-100 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-3 hover:border-dorado hover:shadow-card-hover hover:ring-4 hover:ring-dorado/25 focus-within:-translate-y-3 focus-within:border-dorado motion-reduce:transform-none';
 const RAYA_RESALTA =
   'mb-4 block h-1 w-10 rounded-full bg-dorado transition-all duration-300 group-hover:w-24';
-/** Caja numerada de la franja del gerente (formación y trayectoria) */
-const CAJA_LISTA = 'mt-6 divide-y divide-brand-100 rounded-2xl border border-brand-100 bg-white p-2 shadow-card';
+/** Caja numerada de la franja del gerente (formación y trayectoria): azul suave sobre el blanco */
+const CAJA_LISTA =
+  'mt-6 divide-y divide-brand-200/70 rounded-2xl border border-brand-200 bg-brand-50 p-2 shadow-card';
 const NUMERO_LISTA =
   'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-900 text-sm font-bold text-white';
 
@@ -173,8 +176,8 @@ export default async function NosotrosPage() {
         </div>
       </section>
 
-      {/* ── Misión y visión: al pasar el mouse, la tarjeta sube y se marca en dorado ── */}
-      <section aria-labelledby="mision" className="container-icgc py-20">
+      {/* ── Misión y visión (blanco): al pasar el mouse, la tarjeta sube y se marca en dorado ── */}
+      <section aria-labelledby="mision" className="container-icgc py-16 lg:py-20">
         <div className="grid gap-6 lg:grid-cols-2">
           {[
             { id: 'mision', titulo: 'Misión', texto: MISION },
@@ -189,45 +192,56 @@ export default async function NosotrosPage() {
             </article>
           ))}
         </div>
+      </section>
 
-        {/* ── Un equipo multidisciplinario y sus cinco especialidades ── */}
-        <div className="mt-14 rounded-2xl border border-brand-100 bg-brand-50 p-7 sm:p-9">
-          <h2 id="equipo" className="text-2xl font-extrabold text-brand-900">
-            Un Equipo Multidisciplinario
-          </h2>
-          <p className="mt-4 max-w-4xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
+      {/* ── Un equipo multidisciplinario y sus cinco especialidades: arena con
+          líneas y bordes en onda, como los proyectos del inicio ── */}
+      <section
+        aria-labelledby="equipo"
+        className="relative isolate overflow-hidden bg-arena py-20 lg:py-24"
+      >
+        <FondoLineas className="-z-10" />
+        <BordeOndulado lado="arriba" />
+        <BordeOndulado lado="abajo" />
+        <div className="container-icgc">
+          <div className="rounded-2xl border border-dorado/25 bg-white p-7 shadow-card sm:p-9">
+            <h2 id="equipo" className="text-2xl font-extrabold text-brand-900">
+              Un Equipo Multidisciplinario
+            </h2>
+            <p className="mt-4 max-w-4xl leading-relaxed text-texto">{EQUIPO_INTRO}</p>
+          </div>
+  
+          {/* Cinco tarjetas: tres arriba y dos centradas abajo */}
+          <ul className="mt-8 flex flex-wrap justify-center gap-6">
+            {AREAS_EQUIPO.map((area) => (
+              <li
+                key={area.titulo}
+                className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.75rem)] lg:basis-[calc(33.333%-1rem)]`}
+              >
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={area.imagen}
+                    alt={area.alt}
+                    fill
+                    quality={90}
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 440px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                  />
+                </div>
+                <div className="p-6">
+                  <span aria-hidden="true" className={RAYA_RESALTA} />
+                  <h3 className="text-xl font-bold text-brand-900">{area.titulo}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-texto">{area.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-
-        {/* Cinco tarjetas: tres arriba y dos centradas abajo */}
-        <ul className="mt-8 flex flex-wrap justify-center gap-6">
-          {AREAS_EQUIPO.map((area) => (
-            <li
-              key={area.titulo}
-              className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.75rem)] lg:basis-[calc(33.333%-1rem)]`}
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src={area.imagen}
-                  alt={area.alt}
-                  fill
-                  quality={90}
-                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 440px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
-                />
-              </div>
-              <div className="p-6">
-                <span aria-hidden="true" className={RAYA_RESALTA} />
-                <h3 className="text-xl font-bold text-brand-900">{area.titulo}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-texto">{area.texto}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {/* ── Sobre el líder: resumen corto + formación y trayectoria numeradas ── */}
       {lider && (
-        <section id="lider" aria-labelledby="lider-titulo" className="scroll-mt-20 bg-brand-50 py-16 lg:py-20">
+        <section id="lider" aria-labelledby="lider-titulo" className="scroll-mt-20 bg-white py-16 lg:py-20">
           <div className="container-icgc">
             <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-14">
               <div className="mx-auto w-60 lg:w-full lg:max-w-xs">
@@ -300,7 +314,7 @@ export default async function NosotrosPage() {
                   <div>
                     <h3 className="text-2xl font-extrabold text-brand-900">Trayectoria</h3>
                     {/* Diagrama vertical: cada paso lleva una flecha al siguiente */}
-                    <ol className="mt-6 rounded-2xl border border-brand-100 bg-white p-5 shadow-card sm:p-6">
+                    <ol className="mt-6 rounded-2xl border border-brand-200 bg-brand-50 p-5 shadow-card sm:p-6">
                       {lider.trayectoria.map((paso, i, pasos) => {
                         const ultimo = i === pasos.length - 1;
                         return (
@@ -335,8 +349,12 @@ export default async function NosotrosPage() {
       <section
         id="reconocimientos"
         aria-labelledby="reconocimientos-titulo"
-        className="scroll-mt-20 bg-arena py-16 lg:py-20"
+        className="relative isolate scroll-mt-20 overflow-hidden bg-arena py-20 lg:py-24"
       >
+        {/* Arena con la línea dorada de /servicios y los bordes cortados en onda */}
+        <FondoLineas lineas="una" className="-z-10" />
+        <BordeOndulado lado="arriba" />
+        <BordeOndulado lado="abajo" />
         <div className="container-icgc">
           <p className="eyebrow">Nuestra Experiencia</p>
           <h2 id="reconocimientos-titulo" className="mt-3 text-3xl font-extrabold text-brand-900 sm:text-4xl">
