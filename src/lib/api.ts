@@ -197,6 +197,7 @@ export const FALLBACK_SETTINGS: SiteSettingsDTO = {
   leaderBio: null,
   leaderPhoto: null,
   leaderPhotoAlt: null,
+  heroSlides: [],
   leaderCareer: [],
   leaderEducation: [],
   updatedAt: new Date(0).toISOString(),

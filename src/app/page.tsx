@@ -104,6 +104,12 @@ export default async function HomePage() {
 
   const destacados = destacadosRes.items.slice(0, 5);
 
+  // Fotos del hero: las que se cargaron en Ajustes del sitio; si no hay, las de fábrica
+  const heroSlides =
+    settings.heroSlides.length > 0
+      ? settings.heroSlides.map((h) => ({ src: h.media.url, alt: h.alt }))
+      : HERO_SLIDES;
+
   // Resumen del líder para su tarjeta (los datos completos están en /nosotros)
   const lider = settings.leaderName
     ? {
@@ -176,7 +182,7 @@ export default async function HomePage() {
       {/* ───────────────────────── Hero ───────────────────────── */}
       <section className="relative isolate overflow-hidden bg-brand-950">
         {/* Solo fotos: el logo se presenta en "Quiénes somos" */}
-        <HeroSlider slides={HERO_SLIDES} />
+        <HeroSlider slides={heroSlides} />
 
         {/* Velo neutro solo detrás del texto (izquierda): la foto conserva sus
             colores y el título se sigue leyendo sobre cualquier imagen */}
