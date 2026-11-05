@@ -43,7 +43,7 @@ export function ServicioCard({
       <div className="flex flex-1 flex-col p-5">
         {/* El mismo ícono en todas: marca visual, no cambia el texto del enlace */}
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors group-hover:bg-brand-900">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-900 text-dorado-claro ring-4 ring-transparent transition-all duration-300 group-hover:scale-110 group-hover:bg-dorado group-hover:text-white group-hover:ring-dorado/25 motion-reduce:transform-none">
             <BriefcaseIcon size={18} />
           </span>
           <Titulo className="text-balance pt-1 text-[1.02rem] font-bold leading-snug">
