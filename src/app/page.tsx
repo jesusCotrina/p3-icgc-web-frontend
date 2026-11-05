@@ -19,7 +19,6 @@ import { ServicioCard } from '@/components/ServicioCard';
 import { TituloSeccion } from '@/components/TituloSeccion';
 import { enTitulo, inicialesDe } from '@/lib/format';
 import { getCourses, getPosts, getProjects, getSettings, logoSrc } from '@/lib/api';
-import { resumenPresencia } from '@/lib/presencia';
 import { CIFRAS_NOTA, LEMA, QUIENES_SOMOS, QUIENES_SOMOS_TITULO } from '@/lib/institucional';
 import { absoluteUrl, buildMetadata, truncate } from '@/lib/seo';
 import { SERVICIOS } from '@/lib/servicios';
@@ -93,11 +92,6 @@ const TEXTOS_HERO = [
 ] as const;
 
 /** Cifras de "Quiénes somos" que no salen del gestor (los años sí). */
-const CIFRAS_FIJAS = [
-  { valor: 90, prefijo: '+', sufijo: '%', etiqueta: 'de satisfacción de nuestros clientes en la industria minera' },
-  { valor: 50, prefijo: '+', etiqueta: 'proyectos implementados con éxito en territorios comunales' },
-] as const;
-
 export default async function HomePage() {
   // Todo sale del gestor (vía API) y se resuelve en paralelo en el servidor
   const [settings, destacadosRes, cursos, todosLosProyectos] = await Promise.all([
@@ -125,21 +119,28 @@ export default async function HomePage() {
   // 6 en el inicio (mosaico de 3 × 2); el resto, en /proyectos
   const proyectos = todosLosProyectos.slice(0, 6);
 
-  // Una sola fuente para el hero y el mapa: los proyectos publicados
-  const totales = resumenPresencia(todosLosProyectos);
 
   // Los dos botones del hero van al mismo WhatsApp pero con mensajes distintos,
   // así sabemos por qué llegó cada consulta.
   const urlAsesoria = whatsappUrl(settings, 'asesoria');
 
-  // Cifras de "Quiénes somos": los años salen de los ajustes del gestor y las
-  // regiones se cuentan de los proyectos publicados (coinciden con el mapa)
+  // Cifras de "Quiénes somos": las cuatro se escriben en Ajustes del sitio del gestor
   const cifras = [
-    ...CIFRAS_FIJAS,
-    { valor: settings.yearsExperience, etiqueta: 'años de experiencia', prefijo: '+' },
     {
-      valor: totales.regiones,
-      etiqueta: totales.regiones === 1 ? 'región del Perú atendida' : 'regiones del Perú atendidas',
+      valor: settings.clientSatisfaction,
+      prefijo: '+',
+      sufijo: '%',
+      etiqueta: 'de satisfacción de nuestros clientes en la industria minera',
+    },
+    {
+      valor: settings.projectsAdvised,
+      prefijo: '+',
+      etiqueta: 'proyectos implementados con éxito en territorios comunales',
+    },
+    { valor: settings.yearsExperience, prefijo: '+', etiqueta: 'años de experiencia' },
+    {
+      valor: settings.regionsServed,
+      etiqueta: settings.regionsServed === 1 ? 'región del Perú atendida' : 'regiones del Perú atendidas',
     },
   ];
 
