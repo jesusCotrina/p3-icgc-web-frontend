@@ -185,10 +185,10 @@ export default async function NosotrosPage() {
           ].map((bloque) => (
             <article key={bloque.id} className={TARJETA_RESALTA}>
               <span aria-hidden="true" className={RAYA_RESALTA} />
-              <h2 id={bloque.id} className="text-3xl font-extrabold text-brand-900">
+              <h2 id={bloque.id} className="text-2xl font-extrabold text-brand-900">
                 {bloque.titulo}
               </h2>
-              <p className="mt-5 leading-relaxed text-texto">{bloque.texto}</p>
+              <p className="mt-4 leading-relaxed text-texto">{bloque.texto}</p>
             </article>
           ))}
         </div>
@@ -352,8 +352,8 @@ export default async function NosotrosPage() {
         aria-labelledby="reconocimientos-titulo"
         className="relative isolate scroll-mt-20 overflow-hidden bg-arena py-20 lg:py-24"
       >
-        {/* Arena con la línea dorada de /servicios y los bordes cortados en onda */}
-        <FondoLineas lineas="una" className="-z-10" />
+        {/* Arena con las mismas líneas azules del equipo y los bordes cortados en onda */}
+        <FondoLineas className="-z-10" />
         <BordeOndulado lado="arriba" />
         <BordeOndulado lado="abajo" />
         <div className="container-icgc">
