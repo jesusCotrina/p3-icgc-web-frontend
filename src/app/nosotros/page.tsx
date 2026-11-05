@@ -4,13 +4,21 @@ import { AutoReveal } from '@/components/AutoReveal';
 import { BordeOndulado } from '@/components/BordeOndulado';
 import { ContactForm } from '@/components/ContactForm';
 import { FondoLineas } from '@/components/FondoLineas';
-import { AwardIcon } from '@/components/Icons';
+import {
+  AwardIcon,
+  BriefcaseIcon,
+  GraduationCapIcon,
+  HandshakeIcon,
+  HardHatIcon,
+  ScaleIcon,
+} from '@/components/Icons';
 import { JsonLd } from '@/components/JsonLd';
 import { getSettings, logoSrc } from '@/lib/api';
 import { direccionDelSitio } from '@/lib/direccion';
 import { enTitulo, inicialesDe } from '@/lib/format';
 import {
   AREAS_EQUIPO,
+  type IconoArea,
   EQUIPO_INTRO,
   MISION,
   NOSOTROS_HERO,
@@ -45,6 +53,15 @@ const TARJETA_RESALTA =
   'group relative overflow-hidden rounded-2xl border-2 border-brand-100 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-3 hover:border-dorado hover:shadow-card-hover hover:ring-4 hover:ring-dorado/25 focus-within:-translate-y-3 focus-within:border-dorado motion-reduce:transform-none';
 const RAYA_RESALTA =
   'mb-4 block h-1 w-10 rounded-full bg-dorado transition-all duration-300 group-hover:w-24';
+
+/** Ícono de cada especialidad del equipo (clave `icono` en AREAS_EQUIPO) */
+const ICONOS_AREA: Record<IconoArea, typeof HardHatIcon> = {
+  casco: HardHatIcon,
+  balanza: ScaleIcon,
+  maletin: BriefcaseIcon,
+  apreton: HandshakeIcon,
+  birrete: GraduationCapIcon,
+};
 /** Caja numerada de la franja del gerente (formación y trayectoria): azul suave sobre el blanco */
 const CAJA_LISTA =
   'mt-6 divide-y divide-brand-200/70 rounded-2xl border border-brand-200 bg-brand-50 p-2 shadow-card';
@@ -214,29 +231,40 @@ export default async function NosotrosPage() {
   
           {/* Cinco tarjetas más chicas (foto baja, letra menor), tres arriba y dos
               centradas abajo, en un ancho menor que el de la página */}
-          <ul className="mx-auto mt-8 flex max-w-5xl flex-wrap justify-center gap-5">
-            {AREAS_EQUIPO.map((area) => (
-              <li
-                key={area.titulo}
-                className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.625rem)] lg:basis-[calc(33.333%-0.875rem)]`}
-              >
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <Image
-                    src={area.imagen}
-                    alt={area.alt}
-                    fill
-                    quality={90}
-                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 340px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
-                  />
-                </div>
-                <div className="p-5">
-                  <span aria-hidden="true" className={RAYA_RESALTA} />
-                  <h3 className="text-lg font-bold text-brand-900">{area.titulo}</h3>
-                  <p className="mt-1.5 text-[0.85rem] leading-relaxed text-texto">{area.texto}</p>
-                </div>
-              </li>
-            ))}
+          <ul className="mt-8 flex flex-wrap justify-center gap-4">
+            {AREAS_EQUIPO.map((area) => {
+              const Icono = ICONOS_AREA[area.icono];
+              return (
+                <li
+                  key={area.titulo}
+                  className={`${TARJETA_RESALTA} !p-0 basis-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(20%-0.8rem)]`}
+                >
+                  {/* Foto más alta que ancha para que las cinco quepan en una fila */}
+                  <div className="relative aspect-[5/4] overflow-hidden">
+                    <Image
+                      src={area.imagen}
+                      alt={area.alt}
+                      fill
+                      quality={90}
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 260px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+                    />
+                  </div>
+                  <div className="p-4">
+                    {/* El ícono de la especialidad pisa el borde inferior de la foto */}
+                    <span
+                      aria-hidden="true"
+                      className="relative -mt-9 flex h-11 w-11 items-center justify-center rounded-full bg-brand-900 text-dorado-claro ring-4 ring-white transition-colors group-hover:bg-dorado group-hover:text-white"
+                    >
+                      <Icono size={22} />
+                    </span>
+                    <span aria-hidden="true" className={`${RAYA_RESALTA} mt-3`} />
+                    <h3 className="text-lg font-bold leading-snug text-brand-900">{area.titulo}</h3>
+                    <p className="mt-1.5 text-[0.85rem] leading-relaxed text-texto">{area.texto}</p>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>

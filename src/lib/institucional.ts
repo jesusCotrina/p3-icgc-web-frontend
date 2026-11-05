@@ -63,12 +63,22 @@ export const EQUIPO_INTRO =
   'comunitarias, con experiencia en gestión comunal, construcción y minería. Brindamos asesoría, ' +
   'consultoría y capacitación para fortalecer a las comunidades campesinas y sus empresas.';
 
-export type AreaEquipo = { titulo: string; texto: string; imagen: string; alt: string };
+/** Ícono de cada especialidad (se dibujan en components/Icons.tsx) */
+export type IconoArea = 'casco' | 'balanza' | 'maletin' | 'apreton' | 'birrete';
+
+export type AreaEquipo = {
+  titulo: string;
+  texto: string;
+  imagen: string;
+  alt: string;
+  icono: IconoArea;
+};
 
 // Fotos propias del ICGC (public/nosotros). Al reemplazar una, cambiarle el nombre.
 export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   {
     titulo: 'Ingeniería',
+    icono: 'casco',
     texto:
       'Gestión de proyectos, oficina técnica, residencia y supervisión de obras. Elaboración y revisión de expedientes técnicos, términos de referencia y alcances de trabajo; costos, presupuestos, calidad, seguridad y gestión ambiental.',
     imagen: '/nosotros/area-ingenieria-planos-andes.webp',
@@ -76,6 +86,7 @@ export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   },
   {
     titulo: 'Derecho',
+    icono: 'balanza',
     texto:
       'Asesoría legal comunal y empresarial: constitución de empresas, estatutos, reglamentos, contratos y negociaciones. Soporte jurídico a la administración y gestión de personal, conforme a la normativa aplicable.',
     imagen: '/nosotros/area-derecho-asesora-legal-contrato.webp',
@@ -83,6 +94,7 @@ export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   },
   {
     titulo: 'Gestión Empresarial',
+    icono: 'maletin',
     texto:
       'Planificación estratégica, organización administrativa, gestión financiera, costos y control de gestión para fortalecer la competitividad y sostenibilidad de las empresas comunales, respetando su marco normativo.',
     imagen: '/nosotros/area-gestion-empresarial-planificacion-financiera.webp',
@@ -90,6 +102,7 @@ export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   },
   {
     titulo: 'Relaciones Comunitarias',
+    icono: 'apreton',
     texto:
       'Gestión social, prevención de conflictos y acompañamiento en negociaciones y mesas de diálogo entre comunidades, empresas y Estado. Promovemos acuerdos sostenibles, participación comunal y respeto a los derechos colectivos y al ambiente.',
     imagen: '/nosotros/area-relaciones-comunitarias-dialogo-andes.webp',
@@ -97,6 +110,7 @@ export const AREAS_EQUIPO: readonly AreaEquipo[] = [
   },
   {
     titulo: 'Docencia y Capacitación',
+    icono: 'birrete',
     texto:
       'Cursos, talleres y diplomados para dirigentes, comuneros, directivos, profesionales y trabajadores. Capacitación en gestión y normativa comunal, administración empresarial, proyectos, negociación, seguridad y gestión ambiental.',
     imagen: '/nosotros/area-docencia-taller-planificacion-comunitaria.webp',

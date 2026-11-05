@@ -91,6 +91,40 @@ export function HandshakeIcon({ className = '', size = 18 }: IconProps) {
   );
 }
 
+/** Casco de obra: la especialidad de ingeniería. */
+export function HardHatIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2Z" />
+      <path d="M10 15V6.5a1.5 1.5 0 0 1 1.5-1.5h1A1.5 1.5 0 0 1 14 6.5V15" />
+      <path d="M4 15v-3a8 8 0 0 1 6-7.7" />
+      <path d="M20 15v-3a8 8 0 0 0-6-7.7" />
+    </svg>
+  );
+}
+
+/** Balanza de la justicia: la especialidad de derecho. */
+export function ScaleIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="M12 3v18M8 21h8M4 7h16" />
+      <path d="m6 7-3 7a3 3 0 0 0 6 0L6 7Z" />
+      <path d="m18 7-3 7a3 3 0 0 0 6 0l-3-7Z" />
+    </svg>
+  );
+}
+
+/** Birrete: docencia y capacitación. */
+export function GraduationCapIcon({ className = '', size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} className={className}>
+      <path d="m2 9 10-5 10 5-10 5L2 9Z" />
+      <path d="M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5" />
+      <path d="M22 9v6" />
+    </svg>
+  );
+}
+
 /** Plano/proyecto: para la sección de proyectos. */
 export function BlueprintIcon({ className = '', size = 18 }: IconProps) {
   return (
