@@ -194,19 +194,19 @@ export default async function NosotrosPage() {
       </section>
 
       {/* ── Misión y visión (blanco): al pasar el mouse, la tarjeta sube y se marca en dorado ── */}
-      <section aria-labelledby="mision" className="container-icgc py-12 lg:py-16">
-        {/* Mismo ancho que las tarjetas de especialidades (max-w-5xl) y tarjetas más compactas */}
-        <div className="mx-auto grid max-w-5xl gap-5 lg:grid-cols-2">
+      <section aria-labelledby="mision" className="container-icgc py-16 lg:py-20">
+        {/* A todo el ancho del contenedor, alineado con las secciones de arriba y abajo */}
+        <div className="grid gap-6 lg:grid-cols-2">
           {[
             { id: 'mision', titulo: 'Misión', texto: MISION },
             { id: 'vision', titulo: 'Visión', texto: VISION },
           ].map((bloque) => (
-            <article key={bloque.id} className={`${TARJETA_RESALTA} !p-6`}>
+            <article key={bloque.id} className={TARJETA_RESALTA}>
               <span aria-hidden="true" className={RAYA_RESALTA} />
               <h2 id={bloque.id} className="text-2xl font-extrabold text-brand-900">
                 {bloque.titulo}
               </h2>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-texto">{bloque.texto}</p>
+              <p className="mt-4 leading-relaxed text-texto">{bloque.texto}</p>
             </article>
           ))}
         </div>
