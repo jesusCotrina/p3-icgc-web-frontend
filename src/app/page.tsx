@@ -105,9 +105,11 @@ export default async function HomePage() {
   const destacados = destacadosRes.items.slice(0, 5);
 
   // Fotos del hero: las que se cargaron en Ajustes del sitio; si no hay, las de fábrica
+  // (`?? []`: por si la API vieja aún no manda el campo durante un despliegue)
+  const slidesCargadas = settings.heroSlides ?? [];
   const heroSlides =
-    settings.heroSlides.length > 0
-      ? settings.heroSlides.map((h) => ({ src: h.media.url, alt: h.alt }))
+    slidesCargadas.length > 0
+      ? slidesCargadas.map((h) => ({ src: h.media.url, alt: h.alt }))
       : HERO_SLIDES;
 
   // Resumen del líder para su tarjeta (los datos completos están en /nosotros)
