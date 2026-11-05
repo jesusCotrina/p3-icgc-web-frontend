@@ -118,8 +118,6 @@ export type Reconocimiento = {
   año: number | string;
   imagen?: string;
   alt?: string;
-  /** Tarjeta ancha (dos columnas): la foto de conjunto de los trofeos */
-  destacado?: boolean;
 };
 
 export const RECONOCIMIENTOS_INTRO =
@@ -130,16 +128,6 @@ export const RECONOCIMIENTOS_INTRO =
 const R = '/reconocimientos';
 
 export const RECONOCIMIENTOS: readonly Reconocimiento[] = [
-  {
-    // Los trofeos juntos: son de distintas empresas mineras e instituciones y de distintos años
-    empresa: 'ECOSARC y ECOSERMUQ',
-    otorga: 'Otorgados por empresas mineras e instituciones a las empresas comunales que gerenció',
-    titulo: 'Trofeos por seguridad, calidad y gestión empresarial',
-    año: '2018 – 2025',
-    imagen: `${R}/trofeos-reconocimientos-empresas-comunales.webp`,
-    alt: 'Cuatro trofeos de reconocimiento recibidos por las empresas comunales ECOSARC y ECOSERMUQ, dispuestos en abanico',
-    destacado: true,
-  },
   {
     empresa: 'ECOSERMUQ',
     otorga: 'Consejo Internacional de Prensa',
@@ -170,5 +158,14 @@ export const RECONOCIMIENTOS: readonly Reconocimiento[] = [
     año: 2018,
     imagen: `${R}/empresario-de-las-americas-2018.webp`,
     alt: 'Ceremonia de premiación empresarial con los galardonados y sus reconocimientos',
+  },
+  {
+    // Al final: los trofeos juntos, de distintas empresas mineras e instituciones y de distintos años
+    empresa: 'ECOSARC y ECOSERMUQ',
+    otorga: 'Otorgados por empresas mineras e instituciones a las empresas comunales que gerenció',
+    titulo: 'Trofeos por seguridad, calidad y gestión empresarial',
+    año: '2018 – 2025',
+    imagen: `${R}/trofeos-reconocimientos-empresas-comunales.webp`,
+    alt: 'Cuatro trofeos de reconocimiento recibidos por las empresas comunales ECOSARC y ECOSERMUQ, dispuestos en abanico',
   },
 ];
