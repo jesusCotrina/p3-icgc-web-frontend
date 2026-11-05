@@ -87,10 +87,10 @@ export async function generateMetadata(): Promise<Metadata> {
       description: settings.defaultMetaDescription,
       images: [settings.ogImage?.url ?? OG_POR_DEFECTO.url],
     },
-    icons: {
-      icon: settings.logo?.url ?? '/logo-icgc.png',
-      apple: settings.logo?.url ?? '/logo-icgc.png',
-    },
+    // Sin `icons`: los íconos salen de src/app/favicon.ico, icon.png y
+    // apple-icon.png. Google solo muestra el favicon en los resultados si está
+    // en el mismo dominio y en una URL estable; el logo subido al gestor vive
+    // en api.* y cambia de nombre con cada subida, por eso salía el globo gris.
     ...(settings.googleSiteVerification
       ? { verification: { google: settings.googleSiteVerification } }
       : {}),
