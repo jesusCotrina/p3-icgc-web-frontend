@@ -363,9 +363,13 @@ export default async function NosotrosPage() {
           </h2>
           {/* A todo el ancho: en escritorio el texto corre de lado a lado sin cortes */}
           <p className="mt-4 text-lg leading-relaxed text-texto">{RECONOCIMIENTOS_INTRO}</p>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {/* 3 columnas: la tarjeta de los trofeos ocupa dos y las demás completan la grilla */}
+          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
             {RECONOCIMIENTOS.map((r) => (
-              <li key={r.imagen ?? `${r.titulo}-${r.año}-${r.empresa ?? ''}`} className={`${TARJETA_RESALTA} !p-0`}>
+              <li
+                key={r.imagen ?? `${r.titulo}-${r.año}-${r.empresa ?? ''}`}
+                className={`${TARJETA_RESALTA} !p-0 ${r.destacado ? 'sm:col-span-2' : ''}`}
+              >
                 <div className="relative aspect-[3/2] overflow-hidden bg-brand-50">
                   {r.imagen ? (
                     <Image
@@ -373,10 +377,14 @@ export default async function NosotrosPage() {
                       alt={r.alt ?? r.titulo}
                       fill
                       quality={90}
-                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 31vw, 290px"
-                      // Los trofeos (fotos verticales) se ven enteros sobre gris azulado
-                      className={`transition-transform duration-500 group-hover:scale-105 ${r.trofeo ? 'bg-brand-50 object-contain p-2' : 'object-cover'}`}
+                      sizes={
+                        r.destacado
+                          ? '(max-width: 640px) 92vw, (max-width: 1280px) 62vw, 780px'
+                          : '(max-width: 640px) 92vw, (max-width: 1280px) 31vw, 380px'
+                      }
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+
                   ) : (
                     // Ilustración genérica mientras llega la foto del reconocimiento
                     <div

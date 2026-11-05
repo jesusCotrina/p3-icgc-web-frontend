@@ -114,11 +114,12 @@ export type Reconocimiento = {
   empresa?: string;
   otorga: string;
   titulo: string;
-  año: number;
+  /** Un año, o un rango ("2018 – 2025") cuando la tarjeta reúne varios premios */
+  año: number | string;
   imagen?: string;
   alt?: string;
-  /** Foto vertical de un trofeo: se muestra entera, sin recortar */
-  trofeo?: boolean;
+  /** Tarjeta ancha (dos columnas): la foto de conjunto de los trofeos */
+  destacado?: boolean;
 };
 
 export const RECONOCIMIENTOS_INTRO =
@@ -130,21 +131,22 @@ const R = '/reconocimientos';
 
 export const RECONOCIMIENTOS: readonly Reconocimiento[] = [
   {
+    // Los trofeos juntos: son de distintas empresas mineras e instituciones y de distintos años
+    empresa: 'ECOSARC y ECOSERMUQ',
+    otorga: 'Otorgados por empresas mineras e instituciones a las empresas comunales que gerenció',
+    titulo: 'Trofeos por seguridad, calidad y gestión empresarial',
+    año: '2018 – 2025',
+    imagen: `${R}/trofeos-reconocimientos-empresas-comunales.webp`,
+    alt: 'Cuatro trofeos de reconocimiento recibidos por las empresas comunales ECOSARC y ECOSERMUQ, dispuestos en abanico',
+    destacado: true,
+  },
+  {
     empresa: 'ECOSERMUQ',
     otorga: 'Consejo Internacional de Prensa',
     titulo: 'Líder Empresarial Iberoamericano',
     año: 2025,
     imagen: `${R}/ecosermuq-lider-empresarial-iberoamericano-2025.webp`,
     alt: 'Ceremonia de entrega del reconocimiento Líder Empresarial Iberoamericano a ECOSERMUQ',
-  },
-  {
-    empresa: 'ECOSERMUQ',
-    otorga: 'Minera Raura',
-    titulo: '2.º puesto en implementación de 5S',
-    año: 2025,
-    imagen: `${R}/ecosermuq-raura-5s-2025.webp`,
-    alt: 'Trofeo de cristal de Compañía Minera Raura a ECOSERMUQ por el concurso Raura 5S en Acción',
-    trofeo: true,
   },
   {
     empresa: 'ECOSARC',
@@ -159,26 +161,8 @@ export const RECONOCIMIENTOS: readonly Reconocimiento[] = [
     otorga: 'Minera El Brocal',
     titulo: '1.er puesto: Empresa Más Segura',
     año: 2019,
-    imagen: `${R}/ecosarc-el-brocal-empresa-mas-segura-trofeo.webp`,
-    alt: 'Trofeo de cristal de Sociedad Minera El Brocal a ECOSARC como la empresa más segura',
-    trofeo: true,
-  },
-  {
-    empresa: 'ECOSARC',
-    otorga: 'Minera El Brocal',
-    titulo: '1.er puesto: Empresa Más Segura',
-    año: 2019,
     imagen: `${R}/ecosarc-el-brocal-empresa-mas-segura-2019.webp`,
     alt: 'Equipo de ECOSARC con el reconocimiento de Minera El Brocal a la empresa más segura',
-  },
-  {
-    empresa: 'ECOSARC',
-    otorga: 'Consejo Internacional de Prensa',
-    titulo: 'Calidad, Imagen y Prestigio Empresarial',
-    año: 2018,
-    imagen: `${R}/ecosarc-calidad-imagen-prestigio-2018.webp`,
-    alt: 'Trofeo de oro FIJET-América Calidad, Imagen y Prestigio Empresarial otorgado a ECOSARC',
-    trofeo: true,
   },
   {
     otorga: 'Consejo Internacional de Prensa',

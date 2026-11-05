@@ -103,6 +103,14 @@ const nextConfig = {
         destination: `/cursos/${ahora}`,
         permanent: true,
       })),
+      // Las dos experiencias con ECOSERM VIP se unieron en una sola (nov. 2026)
+      ...['hochschild-mining-y-la-empresa-comunal-ecoserm-vip', 'minera-ares-y-la-empresa-comunal-ecoserm-vip'].map(
+        (antes) => ({
+          source: `/proyectos/${antes}`,
+          destination: '/proyectos/hochschild-mining-minera-ares-y-la-empresa-comunal-ecoserm-vip',
+          permanent: true,
+        }),
+      ),
     ];
   },
 };
