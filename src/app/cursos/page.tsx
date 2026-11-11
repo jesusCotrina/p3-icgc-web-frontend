@@ -70,10 +70,11 @@ export default async function CursosPage() {
         {/* El contador va arriba, a la altura del título (no al pie del párrafo) */}
         <div className="container-icgc flex max-w-6xl flex-wrap items-start justify-between gap-6 py-10 lg:py-12">
           <div className="max-w-3xl">
-            <h1 className="text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
+            {/* Mismo rótulo dorado que en el resto de páginas, encima del h1 */}
+            <p className="eyebrow">Cursos, talleres y diplomados</p>
+            <h1 className="mt-3 text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
               Capacitación y Desarrollo de Capacidades
             </h1>
-            <p className="mt-3 text-lg font-bold text-dorado-oscuro">Cursos, talleres y diplomados</p>
             <p className="mt-3 text-pretty text-lg leading-relaxed text-slate-600">
               Fortalece tus conocimientos en gestión comunal y empresarial, ingeniería, derecho y
               relaciones comunitarias. Propuestas dirigidas a dirigentes, comuneros, directivos,
