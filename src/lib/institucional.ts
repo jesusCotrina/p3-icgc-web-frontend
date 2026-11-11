@@ -176,8 +176,8 @@ export const RECONOCIMIENTOS: readonly Reconocimiento[] = [
   {
     // Al final: los trofeos juntos, de distintas empresas mineras e instituciones y de distintos años
     empresa: 'ECOSARC y ECOSERMUQ',
-    otorga: 'Otorgados por empresas mineras e instituciones a las empresas comunales que gerenció',
-    titulo: 'Trofeos por seguridad, calidad y gestión empresarial',
+    otorga: 'Otorgados por empresas mineras e instituciones a las empresas comunales durante su gestión como gerente.',
+    titulo: 'Reconocimientos por seguridad, calidad y gestión empresarial',
     año: '2018 – 2025',
     imagen: `${R}/trofeos-reconocimientos-empresas-comunales.webp`,
     alt: 'Cuatro trofeos de reconocimiento recibidos por las empresas comunales ECOSARC y ECOSERMUQ, dispuestos en abanico',
