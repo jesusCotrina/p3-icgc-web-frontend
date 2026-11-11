@@ -44,10 +44,10 @@ export function Header({ settings }: { settings: SiteSettingsDTO }) {
           {/* El nombre completo es la marca que queremos asociar en Google.
               En móvil se corta a "ICGC" para que quepa sin romper la barra. */}
           <span className="leading-tight">
-            <span className="block text-lg font-extrabold tracking-tight text-brand-900 sm:hidden">
+            <span className="block text-xl font-extrabold tracking-tight text-brand-900 sm:hidden">
               ICGC
             </span>
-            <span className="hidden max-w-[17rem] text-[1.08rem] font-extrabold leading-[1.15] tracking-tight text-texto sm:block xl:max-w-none">
+            <span className="hidden max-w-[21rem] text-xl font-extrabold leading-[1.15] tracking-tight text-texto sm:block xl:max-w-none">
               Instituto de Capacitación
               <span className="block font-bold text-brand-900">en Gestión Comunal</span>
             </span>
