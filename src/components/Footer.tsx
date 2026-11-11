@@ -223,11 +223,11 @@ export function Footer({
             {redes.map((r) => {
               const icono =
                 r.label === 'WhatsApp' ? (
-                  <WhatsAppIcon size={22} />
+                  <WhatsAppIcon size={26} />
                 ) : (
                   <svg
-                    width="22"
-                    height="22"
+                    width="26"
+                    height="26"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -248,7 +248,7 @@ export function Footer({
                       rel="noopener noreferrer me"
                       aria-label={`${settings.siteName} en ${r.label}`}
                       title={r.label}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-brand-800"
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-brand-800"
                     >
                       {icono}
                     </a>
@@ -256,7 +256,7 @@ export function Footer({
                     <span
                       aria-hidden="true"
                       title={`${r.label}: próximamente`}
-                      className="inline-flex h-10 w-10 cursor-default items-center justify-center rounded-full border border-white/10 text-white/35"
+                      className="inline-flex h-12 w-12 cursor-default items-center justify-center rounded-full border border-white/10 text-white/35"
                     >
                       {icono}
                     </span>

@@ -36,10 +36,10 @@ export function Header({ settings }: { settings: SiteSettingsDTO }) {
           <Image
             src={logoSrc(settings)}
             alt={settings.logoAlt}
-            width={52}
-            height={52}
+            width={80}
+            height={80}
             priority
-            className="h-12 w-12 shrink-0 rounded-full object-contain"
+            className="h-16 w-16 shrink-0 rounded-full object-contain"
           />
           {/* El nombre completo es la marca que queremos asociar en Google.
               En móvil se corta a "ICGC" para que quepa sin romper la barra. */}

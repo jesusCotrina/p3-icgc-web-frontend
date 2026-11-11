@@ -109,7 +109,7 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
         <aside className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">Blog</p>
           <h1 className="mt-3 text-balance text-3xl font-extrabold leading-tight">
-            {activa ? activa.name : etiqueta ? `#${etiqueta.name}` : 'Blog de gestión comunal'}
+            {activa ? activa.name : etiqueta ? `#${etiqueta.name}` : 'Conocimiento para la Gestión Comunal'}
           </h1>
 
           {/* Búsqueda: formulario GET, funciona sin JavaScript */}
