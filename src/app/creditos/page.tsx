@@ -53,7 +53,12 @@ export default async function CreditosPage() {
     ...articulos.map((a) => ({ media: a.coverImage, donde: `Artículo: ${a.title}` })),
   ];
   for (const { media, donde } of desdeGestor) {
-    if (!media?.caption) continue;
+    if (!media) continue;
+    // Créditos estructurados (autor, fuente, enlace) o, si no, el caption antiguo
+    const autor = media.author?.trim();
+    const fuente = media.source?.trim();
+    const credito = autor || fuente ? [autor, fuente].filter(Boolean).join(', ') : media.caption;
+    if (!credito) continue;
     // Una misma foto puede usarse en varios lugares: se lista una vez
     const existente = filas.find((f) => f.clave === media.id);
     if (existente) {
@@ -65,7 +70,8 @@ export default async function CreditosPage() {
       imagen: media.url,
       alt: '',
       dondeSeUsa: donde,
-      credito: media.caption.replace(/^Foto:\s*/, ''),
+      credito: credito.replace(/^Foto:\s*/, ''),
+      original: media.sourceUrl?.trim() || undefined,
     });
   }
 

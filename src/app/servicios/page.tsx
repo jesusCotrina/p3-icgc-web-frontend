@@ -71,7 +71,9 @@ export default async function ServiciosPage() {
       <section className="relative isolate overflow-hidden border-b border-dorado/25 bg-arena">
         <FondoLineas lineas="una" className="-z-10" />
         <div className="container-icgc max-w-6xl py-10 lg:py-12">
-          <h1 className="max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
+          {/* Mismo rótulo dorado que en cursos y proyectos, encima del h1 */}
+          <p className="eyebrow">Servicios</p>
+          <h1 className="mt-3 max-w-3xl text-balance text-3xl font-extrabold leading-tight sm:text-4xl">
             Capacitación y Asesoría para la Gestión Comunal y Empresarial
           </h1>
           <p className="mt-4 max-w-3xl text-pretty text-lg leading-relaxed text-texto">
