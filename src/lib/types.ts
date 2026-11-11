@@ -29,6 +29,10 @@ export interface MediaDTO {
   durationSec: number | null;
   alt: string | null;
   caption: string | null;
+  /** Créditos (pie de foto en el blog). Opcionales: una API anterior no los envía. */
+  author?: string | null;
+  source?: string | null;
+  sourceUrl?: string | null;
   createdAt: string;
 }
 

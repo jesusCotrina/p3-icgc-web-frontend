@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CreditoFoto, tieneCredito } from '@/components/CreditoFoto';
 import type { PostBlockDTO } from '@/lib/types';
 
 /** [texto del enlace](/ruta) o [texto](https://...) dentro de un párrafo. */
@@ -98,9 +99,13 @@ function Block({ block }: { block: PostBlockDTO }) {
             quality={90}
             sizes="(max-width: 768px) 100vw, 768px"
           />
-          {block.caption && (
+          {/* Pie de foto: la leyenda y, debajo, el autor y la fuente (créditos del archivo) */}
+          {(block.caption || tieneCredito(block.media)) && (
             <figcaption className="mt-3 text-center text-sm text-slate-500">
-              {block.caption}
+              {block.caption && <span className="block">{block.caption}</span>}
+              {tieneCredito(block.media) && (
+                <CreditoFoto media={block.media} className={block.caption ? 'mt-1 block' : 'block'} />
+              )}
             </figcaption>
           )}
         </figure>

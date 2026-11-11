@@ -288,6 +288,13 @@ export function blogPostingSchema(post: PostDTO, settings: SiteSettingsDTO) {
             url: post.coverImage.url,
             width: post.coverImage.width ?? undefined,
             height: post.coverImage.height ?? undefined,
+            // Créditos de la foto (Google los muestra en búsqueda de imágenes)
+            ...(post.coverImage.author
+              ? { creator: { '@type': 'Person', name: post.coverImage.author } }
+              : {}),
+            ...(post.coverImage.source || post.coverImage.author
+              ? { creditText: post.coverImage.source || post.coverImage.author }
+              : {}),
           },
         }
       : {}),

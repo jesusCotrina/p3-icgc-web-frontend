@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AutoReveal } from '@/components/AutoReveal';
+import { CreditoFoto, tieneCredito } from '@/components/CreditoFoto';
 import { JsonLd } from '@/components/JsonLd';
 import { PostBlocks, TableOfContents } from '@/components/PostBlocks';
 import { PostCard } from '@/components/PostCard';
@@ -147,18 +148,26 @@ export default async function PostPage({ params }: { params: Params }) {
             </div>
 
             {post.coverImage && (
-              <Image
-                src={post.coverImage.url}
-                alt={post.coverAlt ?? post.coverImage.alt ?? post.title}
-                width={post.coverImage.width ?? 1280}
-                height={post.coverImage.height ?? 720}
-                // Imagen principal del artículo: es el LCP, se precarga
-                priority
-                quality={90}
-                sizes="(max-width: 1024px) 100vw, 1000px"
-                // Recortada a un alto razonable: acompaña al texto sin tapar la pantalla
-                className="mt-7 aspect-[2/1] max-h-[24rem] w-full rounded-xl border border-silver-200 object-cover shadow-card"
-              />
+              <figure className="mt-7">
+                <Image
+                  src={post.coverImage.url}
+                  alt={post.coverAlt ?? post.coverImage.alt ?? post.title}
+                  width={post.coverImage.width ?? 1280}
+                  height={post.coverImage.height ?? 720}
+                  // Imagen principal del artículo: es el LCP, se precarga
+                  priority
+                  quality={90}
+                  sizes="(max-width: 1024px) 100vw, 1000px"
+                  // Recortada a un alto razonable: acompaña al texto sin tapar la pantalla
+                  className="aspect-[2/1] max-h-[24rem] w-full rounded-xl border border-silver-200 object-cover shadow-card"
+                />
+                {/* Autor y fuente de la portada, cargados en Multimedia del gestor */}
+                {tieneCredito(post.coverImage) && (
+                  <figcaption className="mt-2 text-right">
+                    <CreditoFoto media={post.coverImage} />
+                  </figcaption>
+                )}
+              </figure>
             )}
           </header>
 
